@@ -49,8 +49,9 @@ LDFLAGS_append = " \
     -ltrower-base64 \
     "
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
-LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'safec dunfell', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 
 #Adding new package "tdk-b-dl" which will be downloaded package only of tdk_rdm distro feature is enabled
 TDKB_DL_PACK:= "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', '${PN}-dl', '', d)}"
@@ -58,6 +59,7 @@ PACKAGE_BEFORE_PN += "${TDKB_DL_PACK}"
 
 ENABLE_WAN_MANAGER = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '--enable-rdkb_wan_manager', '--disable-rdkb_wan_manager', d)}"
 EXTRA_OECONF_append = "${ENABLE_WAN_MANAGER}"
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 # Install all TDK scripts
 do_install_append () {

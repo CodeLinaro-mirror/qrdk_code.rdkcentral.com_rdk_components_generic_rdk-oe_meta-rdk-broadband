@@ -20,6 +20,8 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+
 inherit autotools pkgconfig
 
 CFLAGS_append = " \

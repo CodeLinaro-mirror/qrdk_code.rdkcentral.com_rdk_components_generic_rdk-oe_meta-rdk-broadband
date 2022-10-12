@@ -9,9 +9,11 @@ DEPENDS = "ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgm
 DEPENDS_append_libc-musl = " libtirpc"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' nanomsg ', ' ', d)}"
 
-DEPENDS_append_dunfell = " libtirpc libsyswrapper"
+DEPENDS_append = " libtirpc"
+DEPENDS_remove_morty = " libtirpc"
 
-RDEPENDS_${PN}_append_dunfell = " bash"
+RDEPENDS_${PN}_append = " bash"
+RDEPENDS_${PN}_remove_morty = " bash"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/Utopia;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=Utopia"
@@ -25,7 +27,8 @@ PV = "${RDK_RELEASE}"
 S = "${WORKDIR}/git"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
 
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '--enable-wanfailover', '', d)}"
+#This configuration is commented in utopia configure.ac file. As long as this is not enabled in configure file, passing the OE configuration is giving error in kirkstone.
+#EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '--enable-wanfailover', '', d)}"
 
 inherit autotools useradd update-alternatives pkgconfig
 
@@ -36,13 +39,15 @@ LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-confi
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 DEPENDS_remove_class-native = " safec-native"
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-deprecated-declarations -Wno-type-limits -Wno-unused-parameter -Wno-return-local-addr "
+CFLAGS_append = " -Wno-format-overflow -Wno-misleading-indentation -Wno-enum-conversion "
 
 CFLAGS += " \
     -I${STAGING_INCDIR}/ccsp \
     -DCONFIG_BUILD_TRIGGER \
     "
 
-CFLAGS_append_dunfell = " -I${STAGING_INCDIR}/tirpc "
+CFLAGS_append = " -I${STAGING_INCDIR}/tirpc "
+CFLAGS_remove_morty = " -I${STAGING_INCDIR}/tirpc "
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION', '', d)}"
 
@@ -57,7 +62,8 @@ LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '
 CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc"
 LDFLAGS_append_libc-musl = " -ltirpc"
 
-LDFLAGS_append_dunfell = " -ltirpc -lrt"
+LDFLAGS_append = " -ltirpc -lrt"
+LDFLAGS_remove_morty = " -ltirpc -lrt"
 
 do_install_append () {
 #    install -D -m 0644 ${S}/source/include/autoconf.h ${D}${includedir}/utctx/autoconf.h
@@ -156,7 +162,9 @@ CUSTOM_PKG_EXTNS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtest', '
 SKIP_MAIN_PKG="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
 DOWNLOAD_ON_DEMAND="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
 
-RDEPENDS_${PN}_append_dunfell = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+RDEPENDS_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+RDEPENDS_${PN}_remove_morty = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"
 EXTRA_OECONF_append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm "

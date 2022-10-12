@@ -9,7 +9,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 
 require ccsp_common.inc
 
-CFLAGS += " -Wall -Werror -Wextra -Wno-address "
+CFLAGS += " -Wall -Werror -Wextra -Wno-address -Wno-enum-conversion"
 
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/CcspMoCA;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=CcspMoCA"
@@ -21,13 +21,14 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig pythonnative breakpad-logmapper
+inherit autotools pkgconfig ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
-LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'safec dunfell', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 CFLAGS_append = " \
@@ -56,9 +57,11 @@ LDFLAGS_append = " \
     -lprivilege \
     "
 
-LDFLAGS_append_dunfell = " -lsyscfg -lsysevent"
+LDFLAGS_append = " -lsyscfg -lsysevent"
+LDFLAGS_remove_morty = " -lsyscfg -lsysevent"
+
 do_compile_prepend () {
-	(python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-MoCA.XML ${S}/source/MoCASsp/dm_pack_datamodel.c)
+	(${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-MoCA.XML ${S}/source/MoCASsp/dm_pack_datamodel.c)
 }
 
 do_install_append () {

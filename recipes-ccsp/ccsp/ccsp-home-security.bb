@@ -16,7 +16,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools breakpad-logmapper
 
-CFLAGS += " -Wall -Werror -Wextra "
+CFLAGS += " -Wall -Werror -Wextra -Wno-format-truncation "
 
 CFLAGS_append = " \
     -I=${includedir}/dbus-1.0 \

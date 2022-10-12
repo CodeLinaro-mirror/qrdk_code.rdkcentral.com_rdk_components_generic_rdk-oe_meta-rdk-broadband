@@ -15,6 +15,8 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+
 inherit autotools pkgconfig
 
 CFLAGS_append = " \
@@ -31,7 +33,8 @@ LDFLAGS += " -lprivilege"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -fPIC -I${STAGING_INCDIR}/libsafec', '-fPIC', d)}"
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '-DFEATURE_RDKB_WAN_MANAGER', '', d)}"
 
-LDFLAGS_append_dunfell = " -ldbus-1"
+LDFLAGS_append = " -ldbus-1"
+LDFLAGS_remove_morty = " -ldbus-1"
 
 do_configure[depends] += "ccsp-common-library:do_install"
 

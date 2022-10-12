@@ -33,7 +33,10 @@ CFLAGS_append = " \
 LDFLAGS += " -lprivilege"
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -fPIC -I${STAGING_INCDIR}/libsafec', '-fPIC', d)}"
-LDFLAGS_append_dunfell = " -ldbus-1"
+LDFLAGS_append = " -ldbus-1"
+LDFLAGS_remove_morty = " -ldbus-1"
+
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 do_install_append () {
     # Config files and scripts

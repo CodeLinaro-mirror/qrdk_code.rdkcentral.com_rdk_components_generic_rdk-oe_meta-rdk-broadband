@@ -14,13 +14,14 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', 
  
 RDEPENDS_${PN}_append = " cjson trower-base64 msgpack-c nanomsg wrp-c libparodus "
 
-RDEPENDS_${PN}-ccsp_append_dunfell = " bash"
+RDEPENDS_${PN}-ccsp_append = " bash"
+RDEPENDS_${PN}-ccsp_remove_morty = "bash"
 
 require ccsp_common.inc
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-shift-negative-value"
 
-CFLAGS_append_dunfell = " -Wno-deprecated-declarations "
+CFLAGS_append = " -Wno-deprecated-declarations -Wno-stringop-overflow -Wno-format-truncation -Wno-enum-conversion -Wno-array-bounds -Wno-misleading-indentation"
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/CcspPandM;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=CcspPandM"
 
@@ -35,13 +36,14 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pythonnative breakpad-logmapper
+inherit autotools ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
-LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'safec dunfell', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wbCfgTestApp', '-DWEBCFG_TEST_SIM', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'ethstats', '-DETH_STATS_ENABLED', '', d)}"
@@ -98,7 +100,8 @@ LDFLAGS_append = " \
 "
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'custom_ula', '-DCUSTOM_ULA', '', d)}"
 
-LDFLAGS_append_dunfell = " -lsyscfg"
+LDFLAGS_append = " -lsyscfg"
+LDFLAGS_remove_morty = " -lsyscfg"
 
 do_compile_prepend () {
 
@@ -151,7 +154,7 @@ do_compile_prepend () {
         if ${@bb.utils.contains('DISTRO_FEATURES', 'custom_ula', 'true', 'false', d)}; then
         sed -i '2i <?define CUSTOM_ULA=True?>' ${S}/config-arm/TR181-USGv2.XML
         fi
-    (python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config-arm/TR181-USGv2.XML ${S}/source/PandMSsp/dm_pack_datamodel.c)
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config-arm/TR181-USGv2.XML ${S}/source/PandMSsp/dm_pack_datamodel.c)
 
 }
 do_install_append () {

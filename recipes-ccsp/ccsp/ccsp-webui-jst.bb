@@ -41,6 +41,7 @@ LDFLAGS += " \
      "
 
 EXTRA_OECONF = "CCSP_COMMON_LIB=${STAGING_LIBDIR}"
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 EXTRANATIVEPATH += "chrpath-native"
 

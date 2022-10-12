@@ -11,7 +11,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEn
 require ccsp_common.inc
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/CcspEthAgent;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=CcspEthAgent"
-CFLAGS += " -Wall -Werror -Wextra "
+CFLAGS += " -Wall -Werror -Wextra -Wno-format-overflow -Wno-format-truncation -Wno-array-bounds"
 
 S = "${WORKDIR}/git"
 
@@ -19,19 +19,21 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 SRCREV = "${AUTOREV}"
 SRCREV_FORMAT = "${AUTOREV}"
 
-inherit autotools pythonnative breakpad-logmapper
+inherit autotools ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
 PACKAGECONFIG ?= "dropearly"
 PACKAGECONFIG[dropearly] = "--enable-dropearly,--disable-dropearly"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
-LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'safec dunfell', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' -DFEATURE_RDKB_WAN_MANAGER', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'ethstats', '-DETH_STATS_ENABLED', '', d)}"
-LDFLAGS_append_dunfell = " -lrt"
+LDFLAGS_append = " -lrt"
+LDFLAGS_remove_morty = " -lrt"
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', ' --enable-wanfailover ', '', d)}"
 
@@ -71,7 +73,7 @@ do_compile_prepend () {
         if ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_auto_port_switch', 'true', 'false', d)}; then
                 sed -i '2i <?define FEATURE_RDKB_AUTO_PORT_SWITCH=True?>' ${S}/config/TR181-EthAgent.xml
         fi
-    (python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-EthAgent.xml ${S}/source/EthSsp/dm_pack_datamodel.c)
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-EthAgent.xml ${S}/source/EthSsp/dm_pack_datamodel.c)
 }
 
 do_install_append () {

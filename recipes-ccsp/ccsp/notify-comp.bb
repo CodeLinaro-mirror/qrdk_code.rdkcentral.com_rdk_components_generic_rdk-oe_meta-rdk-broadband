@@ -15,7 +15,7 @@ SRCREV_notify-comp = "${AUTOREV}"
 SRCREV_FORMAT = "notify-comp"
 
 S = "${WORKDIR}/git/notify_comp"
-inherit autotools pkgconfig breakpad-wrapper coverity pythonnative breakpad-logmapper
+inherit autotools pkgconfig breakpad-wrapper coverity ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
@@ -28,7 +28,8 @@ BREAKPAD_BIN_append = " notify_comp"
 
 LDFLAGS += "-lbreakpadwrapper -lpthread -lstdc++"
 
-LDFLAGS_append_dunfell = " -lrt"
+LDFLAGS_append = " -lrt"
+LDFLAGS_remove_morty = " -lrt"
 
 #generating minidumps
 PACKAGECONFIG_append = " breakpad"
@@ -37,7 +38,7 @@ CFLAGS_append = " \
     -I=${includedir}/ccsp \
     "
 do_compile_prepend () {
-    (python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/scripts/NotifyComponent.xml ${S}/source/NotifyComponent/dm_pack_datamodel.c)
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/scripts/NotifyComponent.xml ${S}/source/NotifyComponent/dm_pack_datamodel.c)
 }
 
 do_install_append_armeb () {

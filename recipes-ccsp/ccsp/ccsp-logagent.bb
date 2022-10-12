@@ -18,16 +18,18 @@ SRCREV_FORMAT = "LogAgent"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig coverity pythonnative
+inherit autotools pkgconfig coverity ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)}
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove_dunfell = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS_remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
 LDFLAGS_append_dunfell = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5.1', '', d)}"
+LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 CFLAGS += " -Wall -Werror -Wextra "
 
@@ -42,10 +44,11 @@ LDFLAGS_append = " \
     "
 
 do_compile_prepend () {
-	(python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/scripts/LogAgent.xml ${S}/source/LogComponent/dm_pack_datamodel.c)
+	(${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/scripts/LogAgent.xml ${S}/source/LogComponent/dm_pack_datamodel.c)
 }
 
-LDFLAGS_append_dunfell = " -lpthread"
+LDFLAGS_append = " -lpthread"
+LDFLAGS_remove_morty = " -lpthread"
 
 do_install_append () {
     # Config files and scripts

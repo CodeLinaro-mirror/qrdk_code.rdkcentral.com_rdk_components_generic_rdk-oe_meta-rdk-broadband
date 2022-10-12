@@ -21,6 +21,8 @@ def getowe_defined(d):
     else:
         return ''
 
+CFLAGS_append = " -fcommon"
+
 CFLAGS_append = " \
     -DCONFIG_LIBNL32 \
     -DCONFIG_LIBNL20 \
