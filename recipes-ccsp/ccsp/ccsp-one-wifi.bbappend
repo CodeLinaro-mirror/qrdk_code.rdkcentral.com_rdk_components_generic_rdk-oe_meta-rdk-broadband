@@ -14,7 +14,7 @@ require ccsp_common.inc
 
 DEPENDS_append = " ccsp-common-library utopia libparodus"
 DEPENDS_append = " opensync-2.4.1"
-DEPENDS_append = " hal-cm  hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi avro-c "
+DEPENDS_append = " hal-wifi hal-cm  hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi avro-c "
 RDEPENDS_${PN}_append = " libparodus"
 
 EXTRA_OECONF_append = " --enable-ccsp-common"
