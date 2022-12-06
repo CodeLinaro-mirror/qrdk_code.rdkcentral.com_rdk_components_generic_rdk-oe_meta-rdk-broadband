@@ -4,13 +4,12 @@ HOMEPAGE = "http://github.com/belvedere-yocto/CcspCMAgent"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
-DEPENDS = "utopia ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi libunpriv"
+DEPENDS = "utopia ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi libunpriv rbus"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' telemetry ', ' ', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' ruli ', ' ', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' cimplog ', ' ', d)}"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', ' rbus ', " ", d)}"
 
 
 require ccsp_common.inc
@@ -43,26 +42,28 @@ CFLAGS_prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'highsplit', '-D_CM_
 CFLAGS_prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'highsplit', ' -I=${includedir}/sysevent ', '',d)} "
 LDFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'highsplit',' -lsysevent', '',d)}"
 
+CFLAGS_append =  "${@bb.utils.contains('DISTRO_FEATURES', 'lld_support', ' -DENABLE_LLD_SUPPORT ', '', d)}"
+
+
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', ' --enable-wanfailover ', '', d)}"
-
-
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '--enable-wanmgr', '', d)}"
+
 
 CFLAGS_append = " \
     -I=${includedir}/dbus-1.0 \
     -I=${libdir}/dbus-1.0/include \
     -I=${includedir}/ccsp \
     -I${STAGING_INCDIR}/cimplog \
+    -I=${includedir}/rbus \
     "
-CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', ' -I=${includedir}/rbus ', '', d)}"
 
 LDFLAGS_append = " \
     -ldbus-1 \
     -lprivilege \
     -lsyscfg \
+    -lrbus \
     "
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', ' -lrbus ', '', d)}"
 
 CFLAGS += " -Wall -Werror -Wextra "
 
