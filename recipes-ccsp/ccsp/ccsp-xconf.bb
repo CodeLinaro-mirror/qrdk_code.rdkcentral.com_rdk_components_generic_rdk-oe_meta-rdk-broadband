@@ -31,7 +31,7 @@ CFLAGS_append = " \
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
-LDFLAGS_append = " -ltelemetry_msgsender"
+LDFLAGS_append = " -ltelemetry_msgsender -lsecure_wrapper"
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' -lfw_upgrade', '', d)}"
 LDFLAGS_remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' -lcm_mgnt', '', d)}"
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
