@@ -3,7 +3,7 @@ SECTION = "libs"
 DESCRIPTION = "C client library for parodus2ccsp"
 HOMEPAGE = "https://github.com/Comcast/parodus2ccsp"
 
-DEPENDS = "cjson msgpack-c rdk-logger dbus ccsp-common-library trower-base64 cimplog wdmp-c nanomsg wrp-c libparodus breakpad breakpad-wrapper utopia libunpriv"
+DEPENDS = "cjson msgpack-c rdk-logger dbus ccsp-common-library trower-base64 cimplog wdmp-c nanomsg wrp-c libparodus breakpad breakpad-wrapper utopia libunpriv rbus"
 DEPENDS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " curl webcfg ", " ", d)}"
 DEPENDS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " curl ", " ", d)}"
 RDEPENDS_${PN} = "cjson msgpack-c rdk-logger trower-base64 cimplog wdmp-c nanomsg wrp-c libparodus utopia bash"
@@ -13,7 +13,7 @@ RDEPENDS_${PN}_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phas
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e"
 
-SRCREV = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "d26d16eb4a85348404259178a48bfcdc49830463", "29da1cd8254c03414c2781bbc9d3fd8e48151386", d)}"
+SRCREV = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "d26d16eb4a85348404259178a48bfcdc49830463", "e8d8cf578c9b05afe6a3191509c0ec98ecbc6d80" , d)}"
 
 do_configure_prepend () {
     (python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/source/arch/intel_usg/boards/rdkb_atom/config/comcast/WebpaAgent.xml ${S}/source/broadband/dm_pack_datamodel.c)
@@ -32,7 +32,7 @@ require ccsp_common.inc
 inherit breakpad-wrapper pythonnative breakpad-logmapper
 BREAKPAD_BIN_append = " webpa"
 
-LDFLAGS += "-lpthread -lcjson -lmsgpackc -ltrower-base64 -lnanomsg -lcimplog -lwdmp-c -lwrp-c -llibparodus -lm -luuid -lstdc++ -lbreakpadwrapper -lsysevent -lutapi -lutctx -lsyscfg -lprivilege"
+LDFLAGS += "-lpthread -lcjson -lmsgpackc -ltrower-base64 -lnanomsg -lcimplog -lwdmp-c -lwrp-c -llibparodus -lm -luuid -lstdc++ -lbreakpadwrapper -lsysevent -lutapi -lutctx -lsyscfg -lprivilege -lrbus -lrtMessage"
 LDFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " -lcurl -lwebcfg ", " ", d)}"
 LDFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " -lcurl ", " ", d)}"
 
@@ -47,6 +47,8 @@ CFLAGS_append = " \
 	-I${STAGING_INCDIR}/libparodus \
 	-I${STAGING_INCDIR}/dbus-1.0 \
 	-I${STAGING_LIBDIR}/dbus-1.0/include \
+	-I${STAGING_INCDIR}/rbus \
+	-I${STAGING_INCDIR}/rtmessage \
 	-I${STAGING_INCDIR}/cimplog \
         -I${STAGING_INCDIR}/trower-base64 \
 	"
