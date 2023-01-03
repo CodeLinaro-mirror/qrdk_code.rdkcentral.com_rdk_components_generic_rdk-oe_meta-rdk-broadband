@@ -4,7 +4,7 @@ HOMEPAGE = "http://github.com/belvedere-yocto/CcspCommonLibrary"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=19774cd4dd519f099bc404798ceeab19"
 
-DEPENDS = "dbus openssl rbus "
+DEPENDS = "dbus openssl rbus trower-base64"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS_class-native = ""
 
@@ -35,6 +35,7 @@ CFLAGS += " \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/rbus \
     -I${STAGING_INCDIR}/rtmessage \
+    -I${STAGING_INCDIR}/trower-base64 \
     "
 
 CFLAGS += " -Wall -Werror -Wextra "
@@ -44,6 +45,7 @@ LDFLAGS += " \
     -lrbuscore \
     -lrtMessage \
     -lrbus \
+    -ltrower-base64 \
     "
 
 do_configure_class-native () {
