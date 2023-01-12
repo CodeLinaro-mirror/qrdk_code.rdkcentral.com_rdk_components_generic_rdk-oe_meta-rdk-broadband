@@ -26,6 +26,7 @@ SRCREV_rdk-wifi-hal = "${AUTOREV}"
 SRCREV_FORMAT = "rdk-wifi-hal"
 
 EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'ONE_WIFIBUILD=true', '', d)}"
+EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git/src/"
@@ -33,6 +34,7 @@ S = "${WORKDIR}/git/src/"
 CFLAGS_append = " -I=${includedir}/ccsp "
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'passpoint', '-DFEATURE_SUPPORT_PASSPOINT', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', '-DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', '-DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
 
 ONEWIFI_CONFIG_FLAGS = " \
     -DCONFIG_LIBNL32 \

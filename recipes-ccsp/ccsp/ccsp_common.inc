@@ -40,6 +40,9 @@ CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'wifiStatsDisable', '
 #Add flags to support RadiusGreyList  if the feature is available.
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'RadiusGreyList', '-DFEATURE_SUPPORT_RADIUSGREYLIST', '', d)}"
 
+#Add flags to support ACL_SELFHEAL  if the feature is available.
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'ACL_SELFHEAL', '-DFEATURE_SUPPORT_ACL_SELFHEAL', '', d)}"
+
 # Add flags to support DFS if the feature is available.
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'dfs', '-DCONFIG_DFS', '', d)}"
 

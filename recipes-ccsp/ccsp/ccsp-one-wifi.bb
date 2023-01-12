@@ -60,6 +60,9 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIF
 CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'acl_nl_support', ' -DNL80211_ACL', '', d)}"
 
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
+
 LDFLAGS_append = " \
     -ltelemetry_msgsender \
     -lrbus \

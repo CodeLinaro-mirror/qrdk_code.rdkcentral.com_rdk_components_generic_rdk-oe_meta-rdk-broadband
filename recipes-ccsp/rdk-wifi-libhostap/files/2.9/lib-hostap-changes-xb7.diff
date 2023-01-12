@@ -241,15 +241,21 @@ index c85a28d..9952e56 100755
  			hostapd_logger(hapd, mgmt->sa,
  				       HOSTAPD_MODULE_IEEE80211,
  				       HOSTAPD_LEVEL_INFO,
-@@ -4003,6 +4031,7 @@ static void handle_assoc(struct hostapd_data *hapd,
+@@ -4003,8 +4031,13 @@ static void handle_assoc(struct hostapd_data *hapd,
  			send_deauth(hapd, mgmt->sa,
  				    WLAN_REASON_CLASS2_FRAME_FROM_NONAUTH_STA);
  			return;
 +#endif /* CONFIG_DRIVER_BRCM */
  		}
  	}
- 
-@@ -4426,6 +4455,7 @@ static int handle_action(struct hostapd_data *hapd,
+
++	sta->assoc_req = os_malloc(len); 
++	os_memcpy(sta->assoc_req, (u8 *)mgmt, len);
++	sta->assoc_req_len = len;
++
+	if ((fc & WLAN_FC_RETRY) &&
+	    sta->last_seq_ctrl != WLAN_INVALID_MGMT_SEQ &&
+@@ -4426,6 +4459,7 @@ static int handle_action(struct hostapd_data *hapd,
  		return 0;
  	}
  
@@ -257,7 +263,7 @@ index c85a28d..9952e56 100755
  #ifdef CONFIG_IEEE80211W
  	if (sta && (sta->flags & WLAN_STA_MFP) &&
  	    !(mgmt->frame_control & host_to_le16(WLAN_FC_ISWEP)) &&
-@@ -4437,6 +4467,7 @@ static int handle_action(struct hostapd_data *hapd,
+@@ -44437,6 +4471,7 @@ static int handle_action(struct hostapd_data *hapd,
  		return 0;
  	}
  #endif /* CONFIG_IEEE80211W */
