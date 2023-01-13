@@ -1645,45 +1645,46 @@ index 732124f..fe69007 100644
  			wpa_printf(MSG_ERROR,
  				   "Invalid control channel for 6 GHz band");
 diff --git a/source/hostap-2.10/src/common/ieee802_11_common.c b/source/hostap-2.10/src/common/ieee802_11_common.c
-index 9e348a2..ab5381a 100644
+index 3dfe375..18bdd5d 100644
 --- a/source/hostap-2.10/src/common/ieee802_11_common.c
 +++ b/source/hostap-2.10/src/common/ieee802_11_common.c
-@@ -1071,13 +1071,33 @@ enum hostapd_hw_mode ieee80211_freq_to_channel_ext(unsigned int freq,
- 		*channel = (freq - 5950) / 5;
+@@ -1046,6 +1046,27 @@ enum hostapd_hw_mode ieee80211_freq_to_channel_ext(unsigned int freq,
  		return HOSTAPD_MODE_IEEE80211A;
  	}
-+#ifdef CONFIG_DRIVER_BRCM 
-+	/* New 6GHz channelization - May 2020 */
-+	if (freq == 5935) {
-+		*channel = 2;
-+		*op_class = 131;
-+		return HOSTAPD_MODE_IEEE80211A;
-+	} else if (freq >= 5955 && freq <= 7125) {
-+		int bw;
-+		u8 idx;
-+		if (freq % 5)
-+			return NUM_HOSTAPD_MODES;
-+		idx = (freq - 5950) / 5;
-+		bw = center_idx_to_bw_6ghz(idx);
-+		if (bw < 0)
-+			return NUM_HOSTAPD_MODES;
  
-+		*channel = idx;
-+		*op_class = 131 + bw;
-+		return HOSTAPD_MODE_IEEE80211A;
-+	}
++#ifdef CONFIG_DRIVER_BRCM 
++    /* New 6GHz channelization - May 2020 */
++    if (freq == 5935) {
++        *channel = 2;
++        *op_class = 131;
++        return HOSTAPD_MODE_IEEE80211A;
++    } else if (freq >= 5955 && freq <= 7125) {
++        int bw;
++        u8 idx;
++        if (freq % 5)
++            return NUM_HOSTAPD_MODES;
++        idx = (freq - 5950) / 5;
++        bw = center_idx_to_bw_6ghz(idx);
++        if (bw < 0)
++            return NUM_HOSTAPD_MODES;
++
++        *channel = idx;
++        *op_class = 131 + bw;
++        return HOSTAPD_MODE_IEEE80211A;
++    }
 +#else
- 	if (freq == 5935) {
- 		*op_class = 136;
- 		*channel = (freq - 5925) / 5;
+ 	if (freq > 5950 && freq <= 7115) {
+ 		if ((freq - 5950) % 5)
+ 			return NUM_HOSTAPD_MODES;
+@@ -1078,6 +1099,7 @@ enum hostapd_hw_mode ieee80211_freq_to_channel_ext(unsigned int freq,
  		return HOSTAPD_MODE_IEEE80211A;
  	}
--
+ 
 +#endif /* CONFIG_DRIVER_BRCM */
  	/* 56.16 GHz, channel 1..6 */
  	if (freq >= 56160 + 2160 * 1 && freq <= 56160 + 2160 * 6) {
  		if (sec_channel)
-@@ -1454,7 +1474,13 @@ static int ieee80211_chan_to_freq_global(u8 op_class, u8 chan)
+@@ -1454,7 +1476,13 @@ static int ieee80211_chan_to_freq_global(u8 op_class, u8 chan)
  	case 135: /* UHB channels, 80+80 MHz: 7, 23, 39.. */
  		if (chan < 1 || chan > 233)
  			return -1;
@@ -1698,7 +1699,7 @@ index 9e348a2..ab5381a 100644
  	case 136: /* UHB channels, 20 MHz: 2 */
  		if (chan == 2)
  			return 5935;
-@@ -2272,7 +2298,11 @@ int center_idx_to_bw_6ghz(u8 idx)
+@@ -2272,7 +2300,11 @@ int center_idx_to_bw_6ghz(u8 idx)
  
  bool is_6ghz_freq(int freq)
  {
@@ -1711,7 +1712,7 @@ index 9e348a2..ab5381a 100644
  		return false;
  
  	if (freq == 5935)
-@@ -2297,13 +2327,24 @@ bool is_6ghz_psc_frequency(int freq)
+@@ -2297,13 +2329,24 @@ bool is_6ghz_psc_frequency(int freq)
  
  	if (!is_6ghz_freq(freq) || freq == 5935)
  		return false;
