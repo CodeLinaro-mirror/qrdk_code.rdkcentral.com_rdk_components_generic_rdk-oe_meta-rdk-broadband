@@ -6,26 +6,26 @@ SUMMARY = "USP Pa component"
 DESCRIPTION = "Agent for USP protocol"
 DEPENDS = "openssl sqlite3 curl zlib ccsp-common-library mosquitto libwebsockets"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=b612eeb51efab2203cc9a982e9530c8a"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=706c802a2e6a2d6ca6322c8497ec7f65"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
 
 # OBUSPA is the reference USP agent codebase
-OBUSPA_REL="5.0.0"
-SRC_URI = "https://github.com/BroadbandForum/obuspa/archive/v${OBUSPA_REL}-master.tar.gz;name=obuspa"
-SRC_URI[obuspa.md5sum] = "67f30b5d99b7280beff900d9b5d9f02f"
+OBUSPA_REL="7.0.0"
+SRC_URI = "https://github.com/BroadbandForum/obuspa/releases/download/v${OBUSPA_REL}-master/obuspa-${OBUSPA_REL}.tar.gz;name=obuspa"
+SRC_URI[obuspa.sha256sum] = "28186decb8764343e550dc8c7d12fbb07830dcac1c09a9bf723da7ee82182ab4"
 
 # USPPA is the RDK specializations
 SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=main;name=usppa"
-SRCREV_usppa = "81738960df8af349a0532d9b989dd14a671ed5bb"
+SRCREV_usppa = "201b5ac1cc8bd424ce1b7757b9f31772fda3a35f"
 
 
 # Patches for OBUSPA
-SRC_URI += "file://patches/remove_duplicate_min_max_define.patch"
+#SRC_URI += "file://patches/remove_duplicate_min_max_define.patch"
 
 # Configure options for OBUSPA
-EXTRA_OECONF += "--enable-websockets --enable-mqtt"
+EXTRA_OECONF += "--disable-websockets --enable-mqtt"
 
 # Configuration files for target
 SRC_URI += "file://conf/usp_factory_reset.conf"
@@ -37,7 +37,7 @@ SRC_URI += "file://usp-pa.service"
 
 
 # Make sure our source directory (for the build) matches the directory structure in the tarball
-S = "${WORKDIR}/obuspa-${OBUSPA_REL}-master"
+S = "${WORKDIR}/obuspa-${OBUSPA_REL}"
 
 # Specify the rules to use to build and install this package
 inherit autotools pkgconfig systemd
