@@ -168,6 +168,7 @@ do_install_append () {
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/partners_defaults.json ${D}/etc/partners_defaults.json
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/rfcDefaults.json ${D}/etc/rfcDefaults.json
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/ScheduleAutoReboot.sh ${D}/etc/ScheduleAutoReboot.sh
+    install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/restart_services.sh ${D}/etc/restart_services.sh
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/AutoReboot.sh ${D}/etc/AutoReboot.sh
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/RebootCondition.sh ${D}/etc/RebootCondition.sh
 }
