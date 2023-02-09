@@ -27,7 +27,6 @@ CFLAGS_append_dunfell = " -Wno-format-overflow -Wno-format-truncation -Wno-addre
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/OneWifi;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=OneWifi"
 
-DEPENDS_append = " opensync-2.4.1"
 LDFLAGS_append = " -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync/lib -low -losw -lopensync"
 
 SRCREV_OneWifi = "${AUTOREV}"
