@@ -53,6 +53,8 @@ CFLAGS_append = " \
 "
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
+CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
+
 LDFLAGS_append = " \
     -ltelemetry_msgsender \
     -lrbus \
