@@ -88,6 +88,8 @@ FILES_${PN} += " \
     ${exec_prefix}/bin/precheck.sh \
 "
 
-
+FILES_${PN}-diag = "\
+/${bindir}/gfo_diag \
+"
 
 
