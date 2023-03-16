@@ -1,7 +1,7 @@
 require ccsp_common.inc
 
 DEPENDS_append = " ccsp-common-library utopia libparodus"
-DEPENDS_append = " opensync-2.4.1"
+DEPENDS_append = " ${@bb.utils.contains("DISTRO_FEATURES", "Opensync_4.4", "opensync-4.4.0", "opensync-2.4.1", d)}"
 DEPENDS_append = " hal-wifi hal-cm  hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi avro-c "
 RDEPENDS_${PN}_append = " libparodus"
 

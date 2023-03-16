@@ -27,7 +27,7 @@ CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-address-of-pa
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/OneWifi;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=OneWifi"
 
-LDFLAGS_append = " -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync/lib -low -losw -lopensync"
+LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'Opensync_4.4', ' -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync_44/lib -low -losw -lopensync', ' -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync/lib -low -losw -lopensync', d)}"
 
 SRCREV_OneWifi = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"

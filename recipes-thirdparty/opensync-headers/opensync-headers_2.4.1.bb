@@ -5,9 +5,11 @@ LICENSE = "BSD-3-Clause"
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
 inherit python3native
-OS_CORE_VERSION="2.4.2"
+OS_CORE_VERSION="${@bb.utils.contains('DISTRO_FEATURES','Opensync_4.4.0','4.4.0','2.4.2',d)}"
 
-SRC_URI += " ${RDK_COMPONENTS_ROOT_GIT}/generic/opensync-core/${OS_CORE_VERSION}/generic;protocol=${RDK_GIT_PROTOCOL};name=opensync-headers;branch=${RDK_GIT_BRANCH};destsuffix=git/os-headers"
+OS_CORE_GIT_2.4.1="${RDK_COMPONENTS_ROOT_GIT}/generic/opensync-core/${OS_CORE_VERSION}/generic;protocol=${RDK_GIT_PROTOCOL};name=opensync-headers;branch=${RDK_GIT_BRANCH};destsuffix=git/os-headers"
+OS_CORE_GIT_4.4.0="${RDK_COMPONENTS_ROOT_GIT}/generic/opensync-core/generic;protocol=${RDK_GIT_PROTOCOL};name=opensync-headers;branch=osync_4.4.0;destsuffix=git/os-headers"
+SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES','Opensync_4.4.0', '${OS_CORE_GIT_4.4.0}', '${OS_CORE_GIT_2.4.1}', d)}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git/os-headers"
