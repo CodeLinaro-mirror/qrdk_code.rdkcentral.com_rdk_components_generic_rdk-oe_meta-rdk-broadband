@@ -15,6 +15,11 @@ inherit autotools pkgconfig
 SRC_URI = "${RDKB_CCSP_ROOT_GIT}/rdk-wifi-libhostap;protocol=${RDK_GIT_PROTOCOL};branch=${RDK_GIT_BRANCH};name=rdk-wifi-libhostap"
 SRCREV_rdk-wifi-libhostap = "${AUTOREV}"
 SRCREV_FORMAT = "rdk-wifi-libhostap"
+def getowe_defined(d):
+    if d.getVar('MACHINE_IMAGE_NAME', True) in [ 'CGM4981COM' ]:
+        return '-DCONFIG_OWE'
+    else:
+        return ''
 
 CFLAGS_append = " \
     -DCONFIG_LIBNL32 \
@@ -24,10 +29,10 @@ CFLAGS_append = " \
     -DCONFIG_INTERWORKING \
     -DCONFIG_ACS \
     -DFEATURE_SUPPORT_RADIUSGREYLIST \
+    ${@getowe_defined(d)} \
 "
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '-DRDK_ONEWIFI', '', d)}"
-
 #Lib hostap compilation changes for compiling libhostap.so
 #!!This has to be first patch!!
 SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'file://2.10/oneWifiLib.patch file://2.10/greylist.patch file://2.10/broadcom.patch file://2.10/one_wifi_radius_greylist.patch',\ 
