@@ -10,8 +10,26 @@ mount-copybind /tmp/dropbear /etc/dropbear/
 
 #added a delay to start the dropbear
 sleep 20
-systemctl start ntpd
+#systemctl start ntpd
 
 # Start dropbear with read-write mount of /et/dropbear and listen on all interfaces
 
 dropbear -v -R -B -p :22
+
+#rdm service to be started once the device has network and Time is updated
+# -q otion in ntpd : Exit the ntpd just after the first time the clock is set.
+
+/usr/sbin/ntpd -u ntp:ntp -p /run/ntpd.pid -l /rdklogs/logs/ntpLog.log -c /tmp/ntp.conf -g -q
+
+#File needed to start the apps-rdm service
+if [ -f /nvram/ptestDnldLocation ]; then
+	url=$(cat /nvram/ptTestDnldLocation)
+	if [ ! -z "$url" ]; then
+	    echo "$url" > /tmp/.xconfssrdownloadurl
+	else
+	    echo "https://dac15cdlserver.ae.ccp.xcal.tv/Images" > /tmp/.xconfssrdownloadurl
+	fi
+else
+       echo "https://dac15cdlserver.ae.ccp.xcal.tv/Images" > /tmp/.xconfssrdownloadurl
+fi
+
