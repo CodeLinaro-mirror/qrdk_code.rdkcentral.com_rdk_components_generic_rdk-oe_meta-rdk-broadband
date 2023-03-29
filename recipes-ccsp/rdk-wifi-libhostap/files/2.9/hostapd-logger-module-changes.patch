@@ -35,54 +35,36 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
 ===================================================================
 --- git.orig/source/hostap-2.9/src/utils/wpa_debug.c
 +++ git/source/hostap-2.9/src/utils/wpa_debug.c
-@@ -209,8 +209,46 @@ void wpa_debug_close_linux_tracing(void)
+@@ -209,8 +209,28 @@ void wpa_debug_close_linux_tracing(void)
  void wpa_printf(int level, const char *fmt, ...)
  {
  	va_list ap;
-+	FILE *fpg = NULL;
++	static FILE *fpg = NULL;
++	char buff[4096] = {0};
  
  	va_start(ap, fmt);
 +
 +	if ((access("/nvram/wifiLibhostapDbg", R_OK)) == 0) {
-+		fpg = fopen("/tmp/wifilibhostap", "a+");
++		vsnprintf(&buff[strlen(buff)], sizeof(buff) - strlen(buff), fmt, ap);
++		va_end(ap);
++		strcat(buff, "\n");
++
 +		if (fpg == NULL) {
-+			return;
++			fpg = fopen("/tmp/wifilibhostap", "a+");
++			if (fpg == NULL) {
++				return;
++			}
 +		}
 +
-+		vfprintf(fpg, fmt, ap);
-+		va_end(ap);
-+		fprintf(fpg, "\n");
++		fputs(buff, fpg);
 +		fflush(fpg);
-+		fclose(fpg);
 +		va_start(ap, fmt);
-+	} else {
-+		switch (level) {
-+			case MSG_INFO:
-+			case MSG_WARNING:
-+			case MSG_ERROR:
-+				fpg = fopen("/rdklogs/logs/wifilibhostap.txt", "a+");
-+				if (fpg == NULL) {
-+					return;
-+				}
-+				vfprintf(fpg, fmt, ap);
-+				va_end(ap);
-+				fprintf(fpg, "\n");
-+				fflush(fpg);
-+				fclose(fpg);
-+				va_start(ap, fmt);
-+			break;
-+			case MSG_EXCESSIVE:
-+			case MSG_MSGDUMP:
-+			case MSG_DEBUG:
-+			default:
-+			break;
-+		}
 +	}
 +
  	if (level >= wpa_debug_level) {
  #ifdef CONFIG_ANDROID_LOG
  		__android_log_vprint(wpa_to_android_level(level),
-@@ -223,6 +261,10 @@ void wpa_printf(int level, const char *f
+@@ -223,6 +243,10 @@ void wpa_printf(int level, const char *f
  #endif /* CONFIG_DEBUG_SYSLOG */
  		wpa_debug_print_timestamp();
  #ifdef CONFIG_DEBUG_FILE
@@ -93,7 +75,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  		if (out_file) {
  			vfprintf(out_file, fmt, ap);
  			fprintf(out_file, "\n");
-@@ -257,6 +299,28 @@ static void _wpa_hexdump(int level, cons
+@@ -257,6 +281,28 @@ static void _wpa_hexdump(int level, cons
  			 size_t len, int show)
  {
  	size_t i;
@@ -122,7 +104,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  
  #ifdef CONFIG_DEBUG_LINUX_TRACING
  	if (wpa_debug_tracing_file != NULL) {
-@@ -350,6 +414,10 @@ static void _wpa_hexdump(int level, cons
+@@ -350,6 +396,10 @@ static void _wpa_hexdump(int level, cons
  #endif /* CONFIG_DEBUG_SYSLOG */
  	wpa_debug_print_timestamp();
  #ifdef CONFIG_DEBUG_FILE
@@ -133,7 +115,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  	if (out_file) {
  		fprintf(out_file, "%s - hexdump(len=%lu):",
  			title, (unsigned long) len);
-@@ -512,7 +580,6 @@ void wpa_hexdump_ascii(int level, const
+@@ -512,7 +562,6 @@ void wpa_hexdump_ascii(int level, const
  	_wpa_hexdump_ascii(level, title, buf, len, 1);
  }
  
@@ -141,7 +123,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  void wpa_hexdump_ascii_key(int level, const char *title, const void *buf,
  			   size_t len)
  {
-@@ -550,6 +617,13 @@ int wpa_debug_reopen_file(void)
+@@ -550,6 +599,13 @@ int wpa_debug_reopen_file(void)
  int wpa_debug_open_file(const char *path)
  {
  #ifdef CONFIG_DEBUG_FILE
@@ -155,7 +137,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  	int out_fd;
  
  	if (!path)
-@@ -845,10 +919,10 @@ void hostapd_logger(void *ctx, const u8
+@@ -845,10 +901,10 @@ void hostapd_logger(void *ctx, const u8
  	if (hostapd_logger_cb)
  		hostapd_logger_cb(ctx, addr, module, level, buf, len);
  	else if (addr)
