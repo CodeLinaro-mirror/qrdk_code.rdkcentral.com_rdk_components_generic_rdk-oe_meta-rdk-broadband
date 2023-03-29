@@ -777,7 +777,7 @@ Index: git/source/hostap-2.10/src/ap/ap_drv_ops.c
 ===================================================================
 --- git.orig/source/hostap-2.10/src/ap/ap_drv_ops.c
 +++ git/source/hostap-2.10/src/ap/ap_drv_ops.c
-@@ -742,6 +742,14 @@ int hostapd_drv_sta_deauth(struct hostap
+@@ -753,6 +753,14 @@ int hostapd_drv_sta_deauth(struct hostap
  					reason);
  }
  
@@ -796,7 +796,7 @@ Index: git/source/hostap-2.10/src/ap/ap_drv_ops.h
 ===================================================================
 --- git.orig/source/hostap-2.10/src/ap/ap_drv_ops.h
 +++ git/source/hostap-2.10/src/ap/ap_drv_ops.h
-@@ -102,6 +102,8 @@ int hostapd_drv_send_mlme(struct hostapd
+@@ -106,6 +106,8 @@ int hostapd_drv_send_mlme(struct hostapd
  			  int no_encrypt);
  int hostapd_drv_sta_deauth(struct hostapd_data *hapd,
  			   const u8 *addr, int reason);
@@ -1273,7 +1273,7 @@ Index: git/source/hostap-2.10/src/utils/wpa_debug.c
 ===================================================================
 --- git.orig/source/hostap-2.10/src/utils/wpa_debug.c
 +++ git/source/hostap-2.10/src/utils/wpa_debug.c
-@@ -210,6 +210,46 @@ void wpa_printf(int level, const char *f
+@@ -210,6 +210,24 @@ void wpa_printf(int level, const char *f
  {
  	va_list ap;
  
@@ -1293,34 +1293,12 @@ Index: git/source/hostap-2.10/src/utils/wpa_debug.c
 +        fflush(fpg);
 +        fclose(fpg);
 +        va_start(ap, fmt);
-+    } else {
-+        switch (level) {
-+            case MSG_INFO:
-+            case MSG_WARNING:
-+            case MSG_ERROR:
-+                fpg = fopen("/rdklogs/logs/wifilibhostap.txt", "a+");
-+                if (fpg == NULL) {
-+                    return;
-+                }
-+                vfprintf(fpg, fmt, ap);
-+                va_end(ap);
-+                fprintf(fpg, "\n");
-+                fflush(fpg);
-+                fclose(fpg);
-+                va_start(ap, fmt);
-+            break;
-+            case MSG_EXCESSIVE:
-+            case MSG_MSGDUMP:
-+            case MSG_DEBUG:
-+            default:
-+            break;
-+        }
 +    }
 +
  	if (level >= wpa_debug_level) {
  #ifdef CONFIG_ANDROID_LOG
  		va_start(ap, fmt);
-@@ -226,6 +266,10 @@ void wpa_printf(int level, const char *f
+@@ -226,6 +244,10 @@ void wpa_printf(int level, const char *f
  #endif /* CONFIG_DEBUG_SYSLOG */
  		wpa_debug_print_timestamp();
  #ifdef CONFIG_DEBUG_FILE
@@ -1331,7 +1309,7 @@ Index: git/source/hostap-2.10/src/utils/wpa_debug.c
  		if (out_file) {
  			va_start(ap, fmt);
  			vfprintf(out_file, fmt, ap);
-@@ -259,7 +303,28 @@ static void _wpa_hexdump(int level, cons
+@@ -259,7 +281,28 @@ static void _wpa_hexdump(int level, cons
  			 size_t len, int show, int only_syslog)
  {
  	size_t i;
@@ -1360,7 +1338,7 @@ Index: git/source/hostap-2.10/src/utils/wpa_debug.c
  #ifdef CONFIG_DEBUG_LINUX_TRACING
  	if (wpa_debug_tracing_file != NULL) {
  		fprintf(wpa_debug_tracing_file,
-@@ -353,6 +418,10 @@ static void _wpa_hexdump(int level, cons
+@@ -353,6 +396,10 @@ static void _wpa_hexdump(int level, cons
  #endif /* CONFIG_DEBUG_SYSLOG */
  	wpa_debug_print_timestamp();
  #ifdef CONFIG_DEBUG_FILE
@@ -1371,7 +1349,7 @@ Index: git/source/hostap-2.10/src/utils/wpa_debug.c
  	if (out_file) {
  		fprintf(out_file, "%s - hexdump(len=%lu):",
  			title, (unsigned long) len);
-@@ -551,6 +620,13 @@ int wpa_debug_reopen_file(void)
+@@ -551,6 +598,13 @@ int wpa_debug_reopen_file(void)
  int wpa_debug_open_file(const char *path)
  {
  #ifdef CONFIG_DEBUG_FILE
@@ -1385,7 +1363,7 @@ Index: git/source/hostap-2.10/src/utils/wpa_debug.c
  	int out_fd;
  
  	if (!path)
-@@ -846,10 +922,10 @@ void hostapd_logger(void *ctx, const u8
+@@ -846,10 +900,10 @@ void hostapd_logger(void *ctx, const u8
  	if (hostapd_logger_cb)
  		hostapd_logger_cb(ctx, addr, module, level, buf, len);
  	else if (addr)
