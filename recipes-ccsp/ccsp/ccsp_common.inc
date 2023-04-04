@@ -115,6 +115,9 @@ CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_configurable_w
 # Adding flag for vendor_class_id
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'vendor_class_id_feature', ' -DVENDOR_CLASS_ID ', '', d)}"
 
+# Adding flag for Wan Manager Unification 
+CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'WanManagerUnificationEnable', '-DWAN_MANAGER_UNIFICATION_ENABLED', '', d)}"
+
 FILES_${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"

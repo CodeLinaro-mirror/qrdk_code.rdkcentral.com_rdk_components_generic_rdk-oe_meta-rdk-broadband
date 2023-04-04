@@ -19,6 +19,9 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)}
 
+export ISRDKB_WAN_UNIFICATION_ENABLED = "${@bb.utils.contains('DISTRO_FEATURES', 'WanManagerUnificationEnable','true','false', d)}"
+export XML_NAME = "${@bb.utils.contains('ISRDKB_WAN_UNIFICATION_ENABLED', 'true','RdkWanManager_v2.xml','RdkWanManager.xml', d)}"
+
 CFLAGS_append = " -fcommon"
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
@@ -36,23 +39,23 @@ LDFLAGS += " -lprivilege"
 
 do_compile_prepend () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', 'true', 'false', d)}; then
-    sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/RdkWanManager.xml
+    sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/${XML_NAME}
     fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'RbusBuildFlagEnable', 'true', 'false', d)}; then
-    sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/RdkWanManager.xml
+    sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/${XML_NAME}
     fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', 'true', 'false', d)}; then
-        (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/RdkWanManager.xml ${S}/source/WanManager/dm_pack_datamodel.c)
+        (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/${XML_NAME} ${S}/source/WanManager/dm_pack_datamodel.c)
     fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', 'true', 'false', d)}; then
-    sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/RdkWanManager.xml
+    sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/${XML_NAME}
     fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'RbusBuildFlagEnable', 'true', 'false', d)}; then
-    sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/RdkWanManager.xml
+    sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/${XML_NAME}
     fi
 
 }
@@ -62,7 +65,7 @@ do_install_append () {
     install -d ${D}${exec_prefix}/rdk/wanmanager
     ln -sf ${bindir}/wanmanager ${D}${exec_prefix}/rdk/wanmanager/wanmanager
     ln -sf ${bindir}/netmonitor ${D}${exec_prefix}/rdk/wanmanager/netmonitor
-    install -m 644 ${S}/config/RdkWanManager.xml ${D}/usr/rdk/wanmanager
+    install -m 644 ${S}/config/${XML_NAME} ${D}/usr/rdk/wanmanager/RdkWanManager.xml
 }
 
 
