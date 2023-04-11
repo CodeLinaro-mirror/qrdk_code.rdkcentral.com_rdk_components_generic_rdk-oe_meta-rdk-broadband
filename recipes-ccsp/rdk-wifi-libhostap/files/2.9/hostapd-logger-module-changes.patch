@@ -31,36 +31,54 @@ Index: git/source/hostap-2.9/src/Makefile.am
  #Needed to compile
  #AM_CFLAGS += -DCONFIG_ECC
  
-Index: git/source/hostap-2.9/src/utils/wpa_debug.c
-===================================================================
---- git.orig/source/hostap-2.9/src/utils/wpa_debug.c
-+++ git/source/hostap-2.9/src/utils/wpa_debug.c
-@@ -209,8 +209,24 @@ void wpa_debug_close_linux_tracing(void)
+diff --git a/source/hostap-2.9/src/ap/accounting.c b/source/hostap-2.9/src/ap/accounting.c
+index 9fc1886..5a8974e 100755
+--- a/source/hostap-2.9/src/ap/accounting.c
++++ b/source/hostap-2.9/src/ap/accounting.c
+@@ -185,6 +185,8 @@ static int accounting_sta_update_stats(struct hostapd_data *hapd,
+ 		sta->last_tx_bytes_lo = data->tx_bytes;
+ 	}
+ 
++#if 0
++//Disabling the below print temporarily as stats features are not completely implemented and below print reports incorrect value
+ 	hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_RADIUS,
+ 		       HOSTAPD_LEVEL_DEBUG,
+ 		       "updated TX/RX stats: rx_bytes=%llu [%u:%u] tx_bytes=%llu [%u:%u] bytes_64bit=%d",
+@@ -193,6 +195,7 @@ static int accounting_sta_update_stats(struct hostapd_data *hapd,
+ 		       data->tx_bytes, sta->last_tx_bytes_hi,
+ 		       sta->last_tx_bytes_lo,
+ 		       data->bytes_64bit);
++#endif
+ 
+ 	return 0;
+ }
+diff --git a/source/hostap-2.9/src/utils/wpa_debug.c b/source/hostap-2.9/src/utils/wpa_debug.c
+index c336e53..2a0f5ba 100755
+--- a/source/hostap-2.9/src/utils/wpa_debug.c
++++ b/source/hostap-2.9/src/utils/wpa_debug.c
+@@ -209,6 +209,21 @@ void wpa_debug_close_linux_tracing(void)
  void wpa_printf(int level, const char *fmt, ...)
  {
  	va_list ap;
-+	static FILE *fpg = NULL;
++	FILE *fpg = NULL;
++
++	if ((access("/nvram/wifiLibhostapDbg", R_OK)) == 0) {
++		fpg = fopen("/tmp/wifilibhostap", "a+");
++		if (fpg == NULL) {
++			return;
++		}
++
++		va_start(ap, fmt);
++	        vfprintf(fpg, fmt, ap);
++	        va_end(ap);
++	        fprintf(fpg, "\n");
++		fflush(fpg);
++	        fclose(fpg);
++	}
  
  	va_start(ap, fmt);
-+
-+    if ((access("/nvram/wifiLibhostapDbg", R_OK)) == 0) {
-+        fpg = fopen("/tmp/wifilibhostap", "a+");
-+        if (fpg == NULL) {
-+            return;
-+        }
-+
-+        vfprintf(fpg, fmt, ap);
-+        va_end(ap);
-+        fprintf(fpg, "\n");
-+        fflush(fpg);
-+        fclose(fpg);
-+        va_start(ap, fmt);
-+    }
-+
  	if (level >= wpa_debug_level) {
- #ifdef CONFIG_ANDROID_LOG
- 		__android_log_vprint(wpa_to_android_level(level),
-@@ -223,6 +239,10 @@ void wpa_printf(int level, const char *f
+@@ -223,6 +238,10 @@ void wpa_printf(int level, const char *fmt, ...)
  #endif /* CONFIG_DEBUG_SYSLOG */
  		wpa_debug_print_timestamp();
  #ifdef CONFIG_DEBUG_FILE
@@ -71,7 +89,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  		if (out_file) {
  			vfprintf(out_file, fmt, ap);
  			fprintf(out_file, "\n");
-@@ -257,6 +277,28 @@ static void _wpa_hexdump(int level, cons
+@@ -257,6 +276,28 @@ static void _wpa_hexdump(int level, const char *title, const u8 *buf,
  			 size_t len, int show)
  {
  	size_t i;
@@ -100,7 +118,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  
  #ifdef CONFIG_DEBUG_LINUX_TRACING
  	if (wpa_debug_tracing_file != NULL) {
-@@ -350,6 +392,10 @@ static void _wpa_hexdump(int level, cons
+@@ -350,6 +391,10 @@ static void _wpa_hexdump(int level, const char *title, const u8 *buf,
  #endif /* CONFIG_DEBUG_SYSLOG */
  	wpa_debug_print_timestamp();
  #ifdef CONFIG_DEBUG_FILE
@@ -111,7 +129,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  	if (out_file) {
  		fprintf(out_file, "%s - hexdump(len=%lu):",
  			title, (unsigned long) len);
-@@ -512,7 +558,6 @@ void wpa_hexdump_ascii(int level, const
+@@ -512,7 +557,6 @@ void wpa_hexdump_ascii(int level, const char *title, const void *buf,
  	_wpa_hexdump_ascii(level, title, buf, len, 1);
  }
  
@@ -119,7 +137,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  void wpa_hexdump_ascii_key(int level, const char *title, const void *buf,
  			   size_t len)
  {
-@@ -550,6 +595,13 @@ int wpa_debug_reopen_file(void)
+@@ -550,6 +594,13 @@ int wpa_debug_reopen_file(void)
  int wpa_debug_open_file(const char *path)
  {
  #ifdef CONFIG_DEBUG_FILE
@@ -133,7 +151,7 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  	int out_fd;
  
  	if (!path)
-@@ -845,10 +897,10 @@ void hostapd_logger(void *ctx, const u8
+@@ -845,10 +896,10 @@ void hostapd_logger(void *ctx, const u8 *addr, unsigned int module, int level,
  	if (hostapd_logger_cb)
  		hostapd_logger_cb(ctx, addr, module, level, buf, len);
  	else if (addr)
@@ -146,24 +164,3 @@ Index: git/source/hostap-2.9/src/utils/wpa_debug.c
  	bin_clear_free(buf, buflen);
  }
  #endif /* CONFIG_NO_HOSTAPD_LOGGER */
-Index: git/source/hostap-2.9/src/ap/accounting.c
-===================================================================
---- git.orig/source/hostap-2.9/src/ap/accounting.c
-+++ git/source/hostap-2.9/src/ap/accounting.c
-@@ -185,6 +185,8 @@ static int accounting_sta_update_stats(s
- 		sta->last_tx_bytes_lo = data->tx_bytes;
- 	}
- 
-+#if 0
-+//Disabling the below print temporarily as stats features are not completely implemented and below print reports incorrect value
- 	hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_RADIUS,
- 		       HOSTAPD_LEVEL_DEBUG,
- 		       "updated TX/RX stats: rx_bytes=%llu [%u:%u] tx_bytes=%llu [%u:%u] bytes_64bit=%d",
-@@ -193,6 +195,7 @@ static int accounting_sta_update_stats(s
- 		       data->tx_bytes, sta->last_tx_bytes_hi,
- 		       sta->last_tx_bytes_lo,
- 		       data->bytes_64bit);
-+#endif
- 
- 	return 0;
- }
