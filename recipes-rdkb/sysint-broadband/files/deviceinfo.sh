@@ -21,6 +21,7 @@ usage()
     echo "       -eb_disable: ETHBACKHAUL DISABLE"
     echo "       -mode: Current Operational Mode - Gateway or ExtenderMode"
     echo "       -off_chan: Off channel scan status(enabled/disabled)"
+    echo "       -wanmode: Device WAN Mode (DOCSIS/Ethernet)"
     exit 1
 }
 
@@ -130,6 +131,16 @@ case $1 in
         echo "$off_chan_status"
         shift 1
         ;;
+    
+    -wanmode)
+	 mode=`syscfg get eth_wan_enabled`
+	 if [ "$mode" = "true" ]; then
+	     echo "Ethernet"
+	 else
+	     echo "DOCSIS"
+	 fi
+	 shift 1
+	 ;;
     *)
         usage;
         ;;
