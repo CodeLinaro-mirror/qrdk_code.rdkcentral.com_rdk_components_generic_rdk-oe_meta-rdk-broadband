@@ -20,7 +20,7 @@ SUMMARY = "This receipe provides gateway manager support."
 SECTION = "console/utils"
 LICENSE = "CLOSED"
 
-DEPENDS = "ccsp-common-library dbus rdk-logger hal-platform util-linux utopia libunpriv jansson rbus webconfig-framework curl trower-base64 msgpack-c"
+DEPENDS = "ccsp-common-library dbus rdk-logger hal-platform util-linux utopia libunpriv jansson rbus webconfig-framework curl trower-base64 msgpack-c telemetry"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
@@ -71,6 +71,7 @@ LDFLAGS_append = " \
     -lrt \
     -lpthread \
     -lbreakpadwrapper \
+    -ltelemetry_msgsender \
     "
 do_install_append () {
     # Config files and scripts
