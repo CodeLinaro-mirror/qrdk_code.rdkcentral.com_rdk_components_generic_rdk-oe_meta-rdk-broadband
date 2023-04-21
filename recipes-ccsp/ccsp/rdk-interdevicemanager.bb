@@ -47,6 +47,8 @@ do_install_append () {
     #Install systemd unit.
     install -d ${D}${systemd_unitdir}/system
     install -D -m 0644 ${S}/systemd_units/RdkInterDeviceManager.service ${D}${systemd_unitdir}/system/RdkInterDeviceManager.service
+    install -d -m 0755 ${D}${sysconfdir}/idm
+    install -D -m 0755 ${S}/source/InterDeviceManager/idm_recovery.sh ${D}${sysconfdir}/idm/idm_recovery.sh
 }
 
 
@@ -54,6 +56,7 @@ FILES_${PN} = " \
    ${bindir}/* \
    ${exec_prefix}/rdk/interdevicemanager/* \
    ${systemd_unitdir}/system/RdkInterDeviceManager.service \
+   ${sysconfdir}/idm/idm_recovery.sh \
 "
 
 FILES_${PN}-dbg = " \
