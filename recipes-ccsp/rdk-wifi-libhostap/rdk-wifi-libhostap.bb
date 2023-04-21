@@ -37,7 +37,7 @@ CFLAGS_append = " \
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '-DRDK_ONEWIFI', '', d)}"
 #Lib hostap compilation changes for compiling libhostap.so
 #!!This has to be first patch!!
-SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'file://2.10/oneWifiLib.patch file://2.10/greylist.patch file://2.10/broadcom.patch file://2.10/one_wifi_radius_greylist.patch',\ 
+SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'file://2.10/oneWifiLib.patch file://2.10/greylist.patch file://2.10/broadcom.patch file://2.10/one_wifi_radius_greylist.patch file://2.10/owe_radius_auth_vlan_32.patch',\ 
               'file://2.9/hostapd-lib-build-modify.patch file://2.9/hostapd-logger-module-changes.patch file://2.9/lib-hostap-changes-xb7.diff \
               file://2.9/wps.patch file://2.9/eloop_rfc_switch.patch file://2.9/greylist.patch file://2.9/one_wifi.patch file://2.9/one_wifi_bss_transition.patch file://2.9/one_wifi_radius_greylist.patch', d)}"
 
