@@ -111,6 +111,8 @@ do_install_append () {
     	install -D -m 0644 ${S}/scripts/systemd/wifi-telemetry.target ${D}${systemd_unitdir}/system/wifi-telemetry.target
     	install -D -m 0644 ${S}/scripts/systemd/wifi-telemetry-cron.service ${D}${systemd_unitdir}/system/wifi-telemetry-cron.service
 	fi
+    install -d ${D}/usr/sbin
+    install -m 755 ${S}/scripts/get_vlan.sh -t ${D}/usr/sbin
 }
 
 do_install_append_mips (){
@@ -161,6 +163,7 @@ FILES_${PN} = "\
     ${prefix}/ccsp/wifi/WifiSingleClientActiveMeasurement.avsc \
     ${prefix}/ccsp/wifi/rdkb-wifi.ovsschema \
     ${prefix}/ccsp/wifi/wifi_db_ovsh \
+    ${sbindir}/get_vlan.sh \
 "
 
 FILES_${PN}-dbg = " \
