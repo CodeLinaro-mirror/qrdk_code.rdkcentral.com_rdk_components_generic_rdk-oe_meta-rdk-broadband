@@ -79,6 +79,7 @@ do_install_append () {
     install -m 755 ${S}/scripts/copy_wifi_logs.sh -t ${D}/usr/ccsp/wifi
     install -m 755 ${S}/scripts/wifi_logupload.sh -t ${D}/usr/ccsp/wifi
     install -m 755 ${S}/scripts/OneWiFi_Selfheal.sh -t ${D}/usr/ccsp/wifi
+    install -m 755 ${S}/scripts/OneWiFi_vap_down.sh -t ${D}/usr/ccsp/wifi
     install -m 755 ${S}/scripts/lfp.sh -t ${D}/usr/ccsp/wifi
     install -m 755 ${S}/scripts/aphealth.sh -t ${D}/usr/ccsp/wifi
     install -m 755 ${S}/scripts/aphealth_log.sh -t ${D}/usr/ccsp/wifi
@@ -147,6 +148,7 @@ FILES_${PN} = "\
     ${prefix}/ccsp/wifi/copy_wifi_logs.sh \
     ${prefix}/ccsp/wifi/wifi_logupload.sh \
     ${prefix}/ccsp/wifi/OneWiFi_Selfheal.sh \
+    ${prefix}/ccsp/wifi/OneWiFi_vap_down.sh \
     ${prefix}/ccsp/wifi/lfp.sh \
     ${prefix}/ccsp/wifi/aphealth.sh \
     ${prefix}/ccsp/wifi/aphealth_log.sh \
