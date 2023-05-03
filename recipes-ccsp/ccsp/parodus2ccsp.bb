@@ -16,7 +16,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e"
 SRCREV = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "d26d16eb4a85348404259178a48bfcdc49830463", "ad66c9d520fcaba7899f57dcc1d48d00dbe47c32" , d)}"
 
 do_configure_prepend () {
-    (python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/source/arch/intel_usg/boards/rdkb_atom/config/comcast/WebpaAgent.xml ${S}/source/broadband/dm_pack_datamodel.c)
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/source/arch/intel_usg/boards/rdkb_atom/config/comcast/WebpaAgent.xml ${S}/source/broadband/dm_pack_datamodel.c)
 }
 
 BRANCH = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "webconfig_phase1", "master", d)}"
@@ -29,7 +29,7 @@ S = "${WORKDIR}/git"
 require ccsp_common.inc
 
 # generating minidumps symbols
-inherit breakpad-wrapper pythonnative breakpad-logmapper
+inherit breakpad-wrapper ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 BREAKPAD_BIN_append = " webpa"
 
 LDFLAGS += "-lpthread -lcjson -lmsgpackc -ltrower-base64 -lnanomsg -lcimplog -lwdmp-c -lwrp-c -llibparodus -lm -luuid -lstdc++ -lbreakpadwrapper -lsysevent -lutapi -lutctx -lsyscfg -lprivilege -lrbus -lrtMessage"
@@ -66,6 +66,8 @@ EXTRA_OECMAKE = "-DBUILD_TESTING=OFF -DBUILD_YOCTO=true"
 EXTRA_OECMAKE += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', ' -DFEATURE_SUPPORT_WEBCONFIG=true ', '', d)}"
 EXTRA_OECMAKE += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_phase1', ' -DFEATURE_SUPPORT_WEBCONFIG=true ', '', d)}"
 
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+
 SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file://Web_config_XML.patch', '', d)}"
 SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_phase1', 'file://Web_config_Phase1_XML.patch', '', d)}"
 SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', 'file://Webpa_Connected_Client_Notify_XML.patch', '', d)}"
@@ -82,7 +84,7 @@ do_install_append() {
     if ${@bb.utils.contains("DISTRO_FEATURES", "webconfig", "true", "false", d)}
     then
         touch ${D}/etc/WEBCONFIG_ENABLE
-        (python ${WORKDIR}/metadata_parser.py ${WORKDIR}/webconfig_metadata.json ${D}/etc/webconfig.properties ${MACHINE})
+        (${PYTHON} ${WORKDIR}/metadata_parser.py ${WORKDIR}/webconfig_metadata.json ${D}/etc/webconfig.properties ${MACHINE})
     fi
 }
 

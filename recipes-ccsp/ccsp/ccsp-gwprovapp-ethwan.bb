@@ -5,7 +5,8 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 DEPENDS = "ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi ruli utopia"
-DEPENDS_append_dunfell = " hal-gwprovappabs"
+DEPENDS_append = " hal-gwprovappabs"
+DEPENDS_remove_morty = " hal-gwprovappabs"
 
 require ccsp_common.inc
 
@@ -21,7 +22,8 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-pointer-to-int-cast "
 
-LDFLAGS_append_dunfell = " -lgwprovappabs"
+LDFLAGS_append = " -lgwprovappabs"
+LDFLAGS_remove_morty = " -lgwprovappabs"
 
 inherit autotools
 

@@ -51,6 +51,7 @@ do_configure_prepend () {
 }
 
 EXTRA_OECONF = "--enable-cosa CCSP_COMMON_LIB=${STAGING_LIBDIR}"
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 do_configure () {
 	oe_runconf

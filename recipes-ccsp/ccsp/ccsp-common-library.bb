@@ -8,13 +8,15 @@ DEPENDS = "dbus openssl rbus trower-base64"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS_class-native = ""
 
-RDEPENDS_${PN}_append_dunfell = " bash"
+RDEPENDS_${PN}_append = " bash"
+RDEPENDS_${PN}_remove_morty = "bash"
 
 require ccsp_common.inc
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/CcspCommonLibrary;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH}"
 
-SRC_URI_append_dunfell = " file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"
+SRC_URI_append = " file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"
+SRC_URI_remove_morty = " file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"
 
 SRCREV = "${AUTOREV}"
 SRCREV_FORMAT = "${AUTOREV}"
@@ -28,6 +30,8 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-confi
 
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+
+CFLAGS_append = " -Wno-enum-conversion -Wno-deprecated-declarations "
 
 CFLAGS += " \
     -D_GNU_SOURCE -D__USE_XOPEN \

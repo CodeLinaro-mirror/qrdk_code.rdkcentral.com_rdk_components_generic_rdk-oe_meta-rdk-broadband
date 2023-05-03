@@ -18,7 +18,7 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig pythonnative breakpad-logmapper
+inherit autotools pkgconfig ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
 CFLAGS += " \
     -I${STAGING_INCDIR}/dbus-1.0 \
@@ -30,7 +30,8 @@ CFLAGS += " \
     -I${STAGING_INCDIR}/libparodus \
     "
 
-CFLAGS += " -Wall -Werror -Wextra "
+CFLAGS += " -Wall -Werror -Wextra -Wno-enum-conversion -Wno-stringop-overflow -Wno-array-parameter"
+CFLAGS_append_kirkstone = " -Wno-format-truncation"
 
 
 LDFLAGS_append = " \
@@ -67,7 +68,7 @@ do_compile_prepend () {
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'vendor_class_id_feature', 'true', 'false', d)}; then
 		sed -i '2i <?define VENDOR_CLASS_ID=True?>' ${S}/config/LMLite.XML
 	fi
-	(python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/LMLite.XML ${S}/source/Ssp/dm_pack_datamodel.c)
+	(${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/LMLite.XML ${S}/source/Ssp/dm_pack_datamodel.c)
 }
 
 #force lib to be built first

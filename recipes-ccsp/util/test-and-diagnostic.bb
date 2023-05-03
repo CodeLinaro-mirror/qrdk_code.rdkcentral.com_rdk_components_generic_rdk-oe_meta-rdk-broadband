@@ -16,13 +16,17 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-type-limits -Wno-unused-parameter "
+CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-type-limits -Wno-unused-parameter -Wno-format -Wno-misleading-indentation"
+
+CFLAGS_append_kirkstone = " -fcommon"
 
 RDEPENDS_${PN} += "libpcap"
-RDEPENDS_${PN}_append_dunfell = " bash"
-RDEPENDS_${PN}-ccsp_append_dunfell += " bash"
+RDEPENDS_${PN}_append = " bash"
+RDEPENDS_${PN}-ccsp_append = " bash"
+RDEPENDS_${PN}_remove_morty = "bash"
+RDEPENDS_${PN}-ccsp_remove_morty = "bash"
 
-inherit autotools pythonnative breakpad-logmapper
+inherit autotools ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
@@ -59,7 +63,7 @@ CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DC
 EXTRA_OECONF_append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "
 
 do_compile_prepend () {
-    (python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TestAndDiagnostic_arm.XML ${S}/source/TandDSsp/dm_pack_datamodel.c)
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TestAndDiagnostic_arm.XML ${S}/source/TandDSsp/dm_pack_datamodel.c)
 }
 do_install_append () {
     # Config files and scripts

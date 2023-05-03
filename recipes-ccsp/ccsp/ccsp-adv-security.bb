@@ -24,17 +24,18 @@ LDFLAGS_append = " \
     -lcjson \
     -lbreakpadwrapper \
 "
-RDEPENDS_${PN}_append_dunfell += "bash"
+RDEPENDS_${PN}_append = " bash"
+RDEPENDS_${PN}_remove_morty = "bash"
 
 S = "${WORKDIR}/git"
 
 CFLAGS += " -Wall -Werror -Wextra "
 
 do_compile_prepend () {
-       (python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-AdvSecurity.xml ${S}/source/AdvSecuritySsp/dm_pack_datamodel.c)
+       (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-AdvSecurity.xml ${S}/source/AdvSecuritySsp/dm_pack_datamodel.c)
 }
 
-inherit autotools coverity pythonnative breakpad-logmapper
+inherit autotools coverity ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
 do_install_append () {
     # Config files and scripts
@@ -85,3 +86,5 @@ DOWNLOAD_ON_DEMAND="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', '
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "CcspAdvSecurity"
 BREAKPAD_LOGMAPPER_LOGLIST = "ADVSEClog.txt.0,agent.txt"
+
+EXTRA_OECONF_append  = " --with-ccsp-arch=arm "

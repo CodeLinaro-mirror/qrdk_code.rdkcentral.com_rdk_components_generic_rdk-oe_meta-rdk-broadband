@@ -26,6 +26,7 @@ SRCREV_usppa = "201b5ac1cc8bd424ce1b7757b9f31772fda3a35f"
 
 # Configure options for OBUSPA
 EXTRA_OECONF += "--disable-websockets --enable-mqtt"
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 # Configuration files for target
 SRC_URI += "file://conf/usp_factory_reset.conf"

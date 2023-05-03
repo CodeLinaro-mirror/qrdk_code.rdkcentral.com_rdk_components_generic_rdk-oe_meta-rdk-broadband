@@ -31,6 +31,8 @@ SRC_URI ="${RDKB_CCSP_ROOT_GIT}/RdkGponManager/generic;protocol=${RDK_GIT_PROTOC
 SRCREV_GponManager = "${AUTOREV}"
 SRCREV_FORMAT = ""
 
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"

@@ -26,6 +26,8 @@ S = "${WORKDIR}/git"
 # inherit cmake pkgconfig
 inherit autotools pkgconfig systemd
 
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \

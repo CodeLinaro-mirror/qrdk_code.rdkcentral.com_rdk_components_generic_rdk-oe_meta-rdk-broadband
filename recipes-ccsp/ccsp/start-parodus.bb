@@ -19,6 +19,8 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
+EXTRA_OECONF_append  = " --with-ccsp-arch=arm "
+
 inherit autotools pkgconfig
 DEPENDS_append = " hal-platform hal-cm openssl cpgc lxy "
 RDEPENDS_${PN} += " cjson hal-platform hal-cm utopia "

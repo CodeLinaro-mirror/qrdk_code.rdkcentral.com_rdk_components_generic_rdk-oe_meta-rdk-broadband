@@ -29,7 +29,8 @@ CFLAGS_append = " \
 
 LDFLAGS += " -lprivilege"
 
-LDFLAGS_append_dunfell = " -ldbus-1"
+LDFLAGS_append = " -ldbus-1"
+LDFLAGS_remove_morty = " -ldbus-1"
 
 do_install_append () {
     # Config files and scripts

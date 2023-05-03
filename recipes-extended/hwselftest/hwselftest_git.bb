@@ -2,7 +2,7 @@ SUMMARY = "Hardware Self test"
 DESCRIPTION = "Hardware-Selftest and Diagnostic Tool"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
-PV = "${RDK_RELEASE}"
+PV = "${RDK_RELEASE}+git${SRCPV}"
 
 SRCREV_hwselftest = "${AUTOREV}"
 SRCREV_FORMAT = "hwselftest"
@@ -20,7 +20,8 @@ EXTRA_OECONF += "--enable-agent-build --enable-client-build --enable-hwselftestt
 EXTRA_OECONF += " --with-diag-emmc --with-diag-moca --with-diag-wan --with-diag-bluetooth --with-diag-dram --with-diag-wifi --with-diag-mta --with-diag-xhs --with-diag-lan --with-diag-zigbee"
 
 DEPENDS = "jansson breakpad breakpad-wrapper xupnp ccsp-common-library dbus hal-platform"
-RDEPENDS_${PN}_append_dunfell = "bash"
+RDEPENDS_${PN}_append = "bash"
+RDEPENDS_${PN}_remove_morty = "bash"
 
 inherit autotools pkgconfig systemd
 

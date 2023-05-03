@@ -32,6 +32,7 @@ CFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "seshat", " -DENABLE_SE
 LDFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "seshat", " -llibseshat ", " ", d)}"
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
+EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 LDFLAGS += " -lprivilege"
 
@@ -39,7 +40,8 @@ CFLAGS_append = "\
     ${@bb.utils.contains("DISTRO_FEATURES", "seshat", "-I${STAGING_INCDIR}/libseshat ", " ", d)} \
 "
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '-DFEATURE_RDKB_WAN_MANAGER', '', d)}"
-LDFLAGS_append_dunfell = " -lrt -lm"
+LDFLAGS_append = " -lrt -lm"
+LDFLAGS_remove_morty = " -lrt -lm"
 
 do_install_append () {
     # Config files and scripts

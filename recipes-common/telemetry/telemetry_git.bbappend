@@ -14,7 +14,7 @@ CFLAGS += " -DCCSP_SUPPORT_ENABLED \
 require recipes-ccsp/ccsp/ccsp_common.inc
 
 do_compile_prepend () {
-    (python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-T2-USGv2.XML ${S}/source/t2ssp/dm_pack_datamodel.c)
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-T2-USGv2.XML ${S}/source/t2ssp/dm_pack_datamodel.c)
 }
 
 do_install_append () {
