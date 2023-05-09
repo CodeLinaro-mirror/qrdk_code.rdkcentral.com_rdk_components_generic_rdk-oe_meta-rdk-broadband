@@ -175,13 +175,13 @@ Signed-off-by: Manish_Dharanenthiran <Manish_Dharanenthiran@Comcast.com>
 +/*
 + * hostapd / RADIUS Greylist Access Control
 + *
-+ * $ Copyright Open Broadcom Corporation $
++ * RadiusGreylist is the feature controlled by RFC
++ * this feature will add the clients mac to public vaps maclist,
++ * Greylist implementations and  definations are added here.
++ * 
 + *
 + *
-+ * <<Broadcom-WL-IPTag/Open:>>
-+ *
-+ * This software may be distributed under the terms of the BSD license.
-+ * See README for more details.
++ * 
 + */
 +
 +#define __USE_XOPEN
@@ -944,13 +944,13 @@ Signed-off-by: Manish_Dharanenthiran <Manish_Dharanenthiran@Comcast.com>
 +/*
 + * hostapd / RADIUS Greylist Access Control
 + *
-+ * $ Copyright Open Broadcom Corporation $
++ * RadiusGreylist is the feature controlled by RFC
++ * this feature will add the clients mac to public vaps maclist,
++ * which  are connected to public vaps from their own device
++ * Implementations and declaration are present here.
 + *
 + *
-+ * <<Broadcom-WL-IPTag/Open:>>
-+ *
-+ * This software may be distributed under the terms of the BSD license.
-+ * See README for more details.
++ * 
 + */
 +
 +#ifndef GREYLIST_H
