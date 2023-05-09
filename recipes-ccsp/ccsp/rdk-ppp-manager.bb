@@ -13,7 +13,7 @@ SRC_URI ="${RDKB_CCSP_ROOT_GIT}/RdkPppManager/generic;protocol=${RDK_GIT_PROTOCO
 SRCREV_PppManager = "${AUTOREV}"
 SRCREV_FORMAT = "PppManager"
 
-PV = "${RDK_RELEASE}+git"
+PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 

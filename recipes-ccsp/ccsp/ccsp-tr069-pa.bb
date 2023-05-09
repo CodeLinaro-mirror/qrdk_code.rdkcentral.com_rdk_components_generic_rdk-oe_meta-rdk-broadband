@@ -14,7 +14,7 @@ SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/CcspTr069Pa;protocol=
 
 SRCREV_CcspTr069Pa = "${AUTOREV}"
 SRCREV_FORMAT = "CcspTr069Pa"
-PV = "${RDK_RELEASE}"
+PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
