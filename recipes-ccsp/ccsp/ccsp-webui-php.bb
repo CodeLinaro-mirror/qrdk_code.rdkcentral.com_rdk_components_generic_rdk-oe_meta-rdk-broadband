@@ -19,7 +19,7 @@ SRCREV_webui = "${AUTOREV}"
 SRCREV_xb3 = "${AUTOREV}"
 SRCREV_FORMAT = "webui_xb3"
 
-PV = "${RDK_RELEASE}"
+PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git/source/CcspPhpExtension/"
 
