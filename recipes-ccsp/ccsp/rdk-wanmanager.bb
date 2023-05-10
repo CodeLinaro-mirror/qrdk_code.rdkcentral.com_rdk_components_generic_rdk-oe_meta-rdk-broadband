@@ -49,6 +49,10 @@ do_compile_prepend () {
     sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/${XML_NAME}
     fi
 
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager', 'true', 'false', d)}; then
+        sed -i '2i <?define FEATURE_RDKB_DHCP_MANAGER=True?>' ${S}/config/RdkWanManager.xml
+    fi
+
     if ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', 'true', 'false', d)}; then
     sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/${XML_NAME}
     fi

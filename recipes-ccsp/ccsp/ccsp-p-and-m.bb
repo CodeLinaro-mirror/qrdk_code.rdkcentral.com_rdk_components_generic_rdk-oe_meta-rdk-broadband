@@ -160,8 +160,10 @@ do_compile_prepend () {
         if ${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', 'true', 'false', d)}; then
             sed -i '2i <?define WIFI_MANAGE_SUPPORTED=True?>' ${S}/config-arm/TR181-USGv2.XML
         fi
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager', 'true', 'false', d)}; then
+            sed -i '2i <?define FEATURE_RDKB_DHCP_MANAGER=True?>' ${S}/config-arm/TR181-USGv2.XML
+        fi
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config-arm/TR181-USGv2.XML ${S}/source/PandMSsp/dm_pack_datamodel.c)
-
 }
 do_install_append () {
     # Config files and scripts
