@@ -2,7 +2,7 @@ SUMMARY = "jst for webui which includes duktape and ccsp sources."
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e76996dff7c96f34b60249db92fc7aeb"
 
-DEPENDS = "ccsp-common-library ${@bb.utils.contains('DISTRO_FEATURES', 'rbus', '', 'dbus', d)}"
+DEPENDS = "ccsp-common-library ${@bb.utils.contains('DISTRO_FEATURES', 'rbus', '', 'dbus', d)} curl"
 
 SRC_URI = "${RDK_GENERIC_ROOT_GIT}/jst/generic;protocol=${RDK_GIT_PROTOCOL};branch=${RDK_GIT_BRANCH}"
 
