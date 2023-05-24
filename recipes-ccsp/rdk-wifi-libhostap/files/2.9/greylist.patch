@@ -2,8 +2,7 @@
 Date: Mar 17, 2021 10:47 PM
 From: 53841f78c274c28c1d57bfb2159ff7e0f61ac0ba
 Subject: RDK Hostapd greylist changes
-Source: COMCAST
-License: BSD
+Source: Comcast
 Upstream-Status: Pending
 Signed-off-by: Manish_Dharanenthiran <Manish_Dharanenthiran@Comcast.com>
 ##########################################

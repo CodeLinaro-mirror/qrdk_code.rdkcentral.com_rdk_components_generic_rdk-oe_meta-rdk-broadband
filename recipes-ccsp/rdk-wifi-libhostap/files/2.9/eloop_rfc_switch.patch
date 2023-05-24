@@ -2,8 +2,7 @@
 Date: Jun 17, 2021 10:47 PM
 From: 53841f78c274c28c1d57bfb2159ff7e0f61ac0ba
 Subject: Hostapd lib crash debug
-Source: COMCAST
-License: BSD
+Source: Comcast
 Upstream-Status: Pending
 Signed-off-by: Manish Dharanenthiran <manish_dharanenthiran@comcast.com>
 ##########################################

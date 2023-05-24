@@ -1,7 +1,8 @@
 SUMMARY = "RDK-WiFi-LIBHOSTAP for RDK CcspWiFiAgent components"
 SUMMARY = "This recipe compiles and installs the Opensource hostapd as a dynamic library for RDK hostap authenticator"
 SECTION = "base"
-LICENSE = "CLOSED"
+LICENSE = "BSD-3-Clause"
+LIC_FILES_CHKSUM = "file://source/hostap-2.10/README;md5=e3d2f6c2948991e37c1ca4960de84747"
 
 FILESEXTRAPATHS_prepend:="${THISDIR}/files:"
 PROVIDES = "rdk-wifi-libhostap"

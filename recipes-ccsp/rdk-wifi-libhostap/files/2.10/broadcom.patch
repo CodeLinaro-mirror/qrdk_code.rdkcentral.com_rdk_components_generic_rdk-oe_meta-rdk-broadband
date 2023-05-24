@@ -1,9 +1,8 @@
 ##########################################
 Date: Apr 22, 2022 10:47 PM
 From: 53841f78c274c28c1d57bfb2159ff7e0f61ac0ba
-Subject: 
-Source: Sky
-License: BSD
+Subject: BRCM driver support for hostapd-2.10
+Source: Broadcom & Sky
 Upstream-Status: Pending
 Signed-off-by: Damiano Barone <damiano.barone@sky.uk>
 ##########################################

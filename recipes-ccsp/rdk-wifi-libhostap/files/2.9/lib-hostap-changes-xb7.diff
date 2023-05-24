@@ -1,3 +1,11 @@
+##########################################
+Date: Apr 14, 2022 8:11 PM
+From: a75ae27fb329c8d9098bbacfe13827b9ecccaa27
+Subject: Integrate hostapd 2.10 and 6ghz patches
+Source: Broadcom & Comcast
+Upstream-Status: Pending
+Signed-off-by: Signed-off-by: Damiano Barone <damiano.barone@sky.uk>
+##########################################
 diff --git a/source/hostap-2.9/src/drivers/driver_nl80211_event.c b/source/hostap-2.9/src/drivers/driver_nl80211_event.c
 index 7c16330..0231ac5 100755
 --- a/source/hostap-2.9/src/drivers/driver_nl80211_event.c

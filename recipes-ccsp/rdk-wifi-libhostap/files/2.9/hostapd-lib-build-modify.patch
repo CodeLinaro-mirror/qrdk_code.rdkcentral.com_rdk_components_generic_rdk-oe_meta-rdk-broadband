@@ -2,8 +2,7 @@
 Date: Mar 17, 2021 10:47 PM
 From: 53841f78c274c28c1d57bfb2159ff7e0f61ac0ba
 Subject: Hostapd lib compilation changes
-Source: COMCAST
-License: BSD
+Source: Comcast
 Upstream-Status: Pending
 Signed-off-by: Manish_Dharanenthiran <Manish_Dharanenthiran@Comcast.com>
 ##########################################
@@ -14,7 +13,7 @@ index 0000000..6e9e863
 +++ b/Makefile.am
 @@ -0,0 +1,19 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -39,7 +38,7 @@ index 0000000..44e3cbd
 +++ b/configure.ac
 @@ -0,0 +1,95 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -140,7 +139,7 @@ index 0000000..3151445
 +++ b/source/Makefile.am
 @@ -0,0 +1,19 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -165,7 +164,7 @@ index 0000000..a40fa4a
 +++ b/source/hostap-2.9/Makefile.am
 @@ -0,0 +1,19 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -190,7 +189,7 @@ index 0000000..c8cc19b
 +++ b/source/hostap-2.9/hostapd/Makefile.am
 @@ -0,0 +1,50 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -259,7 +258,7 @@ index 0000000..7dffcf2
 +++ b/source/hostap-2.9/src/Makefile.am
 @@ -0,0 +1,344 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management

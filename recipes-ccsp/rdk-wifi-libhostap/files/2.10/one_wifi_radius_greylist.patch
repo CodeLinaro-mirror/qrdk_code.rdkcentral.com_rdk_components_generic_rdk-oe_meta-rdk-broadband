@@ -2,8 +2,7 @@
 Date: April 4 2022 10:47 PM
 From: c469f3c2954be67787915fead4f937843c33bb0e
 Subject: Hostapd handling for RadiusGreylist
-Source: COMCAST
-License: BSD
+Source: Comcast
 Upstream-Status: Pending
 Signed-off-by: Tamilarasi Ganesan <tamilarasi_ganesan@comcast.com>
 ##########################################

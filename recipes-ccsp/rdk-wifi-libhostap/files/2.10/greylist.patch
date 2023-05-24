@@ -2,8 +2,7 @@
 Date: May 6, 2022 10:47 PM
 From: 406cbb74775a5e4965494c02751e458ca9dcc23b
 Subject: RDK Hostapd greylist changes
-Source: COMCAST
-License: BSD
+Source: Comcast
 Upstream-Status: Pending
 Signed-off-by: Damiano Baorne <damiano.barone@sky.uk>
 ##########################################

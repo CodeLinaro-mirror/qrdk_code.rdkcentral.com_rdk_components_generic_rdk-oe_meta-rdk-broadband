@@ -3,7 +3,6 @@ Date: Apr 22, 2022 10:47 PM
 From: 53841f78c274c28c1d57bfb2159ff7e0f61ac0ba
 Subject: 
 Source: Sky
-License: BSD
 Upstream-Status: Pending
 Signed-off-by: Damiano Barone <damiano.barone@sky.uk>
 ##########################################
@@ -13,7 +12,7 @@ Index: git/Makefile.am
 +++ git/Makefile.am
 @@ -0,0 +1,19 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -38,7 +37,7 @@ Index: git/configure.ac
 +++ git/configure.ac
 @@ -0,0 +1,94 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -137,7 +136,7 @@ Index: git/source/Makefile.am
 +++ git/source/Makefile.am
 @@ -0,0 +1,19 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -162,7 +161,7 @@ Index: git/source/hostap-2.10/Makefile.am
 +++ git/source/hostap-2.10/Makefile.am
 @@ -0,0 +1,19 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -187,7 +186,7 @@ Index: git/source/hostap-2.10/hostapd/Makefile.am
 +++ git/source/hostap-2.10/hostapd/Makefile.am
 @@ -0,0 +1,72 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
@@ -369,7 +368,7 @@ Index: git/source/hostap-2.10/src/Makefile.am
 +++ git/source/hostap-2.10/src/Makefile.am
 @@ -0,0 +1,382 @@
 +##########################################################################
-+# If not stated otherwise in this file or this component's Licenses.txt
++# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
 +#
 +# Copyright 2015 RDK Management
