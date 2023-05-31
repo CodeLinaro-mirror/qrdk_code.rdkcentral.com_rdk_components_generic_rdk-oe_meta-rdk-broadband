@@ -1,7 +1,7 @@
 SUMMARY = "CCSP Hotspot Kernel Module"
 HOMEPAGE = "https://github.com/belvedere-yocto/hotspot"
 
-LICENSE = "GPLV2"
+LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://COPYING;md5=90a09ab320e2368b0ee7213fd5be2d5c"
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/cpc/mtu_modifier;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=hotspot-kmod"
