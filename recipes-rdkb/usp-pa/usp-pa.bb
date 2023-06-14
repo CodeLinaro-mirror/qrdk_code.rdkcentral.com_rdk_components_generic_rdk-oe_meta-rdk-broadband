@@ -85,6 +85,11 @@ FILES_${PN} += "${sysconfdir}/usp-pa/usp_truststore.pem"
 # Signal that a system-d service must be provisioned
 SYSTEMD_SERVICE_${PN} = "usp-pa.service"
 
-
+## Additional steps for DAC Distro Feature
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', 'rbus', '', d)}"
+#add dependencies for the changes into compiler options
+LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -lrbus ', '', d)}"
+CFLAGS  += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -isystem${STAGING_INCDIR}/rbus ', '', d)}"
+TARGET_CFLAGS  += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -DINCLUDE_LCM_DATAMODEL ', '', d)}"
 
 
