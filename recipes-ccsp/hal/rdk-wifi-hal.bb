@@ -35,6 +35,7 @@ CFLAGS_append = " -I=${includedir}/ccsp "
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'passpoint', '-DFEATURE_SUPPORT_PASSPOINT', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', '-DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', '-DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
+CFLAGS_append_kirkstone = " -Wno-deprecated-declarations "
 
 ONEWIFI_CONFIG_FLAGS = " \
     -DCONFIG_LIBNL32 \
