@@ -8,6 +8,8 @@ DEPENDS = "ccsp-common-library hal-platform utopia libunpriv"
 RDEPENDS_${PN} = " trower-base64 "
 DEPENDS += " trower-base64"
 
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' rdk-scheduler','',d)}"
+
 require ccsp_common.inc
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/CcspMisc;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=CcspMisc"
 
@@ -46,6 +48,9 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/ccsp \
     -I${STAGING_INCDIR}/trower-base64 \
     "
+
+CFLAGS_append += "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' -I${STAGING_INCDIR}/cimplog','',d)}"
+
 EXTRA_OECONF += "${@bb.utils.contains("DISTRO_FEATURES", "notifylease", " --enable-notifylease ", " ", d)}"
 EXTRA_OECONF_append_puma7 += "${@bb.utils.contains("DISTRO_FEATURES", "setLED", " --enable-setLED=yes", " ", d)}"
 EXTRA_OECONF_append_bcm3390 += "${@bb.utils.contains("DISTRO_FEATURES", "setLED", " --enable-setLED=yes", " ", d)}"
@@ -53,6 +58,8 @@ EXTRA_OECONF_append_bcm3390 += "${@bb.utils.contains("DISTRO_FEATURES", "setLED"
 EXTRA_OECONF += "${@bb.utils.contains("DISTRO_FEATURES", "multipartUtility", " --enable-multipartUtilEnable=yes ", " ", d)}"
 
 EXTRA_OECONF += "${@bb.utils.contains("DISTRO_FEATURES", "wbCfgTestApp", " --enable-wbCfgTestAppEnable ", " ", d)}"
+
+EXTRA_OECONF += "${@bb.utils.contains("DISTRO_FEATURES", "rdkscheduler_testapp", " --enable-rdkSchedulerTestAppEnable ", " ", d)}"
 
 do_install_append () {
     # Config files and scripts

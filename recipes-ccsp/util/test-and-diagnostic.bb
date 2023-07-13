@@ -7,6 +7,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=06093b681f6d882a55e3bc222a02a988"
 DEPENDS = "ccsp-common-library utopia hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi rbus libev libpcap"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler', ' trower-base64 msgpack-c rdk-scheduler cimplog', " ", d)}"
+
 require recipes-ccsp/ccsp/ccsp_common.inc
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/TestAndDiagnostic;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=TestAndDiagnostic"
 
@@ -39,6 +41,8 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/syscfg \
     "
 
+CFLAGS_append += "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' -I${STAGING_INCDIR}/trower-base64 -I${STAGING_INCDIR}/msgpackc -I${STAGING_INCDIR}/cimplog','',d)}"
+
 EXTRA_OECONF_append = "--enable-mta"
 
 LDFLAGS_append = " \
@@ -61,6 +65,10 @@ LDFLAGS_append += "${@bb.utils.contains('DISTRO_FEATURES', 'warehouseFan',' -lha
 
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"
 EXTRA_OECONF_append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "
+
+EXTRA_OECONF_append = "${@bb.utils.contains('DISTRO_FEATURES', 'enable_device_prioritization',' --enable-device_prioritization','',d)}"
+EXTRA_OECONF_append = "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' --enable-rdk_scheduler','',d)}"
+LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' -lcimplog','',d)}"
 
 do_compile_prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TestAndDiagnostic_arm.XML ${S}/source/TandDSsp/dm_pack_datamodel.c)
