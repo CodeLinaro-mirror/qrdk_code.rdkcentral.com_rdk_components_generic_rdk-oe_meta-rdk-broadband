@@ -40,6 +40,10 @@ B = "${WORKDIR}/build"
 
 inherit autotools pkgconfig
 
+export ISRDKB_WAN_UNIFICATION_ENABLED = "${@bb.utils.contains('DISTRO_FEATURES', 'WanManagerUnificationEnable','true','false', d)}"
+export SCHEMA_FILE = "${@bb.utils.contains('ISRDKB_WAN_UNIFICATION_ENABLED', 'true','gpon_wan_unify_hal_schema.json','gpon_hal_schema.json', d)}"
+export CONF_FILE = "${@bb.utils.contains('ISRDKB_WAN_UNIFICATION_ENABLED', 'true','gpon_manager_wan_unify_conf.json','gpon_manager_conf.json', d)}"
+
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
@@ -59,17 +63,17 @@ do_install () {
     install -d ${D}${sysconfdir}/rdk/schemas
     install -m 755 ${B}/source/GponManager/GponManager ${D}${bindir}
     install -m 644 ${S}/config/RdkGponManager.xml ${D}/usr/rdk/gponmanager
-    install -m 644 ${S}/config/gpon_manager_conf.json ${D}${sysconfdir}/rdk/conf
-    install -m 644 ${S}/hal_schema/gpon_hal_schema.json ${D}${sysconfdir}/rdk/schemas
+    install -m 644 ${S}/config/${CONF_FILE} ${D}${sysconfdir}/rdk/conf
+    install -m 644 ${S}/hal_schema/${SCHEMA_FILE} ${D}${sysconfdir}/rdk/schemas
 }
 
 FILES_${PN} = " \
    ${bindir}/GponManager \
    ${prefix}/rdk/gponmanager/RdkGponManager.xml \
    ${sysconfdir}/rdk/conf \
-   ${sysconfdir}/rdk/conf/gpon_manager_conf.json \
+   ${sysconfdir}/rdk/conf/${CONF_FILE} \
    ${sysconfdir}/rdk/schemas \
-   ${sysconfdir}/rdk/schemas/gpon_hal_schema.json \
+   ${sysconfdir}/rdk/schemas/${SCHEMA_FILE} \
 "
 
 FILES_${PN}-dbg = " \
