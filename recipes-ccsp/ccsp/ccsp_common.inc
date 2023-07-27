@@ -121,6 +121,9 @@ CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'vendor_class_id_fea
 # Adding flag for Wan Manager Unification 
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'WanManagerUnificationEnable', '-DWAN_MANAGER_UNIFICATION_ENABLED', '', d)}"
 
+# Adding flag for WiFi Manange
+CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', ' -DWIFI_MANAGE_SUPPORTED', '', d)}"
+
 FILES_${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"

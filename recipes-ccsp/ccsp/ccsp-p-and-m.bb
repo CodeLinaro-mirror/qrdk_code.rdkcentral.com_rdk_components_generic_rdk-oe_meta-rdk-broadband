@@ -74,6 +74,9 @@ EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--en
 ENABLE_MAPT = "--enable-maptsupport=${@bb.utils.contains('DISTRO_FEATURES', 'nat46', 'yes', 'no', d)}"
 EXTRA_OECONF_append = " ${ENABLE_MAPT}"
 
+ENABLE_WIFI_MANAGE = "--enable-wifimanagesupport=${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', 'yes', 'no', d)}"
+EXTRA_OECONF_append = " ${ENABLE_WIFI_MANAGE}"
+
 CFLAGS_append = " -DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_INTERNET2P0 -DCONFIG_CISCO_HOTSPOT"
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION -DCONFIG_CISCO_TRUE_STATIC_IP -D_BCI_FEATURE_REQ', '', d)}"
@@ -153,6 +156,9 @@ do_compile_prepend () {
 	fi
         if ${@bb.utils.contains('DISTRO_FEATURES', 'custom_ula', 'true', 'false', d)}; then
         sed -i '2i <?define CUSTOM_ULA=True?>' ${S}/config-arm/TR181-USGv2.XML
+        fi
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', 'true', 'false', d)}; then
+            sed -i '2i <?define WIFI_MANAGE_SUPPORTED=True?>' ${S}/config-arm/TR181-USGv2.XML
         fi
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config-arm/TR181-USGv2.XML ${S}/source/PandMSsp/dm_pack_datamodel.c)
 
