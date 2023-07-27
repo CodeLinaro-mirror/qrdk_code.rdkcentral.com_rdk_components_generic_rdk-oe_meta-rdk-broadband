@@ -36,6 +36,7 @@ CFLAGS_append = " \
     -I=${includedir}/middle_layer_src/cm \
     -I=${includedir}/middle_layer_src/wifi \
     -I=${includedir}/cimplog \
+    -I${STAGING_DIR_TARGET}${includedir}/trower-base64 \
     "
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
@@ -59,9 +60,10 @@ LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' 
 TDKB_DL_PACK:= "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', '${PN}-dl', '', d)}"
 PACKAGE_BEFORE_PN += "${TDKB_DL_PACK}"
 
-ENABLE_WAN_MANAGER = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '--enable-rdkb_wan_manager', '--disable-rdkb_wan_manager', d)}"
-EXTRA_OECONF_append = "${ENABLE_WAN_MANAGER}"
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+#ENABLE_WAN_MANAGER = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '--enable-rdkb_wan_manager', '--disable-rdkb_wan_manager', d)}"
+#EXTRA_OECONF_append = "${ENABLE_WAN_MANAGER}"
+#EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+
 
 # Install all TDK scripts
 do_install_append () {
@@ -97,10 +99,10 @@ FILES_${PN} = " \
 "
 
 #All artifacts will be part of tdk-b package when tdk_rdm distro is not present (in non rdm tdk-b builds)
-FILES_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', ' ', ' ${bindir}/rdk_tdk_agent_process ${bindir}/tdk_cmd_utility ${libdir}/*.so.* ${tdkdir}/* /etc/*', d)"
+FILES_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', ' ', ' ${bindir}/rdk_tdk_agent_process ${bindir}/tdk_cmd_utility ${libdir}/*.so* ${tdkdir}/* /etc/*', d)"
 
 #All artifacts will be packed in tdk-b-dl package when tdk_rdm distro is enabled
-FILES_${PN}-dl = "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', ' ${bindir}/rdk_tdk_agent_process ${bindir}/tdk_cmd_utility ${libdir}/*.so.* ${tdkdir}/* /etc/* ', '', d)"
+FILES_${PN}-dl = "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', ' ${bindir}/rdk_tdk_agent_process ${bindir}/tdk_cmd_utility ${libdir}/*.so* ${tdkdir}/* /etc/* ', '', d)"
 
 FILES_${PN}-dbg = " \
     ${prefix}/src/debug \
