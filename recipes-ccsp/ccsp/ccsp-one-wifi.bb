@@ -142,7 +142,7 @@ FILES_${PN}-gtest = " \
 FILES_${PN} = "\
     ${bindir}/OneWifi \
     ${bindir}/wifi_ctrl \
-    ${bindir}/wifi_webconfig_consumer \
+    ${bindir}/onewifi_component_test_app \
     ${bindir}/wifi_api2 \
     ${libdir}/libwifi.so* \
     ${prefix}/ccsp/wifi/process_monitor_atom.sh \
