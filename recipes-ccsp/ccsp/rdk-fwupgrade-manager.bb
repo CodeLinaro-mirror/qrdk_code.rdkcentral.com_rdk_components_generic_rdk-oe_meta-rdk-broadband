@@ -19,6 +19,10 @@ EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 inherit autotools pkgconfig
 
+do_compile_prepend () {
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/RdkFwUpgradeManager.xml ${S}/source/FwUpgradeManager/dm_pack_datamodel.c)
+}
+
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
