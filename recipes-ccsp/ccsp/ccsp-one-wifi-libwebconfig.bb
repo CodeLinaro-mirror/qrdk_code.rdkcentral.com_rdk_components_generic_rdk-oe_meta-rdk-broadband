@@ -24,7 +24,6 @@ CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-address-of-pa
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wpa3_security_schema', ' -DWPA3_SECURITY_SCHEMA', '', d)}"
 CFLAGS_append_kirkstone = " -Wno-deprecated-declarations"
 
 LDFLAGS_append = " -lrbus "
