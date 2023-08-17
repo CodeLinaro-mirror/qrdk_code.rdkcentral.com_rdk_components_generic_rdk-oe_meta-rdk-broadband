@@ -17,6 +17,7 @@ LDFLAGS_append = " -ldbus-1"
 LDFLAGS_append = " -llibparodus"
 LDFLAGS_append = " -ltrower-base64"
 LDFLAGS_append = " -lutctx"
+LDFLAGS_append = " -ldpp"
 
 do_compile_prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-WiFi-USGv2.XML ${S}/source/dml/wifi_ssp/dm_pack_datamodel.c)
