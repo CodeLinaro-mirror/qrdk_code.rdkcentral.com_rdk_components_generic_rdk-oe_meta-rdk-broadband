@@ -49,10 +49,6 @@ do_compile_prepend () {
     sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/${XML_NAME}
     fi
 
-    if ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', 'true', 'false', d)}; then
-        (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/${XML_NAME} ${S}/source/WanManager/dm_pack_datamodel.c)
-    fi
-
     if ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', 'true', 'false', d)}; then
     sed -i '2i <?define RBUS_BUILD_FLAG_ENABLE=True?>' ${S}/config/${XML_NAME}
     fi
@@ -63,6 +59,10 @@ do_compile_prepend () {
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'feature_mapt', 'true', 'false', d)}; then
         sed -i '2i <?define FEATURE_MAPT=True?>' ${S}/config/${XML_NAME}
+    fi
+
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', 'true', 'false', d)}; then
+        (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/${XML_NAME} ${S}/source/WanManager/dm_pack_datamodel.c)
     fi
 }
 
