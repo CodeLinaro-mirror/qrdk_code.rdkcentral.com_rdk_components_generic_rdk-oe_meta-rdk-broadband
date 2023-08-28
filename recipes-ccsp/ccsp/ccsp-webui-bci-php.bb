@@ -36,7 +36,7 @@ LXC_NAME = "webui"
 LXC_LOG_PATH = "/rdklogs/logs"
 LXC_LOG_LEVEL = "8"
 
-CFLAGS += " \
+CFLAGS_append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \

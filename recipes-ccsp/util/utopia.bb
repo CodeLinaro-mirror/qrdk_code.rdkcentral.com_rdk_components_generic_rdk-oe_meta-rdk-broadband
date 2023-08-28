@@ -41,7 +41,7 @@ DEPENDS_remove_class-native = " safec-native"
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-deprecated-declarations -Wno-type-limits -Wno-unused-parameter -Wno-return-local-addr "
 CFLAGS_append = " -Wno-format-overflow -Wno-misleading-indentation -Wno-enum-conversion "
 
-CFLAGS += " \
+CFLAGS_append = " \
     -I${STAGING_INCDIR}/ccsp \
     -DCONFIG_BUILD_TRIGGER \
     "

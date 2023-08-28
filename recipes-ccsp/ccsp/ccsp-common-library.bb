@@ -33,7 +33,7 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC
 
 CFLAGS_append = " -Wno-enum-conversion -Wno-deprecated-declarations "
 
-CFLAGS += " \
+CFLAGS_append = " \
     -D_GNU_SOURCE -D__USE_XOPEN \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \

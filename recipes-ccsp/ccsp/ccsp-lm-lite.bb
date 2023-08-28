@@ -20,7 +20,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
-CFLAGS += " \
+CFLAGS_append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_INCDIR}/libxml2 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
