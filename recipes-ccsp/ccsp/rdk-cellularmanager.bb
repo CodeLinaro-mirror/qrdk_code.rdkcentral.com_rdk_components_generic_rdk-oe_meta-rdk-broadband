@@ -17,7 +17,7 @@ S = "${WORKDIR}/git"
 
 require ccsp_common.inc
 
-inherit autotools pkgconfig systemd pythonnative
+inherit autotools pkgconfig systemd ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} 
 
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
