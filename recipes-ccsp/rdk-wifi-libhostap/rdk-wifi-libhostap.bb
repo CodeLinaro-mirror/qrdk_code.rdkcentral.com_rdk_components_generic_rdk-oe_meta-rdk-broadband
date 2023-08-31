@@ -32,15 +32,16 @@ CFLAGS_append = " \
     -DCONFIG_INTERWORKING \
     -DCONFIG_ACS \
     -DFEATURE_SUPPORT_RADIUSGREYLIST \
+    -DCONFIG_WNM_AP \
     ${@getowe_defined(d)} \
 "
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '-DRDK_ONEWIFI', '', d)}"
 #Lib hostap compilation changes for compiling libhostap.so
 #!!This has to be first patch!!
-SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10','file://2.10/oneWifiLib.patch file://2.10/greylist.patch file://2.10/broadcom.patch file://2.10/one_wifi_radius_greylist.patch file://2.10/RDKB-48455-hostap-2.10-crash.patch file://2.10/owe_radius_auth_vlan_32.patch file://2.10/RDKB_47882_VLAN_2_10.patch file://2.10/onewifi_cac.patch file://2.10/mbr.patch file://2.10/wpa_auth_vlogger_crash.patch file://2.10/connected_building_avp_2_10.patch',\
+SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10','file://2.10/oneWifiLib.patch file://2.10/greylist.patch file://2.10/broadcom.patch file://2.10/one_wifi_radius_greylist.patch file://2.10/RDKB-48455-hostap-2.10-crash.patch file://2.10/owe_radius_auth_vlan_32.patch file://2.10/RDKB_47882_VLAN_2_10.patch file://2.10/onewifi_cac.patch file://2.10/mbr.patch file://2.10/wpa_auth_vlogger_crash.patch file://2.10/connected_building_avp_2_10.patch file://2.10/enable-wnm-flag-2-10.patch ',\
               'file://2.9/hostapd-lib-build-modify.patch file://2.9/hostapd-logger-module-changes.patch file://2.9/RDKB-48455-hostap-2.9-crash.patch file://2.9/lib-hostap-changes-xb7.diff \
-              file://2.9/wps.patch file://2.9/eloop_rfc_switch.patch file://2.9/greylist.patch file://2.9/one_wifi.patch file://2.9/one_wifi_bss_transition.patch file://2.9/one_wifi_radius_greylist.patch file://2.9/owe_radius_auth_vlan_32_2_9.patch file://2.9/RDKB_47882_VLAN_2_9.patch file://2.9/onewifi_cac.patch file://2.9/connected_building_avp_2_9.patch', d)}"
+              file://2.9/wps.patch file://2.9/eloop_rfc_switch.patch file://2.9/greylist.patch file://2.9/one_wifi.patch file://2.9/one_wifi_bss_transition.patch file://2.9/one_wifi_radius_greylist.patch file://2.9/owe_radius_auth_vlan_32_2_9.patch file://2.9/RDKB_47882_VLAN_2_9.patch file://2.9/onewifi_cac.patch file://2.9/connected_building_avp_2_9.patch file://2.9/enable-wnm-flag.patch ', d)}"
 
 S = "${WORKDIR}/git/"
 
