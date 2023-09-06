@@ -23,6 +23,8 @@ inherit autotools breakpad-logmapper
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 
+SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', 'file://Add_WanManager_Ready_Event.patch', '', d)}"
+
 CFLAGS_append = " \
     -I=${includedir}/dbus-1.0 \
     -I=${libdir}/dbus-1.0/include \
