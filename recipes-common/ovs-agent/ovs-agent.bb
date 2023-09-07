@@ -3,7 +3,7 @@ SUMMARY = "Ovs Agent"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=c69ddb4023dccc5f90337c20fd9408f2"
 
-DEPENDS = "ccsp-common-library utopia rdk-logger telemetry jansson"
+DEPENDS = "ccsp-common-library utopia rdk-logger telemetry jansson libsyswrapper"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 require recipes-ccsp/ccsp/ccsp_common.inc
 
@@ -28,7 +28,7 @@ CFLAGS_append = " \
 LDFLAGS_append = " \
     -lrdkloggers \
 "
-LDFLAGS_append = " -ltelemetry_msgsender"
+LDFLAGS_append = " -ltelemetry_msgsender -lsecure_wrapper"
 S = "${WORKDIR}/git"
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
