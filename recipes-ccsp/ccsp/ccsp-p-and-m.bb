@@ -175,7 +175,6 @@ do_install_append () {
     install -m 644 ${S}/source/TR-181/include/*.h ${D}/usr/include/ccsp
     install -m 644 ${S}/source/TR-181/middle_layer_src/*.h ${D}/usr/include/middle_layer_src/pam
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/partners_defaults.json ${D}/etc/partners_defaults.json
-    install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/rfcDefaults.json ${D}/etc/rfcDefaults.json
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/ScheduleAutoReboot.sh ${D}/etc/ScheduleAutoReboot.sh
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/restart_services.sh ${D}/etc/restart_services.sh
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/AutoReboot.sh ${D}/etc/AutoReboot.sh
