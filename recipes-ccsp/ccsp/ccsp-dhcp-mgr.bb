@@ -37,6 +37,8 @@ LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 #CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' -DFEATURE_RDKB_WAN_MANAGER', '', d)}"
 #LDFLAGS_append_dunfell = " -lrt"
+CFLAGS_append_kirkstone = " -Wno-array-bounds"
+CFLAGS_append_kirkstone = " -fcommon"
 
 EXTRA_OECONF_append = " --enable-dhcp_server_support=yes "
 EXTRA_OECONF_append = " --enable-dhcp_client_support=yes "
