@@ -26,6 +26,8 @@ CFLAGS_append = " \
     -I ${STAGING_INCDIR}/syscfg \
     -I ${STAGING_INCDIR}/sysevent \
     "
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfigled', ' --enable-webconfigled ', '', d)}"
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfigled', '-DLEDMGR_WEBCONFIG', '', d)} "
 
 LDFLAGS += " -lprivilege"
 
