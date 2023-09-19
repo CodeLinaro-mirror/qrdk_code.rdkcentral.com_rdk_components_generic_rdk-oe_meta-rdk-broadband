@@ -3,7 +3,7 @@ SUMMARY = "RDK VLAN Manager component"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
-DEPENDS = "ccsp-common-library dbus rdk-logger utopia hal-platform json-hal-lib libunpriv"
+DEPENDS = "ccsp-common-library dbus rdk-logger utopia hal-platform libunpriv"
 
 require ccsp_common.inc
 
@@ -15,8 +15,6 @@ SRCREV_FORMAT = "VlanManager"
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
-
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 inherit autotools pkgconfig
 
