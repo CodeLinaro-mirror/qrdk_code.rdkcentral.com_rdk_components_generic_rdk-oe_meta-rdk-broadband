@@ -47,7 +47,7 @@
  		u8 secure, snr;
  		u32 ap_vlan;
  		char txtaddr[TXT_MAC_ADDR_LEN] = {'\0'};
-+		char managed_guest_val[128] = "Connected Building IoT VAP";
++		char managed_guest_val[128] = "cb01";
  
  		secure = (hapd->conf->wpa == 0) ? 1 : 2;
  
@@ -88,7 +88,7 @@
  	key_mgmt = wpa_auth_sta_key_mgmt(sta->wpa_sm);
  	if (key_mgmt != -1 &&
 -	    (wpa_key_mgmt_wpa_psk(key_mgmt) || (key_mgmt == WPA_KEY_MGMT_OWE && !(hapd->conf->rdk_greylist)) ||
-+	    (wpa_key_mgmt_wpa_psk(key_mgmt) || (key_mgmt == WPA_KEY_MGMT_OWE && (!(hapd->conf->rdk_greylist) || !(hapd->conf->connected_building_avp))) ||
++	    (wpa_key_mgmt_wpa_psk(key_mgmt) || (key_mgmt == WPA_KEY_MGMT_OWE && !(hapd->conf->rdk_greylist || hapd->conf->connected_building_avp)) ||
  	     key_mgmt == WPA_KEY_MGMT_DPP)) {
  		wpa_printf(MSG_DEBUG, "IEEE 802.1X: Ignore STA - using PSK");
  		/*

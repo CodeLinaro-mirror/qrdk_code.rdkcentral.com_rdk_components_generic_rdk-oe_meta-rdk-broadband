@@ -40,7 +40,7 @@
  		u8 secure, snr;
  		u32 ap_vlan;
  		char txtaddr[TXT_MAC_ADDR_LEN] = {'\0'};
-+		char managed_guest_val[128] = "Connected Building IoT VAP";
++		char managed_guest_val[32] = "cb01";
  
  		secure = (hapd->conf->wpa == 0) ? 1 : 2;
  
