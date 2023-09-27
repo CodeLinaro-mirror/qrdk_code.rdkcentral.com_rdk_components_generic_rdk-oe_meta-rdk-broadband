@@ -204,7 +204,7 @@ index 2ac0c3f..4ceb88d 100644
  AM_LDFLAGS += -lz
  hardware_platform = i686-linux-gnu
 diff --git a/source/hostap-2.9/src/ap/ieee802_11.c b/source/hostap-2.9/src/ap/ieee802_11.c
-index c85a28d..9952e56 100755
+index c85a28d..f089b63 100755
 --- a/source/hostap-2.9/src/ap/ieee802_11.c
 +++ b/source/hostap-2.9/src/ap/ieee802_11.c
 @@ -2341,6 +2341,11 @@ static void handle_auth(struct hostapd_data *hapd,
@@ -249,21 +249,23 @@ index c85a28d..9952e56 100755
  			hostapd_logger(hapd, mgmt->sa,
  				       HOSTAPD_MODULE_IEEE80211,
  				       HOSTAPD_LEVEL_INFO,
-@@ -4003,8 +4031,13 @@ static void handle_assoc(struct hostapd_data *hapd,
+@@ -4003,9 +4031,15 @@ static void handle_assoc(struct hostapd_data *hapd,
  			send_deauth(hapd, mgmt->sa,
  				    WLAN_REASON_CLASS2_FRAME_FROM_NONAUTH_STA);
  			return;
 +#endif /* CONFIG_DRIVER_BRCM */
  		}
  	}
-
-+	sta->assoc_req = os_malloc(len); 
+ 
++	os_free(sta->assoc_req);
++	sta->assoc_req = os_malloc(len);
 +	os_memcpy(sta->assoc_req, (u8 *)mgmt, len);
 +	sta->assoc_req_len = len;
 +
-	if ((fc & WLAN_FC_RETRY) &&
-	    sta->last_seq_ctrl != WLAN_INVALID_MGMT_SEQ &&
-@@ -4426,6 +4459,7 @@ static int handle_action(struct hostapd_data *hapd,
+ 	if ((fc & WLAN_FC_RETRY) &&
+ 	    sta->last_seq_ctrl != WLAN_INVALID_MGMT_SEQ &&
+ 	    sta->last_seq_ctrl == seq_ctrl &&
+@@ -4426,6 +4460,7 @@ static int handle_action(struct hostapd_data *hapd,
  		return 0;
  	}
  
@@ -271,7 +273,7 @@ index c85a28d..9952e56 100755
  #ifdef CONFIG_IEEE80211W
  	if (sta && (sta->flags & WLAN_STA_MFP) &&
  	    !(mgmt->frame_control & host_to_le16(WLAN_FC_ISWEP)) &&
-@@ -44437,6 +4471,7 @@ static int handle_action(struct hostapd_data *hapd,
+@@ -4437,6 +4472,7 @@ static int handle_action(struct hostapd_data *hapd,
  		return 0;
  	}
  #endif /* CONFIG_IEEE80211W */

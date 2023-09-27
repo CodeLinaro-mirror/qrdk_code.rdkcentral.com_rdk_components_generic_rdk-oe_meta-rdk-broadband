@@ -668,7 +668,7 @@ index 255e69f..d73bfc5 100644
  
  	int beacon_set_done;
 diff --git a/source/hostap-2.10/src/ap/ieee802_11.c b/source/hostap-2.10/src/ap/ieee802_11.c
-index 394e292..de34732 100644
+index 394e292..ea53a5e 100644
 --- a/source/hostap-2.10/src/ap/ieee802_11.c
 +++ b/source/hostap-2.10/src/ap/ieee802_11.c
 @@ -55,7 +55,9 @@
@@ -801,7 +801,7 @@ index 394e292..de34732 100644
  			hostapd_logger(hapd, mgmt->sa,
  				       HOSTAPD_MODULE_IEEE80211,
  				       HOSTAPD_LEVEL_INFO,
-@@ -5618,8 +5672,13 @@ static void handle_assoc(struct hostapd_data *hapd,
+@@ -5618,9 +5672,15 @@ static void handle_assoc(struct hostapd_data *hapd,
  			send_deauth(hapd, mgmt->sa,
  				    WLAN_REASON_CLASS2_FRAME_FROM_NONAUTH_STA);
  			return;
@@ -809,13 +809,15 @@ index 394e292..de34732 100644
  		}
  	}
  
++	os_free(sta->assoc_req);
 +	sta->assoc_req = os_malloc(len);
 +	os_memcpy(sta->assoc_req, (u8 *)mgmt, len);
 +	sta->assoc_req_len = len;
 +
-	if ((fc & WLAN_FC_RETRY) &&
-	    sta->last_seq_ctrl != WLAN_INVALID_MGMT_SEQ &&
-@@ -6038,7 +6097,7 @@ static int handle_action(struct hostapd_data *hapd,
+ 	if ((fc & WLAN_FC_RETRY) &&
+ 	    sta->last_seq_ctrl != WLAN_INVALID_MGMT_SEQ &&
+ 	    sta->last_seq_ctrl == seq_ctrl &&
+@@ -6038,7 +6098,7 @@ static int handle_action(struct hostapd_data *hapd,
  			   mgmt->u.action.category, MAC2STR(mgmt->sa));
  		return 0;
  	}
@@ -824,7 +826,7 @@ index 394e292..de34732 100644
  	if (sta && (sta->flags & WLAN_STA_MFP) &&
  	    !(mgmt->frame_control & host_to_le16(WLAN_FC_ISWEP)) &&
  	    robust_action_frame(mgmt->u.action.category)) {
-@@ -6048,6 +6107,7 @@ static int handle_action(struct hostapd_data *hapd,
+@@ -6048,6 +6108,7 @@ static int handle_action(struct hostapd_data *hapd,
  			       "an MFP STA");
  		return 0;
  	}
