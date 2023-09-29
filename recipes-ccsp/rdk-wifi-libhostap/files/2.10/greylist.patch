@@ -746,11 +746,11 @@ index 0000000..06fa838
 +			wpa_printf(MSG_ERROR, "GREYLIST: %s: "
 +					"%s already exists in file\n",
 +					__func__, txtaddr);
-+			fclose(fp);
++			flock(fd, LOCK_UN);
 +			wpa_printf(MSG_DEBUG,
 +					"GREYLIST: %s: %s: released file lock\n",
 +					__func__, conf->iface);
-+			flock(fd, LOCK_UN);
++			fclose(fp);
 +			goto ADD_TO_DRIVER;
 +		}
 +	}
@@ -1139,7 +1139,7 @@ index fb5e920..b0232b5 100644
  		break;
  	case RADIUS_CODE_ACCESS_REJECT:
  		sm->eap_if->aaaFail = true;
-@@ -2040,6 +2098,35 @@ ieee802_1x_receive_auth(struct radius_msg *msg, struct radius_msg *req,
+@@ -2040,6 +2098,36 @@ ieee802_1x_receive_auth(struct radius_msg *msg, struct radius_msg *req,
  				   MACSTR, reason_code, MAC2STR(sta->addr));
  			sta->disconnect_reason_code = reason_code;
  		}
@@ -1169,6 +1169,7 @@ index fb5e920..b0232b5 100644
 +								WLAN_REASON_UNSPECIFIED);
 +					}
 +				}
++				os_free(reply);
 +			}
 +		}
 +#endif /* FEATURE_SUPPORT_RADIUSGREYLIST */

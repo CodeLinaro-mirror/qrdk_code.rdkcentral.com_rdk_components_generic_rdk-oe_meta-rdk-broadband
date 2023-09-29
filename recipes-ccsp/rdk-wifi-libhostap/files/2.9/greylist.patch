@@ -720,11 +720,11 @@ Signed-off-by: Manish_Dharanenthiran <Manish_Dharanenthiran@Comcast.com>
 +			wpa_printf(MSG_ERROR, "GREYLIST: %s: "
 +					"%s already exists in file\n",
 +					__func__, txtaddr);
-+			fclose(fp);
++			flock(fd, LOCK_UN);
 +			wpa_printf(MSG_DEBUG,
 +					"GREYLIST: %s: %s: released file lock\n",
 +					__func__, conf->iface);
-+			flock(fd, LOCK_UN);
++			fclose(fp);
 +			goto ADD_TO_DRIVER;
 +		}
 +	}
@@ -1105,7 +1105,7 @@ Signed-off-by: Manish_Dharanenthiran <Manish_Dharanenthiran@Comcast.com>
  		break;
  	case RADIUS_CODE_ACCESS_REJECT:
  		sm->eap_if->aaaFail = TRUE;
-@@ -2028,6 +2091,35 @@ ieee802_1x_receive_auth(struct radius_ms
+@@ -2028,6 +2091,36 @@ ieee802_1x_receive_auth(struct radius_ms
  				   MACSTR, reason_code, MAC2STR(sta->addr));
  			sta->disconnect_reason_code = reason_code;
  		}
@@ -1135,6 +1135,7 @@ Signed-off-by: Manish_Dharanenthiran <Manish_Dharanenthiran@Comcast.com>
 +								WLAN_REASON_UNSPECIFIED);
 +					}
 +				}
++				os_free(reply);
 +			}
 +		}
 +#endif /* FEATURE_SUPPORT_RADIUSGREYLIST */
