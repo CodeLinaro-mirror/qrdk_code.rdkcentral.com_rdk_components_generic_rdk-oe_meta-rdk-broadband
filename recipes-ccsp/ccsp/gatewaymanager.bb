@@ -45,6 +45,7 @@ LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5'
 LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+CFLAGS_append =  "${@bb.utils.contains('DISTRO_FEATURES', 'local_restore_support', ' -DENABLE_LOCAL_RESTORE ', '', d)}"
 
 EXTRA_OECONF_append = " --enable-rbus_only_gwmgr"
 
