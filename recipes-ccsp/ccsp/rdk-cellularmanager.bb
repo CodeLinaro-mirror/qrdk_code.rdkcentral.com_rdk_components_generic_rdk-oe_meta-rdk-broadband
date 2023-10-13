@@ -4,7 +4,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 DEPENDS = "ccsp-common-library rdk-logger utopia libunpriv halinterface glib-2.0 webconfig-framework curl trower-base64 msgpack-c libgudev rbus"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', '', 'libqmi', d)}"
+DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_libqmi_support', 'libqmi', '', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 SRC_URI ="${RDKB_CCSP_ROOT_GIT}/RdkCellularManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};name=CellularManager"
@@ -28,7 +28,7 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/libsafec \
     -I${STAGING_INCDIR}/glib-2.0 \
     -I${STAGING_LIBDIR}/glib-2.0/include \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', '', ' -I${STAGING_INCDIR}/libqmi-glib', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_libqmi_support', ' -I${STAGING_INCDIR}/libqmi-glib', '', d)} \
     -I${STAGING_INCDIR}/trower-base64 \
     -I${STAGING_INCDIR}/msgpackc \
     "
@@ -38,7 +38,7 @@ LDFLAGS += " -lprivilege"
 LDFLAGS_append = " -ldbus-1"
 LDFLAGS_remove_morty = " -ldbus-1"
 LDFLAGS += " -lgobject-2.0 -lgio-2.0 -lglib-2.0 -lgudev-1.0"
-LDFLAGS += " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', '', '-lqmi-glib', d)}"
+LDFLAGS += " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_libqmi_support', '-lqmi-glib', '', d)}"
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', '-DCELLULAR_MGR_LITE ', '', d)}"
@@ -103,3 +103,6 @@ DOWNLOAD_ON_DEMAND="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', '
 ENABLE_CELLULAR_MGR_LITE = "--enable-cellularmgrlite=${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', 'yes', 'no', d)}"
 EXTRA_OECONF_append  = " ${ENABLE_CELLULAR_MGR_LITE}"
 EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+
+ENABLE_CELLULAR_MGR_LTE_USB = "--enable-lteusbsupport=${@bb.utils.contains('DISTRO_FEATURES', 'lte_usb_support', 'yes', 'no', d)}"
+EXTRA_OECONF_append  = " ${ENABLE_CELLULAR_MGR_LTE_USB}"
