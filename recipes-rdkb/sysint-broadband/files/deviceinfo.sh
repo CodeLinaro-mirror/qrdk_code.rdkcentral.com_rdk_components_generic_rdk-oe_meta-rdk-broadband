@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "Usage: deviceinfo.sh -[mo|sn|fw|ms|mu|cmac|cip|cipv6|emac|eip|eipv6|lmac|lip|lipv6]"
+    echo "Usage: deviceinfo.sh -[mo|sn|fw|ms|mu|cmac|cip|cipv6|emac|eip|eipv6|lmac|lip|lipv6|optimization|mwo_broker|mwo_port|mwo_topic|mesh_enable]"
     echo "       -mo:    Model number"
     echo "       -sn:    Serial number"
     echo "       -fw:    Firmware version"
@@ -22,6 +22,11 @@ usage()
     echo "       -mode: Current Operational Mode - Gateway or ExtenderMode"
     echo "       -off_chan: Off channel scan status(enabled/disabled)"
     echo "       -wanmode: Device WAN Mode (DOCSIS/Ethernet)"
+    echo "       -optimization: mesh optimzation (online = 0 default mode, fully controlled by the cloud), (monitor = 1 Transitional mode, local optimization code to be validated with cloud, still fully controller by cloud), (offline = 2 Fully device controlled), (disabled = 3 Full Mesh disablement)"
+    echo "       -mwo_broker: mqtt broker or ip"
+    echo "       -mwo_port: mqtt port"
+    echo "       -mwo_topic: mqtt topic"
+    echo "       -mesh_enable: mesh rfc"
     exit 1
 }
 
@@ -126,6 +131,12 @@ case $1 in
         shift 1
         ;;
 
+    -mesh_enable)
+        mesh=`syscfg get mesh_enable`
+        echo "$mesh"
+        shift 1
+        ;;
+
     -off_chan)
         off_chan_status=`psmcli get Device.DeviceInfo.X_RDK_RFC.Feature.OffChannelScan.Enable`
         echo "$off_chan_status"
@@ -141,6 +152,33 @@ case $1 in
 	 fi
 	 shift 1
 	 ;;
+
+    -optimization)
+        mode=`syscfg get mesh_optimized_mode`
+        if [ "$mode" == "1" ]; then
+            echo "monitor"
+        elif [ "$mode" == "2" ]; then
+            echo "offline"
+        else
+            echo "off"
+        fi
+        shift 1
+        ;;
+
+    -mwo_broker)
+        mode=`syscfg get mwo_mqtt_config`
+        IP=${mode%:*}
+        echo $IP
+        shift 1
+        ;;
+
+    -mwo_port)
+        mode=`syscfg get mwo_mqtt_config`
+        PORT=${mode##*:}
+        echo $PORT
+        shift 1
+        ;;
+
     *)
         usage;
         ;;
