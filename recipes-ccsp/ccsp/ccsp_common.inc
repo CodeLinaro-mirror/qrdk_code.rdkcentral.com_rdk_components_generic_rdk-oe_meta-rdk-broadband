@@ -124,6 +124,9 @@ CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'WanManagerUnificati
 # Adding flag for WiFi Manange
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', ' -DWIFI_MANAGE_SUPPORTED', '', d)}"
 
+# Adding flag for ovs support enable
+CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'uselinux_bridge', ' -DUSE_LINUX_BRIDGE ', '', d)}"
+
 FILES_${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"
