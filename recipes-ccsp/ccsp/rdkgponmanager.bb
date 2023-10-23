@@ -54,6 +54,11 @@ CFLAGS_append = " \
     "
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '-DFEATURE_RDKB_WAN_MANAGER', '', d)}"
 
+do_compile_prepend () {
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/RdkGponManager.xml ${S}/source/GponManager/dm_pack_datamodel.c)
+}
+
+
 do_install () {
     # Config files and scripts
     install -d ${D}/usr/rdk
