@@ -69,6 +69,12 @@ do_install_append() {
     install -m 755 ${S}/code/status-500.html ${D}/usr/www2
     install -m 755 ${S}/jst/*.jst ${D}/usr/www2
     install -m 755 ${S}/jst/actionHandler/*.jst ${D}/usr/www2/actionHandler
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'true', 'false', d)}; then
+        install -m 0755 ${S}/jst/actionHandler/ajaxSet_wireless_network_configuration_onewifi.jst ${D}/usr/www2/actionHandler/ajaxSet_wireless_network_configuration.jst
+        install -m 0755 ${S}/jst/actionHandler/ajaxSet_wireless_network_configuration_edit_onewifi.jst ${D}/usr/www2/actionHandler/ajaxSet_wireless_network_configuration_edit.jst
+        install -m 0755 ${S}/jst/actionHandler/ajaxSet_wizard_step2_onewifi.jst ${D}/usr/www2/actionHandler/ajaxSet_wizard_step2.jst
+        install -m 0755 ${S}/jst/actionHandler/ajaxSet_wps_config_onewifi.jst ${D}/usr/www2/actionHandler/ajaxSet_wps_config.jst
+     fi
     install -m 755 ${S}/code/cmn/css/*.css ${D}/usr/www2/cmn/css
     install -m 755 ${S}/code/cmn/css/lib/*.css ${D}/usr/www2/cmn/css/lib
     install -m 755 ${S}/code/cmn/img/* ${D}/usr/www2/cmn/img
