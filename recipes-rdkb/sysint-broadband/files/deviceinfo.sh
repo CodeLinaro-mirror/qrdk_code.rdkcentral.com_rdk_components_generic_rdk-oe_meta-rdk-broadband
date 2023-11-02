@@ -22,7 +22,7 @@ usage()
     echo "       -mode: Current Operational Mode - Gateway or ExtenderMode"
     echo "       -off_chan: Off channel scan status(enabled/disabled)"
     echo "       -wanmode: Device WAN Mode (DOCSIS/Ethernet)"
-    echo "       -optimization: mesh optimzation (online = 0 default mode, fully controlled by the cloud), (monitor = 1 Transitional mode, local optimization code to be validated with cloud, still fully controller by cloud), (offline = 2 Fully device controlled), (disabled = 3 Full Mesh disablement)"
+    echo "       -optimization: mesh optimzation (disable = 0 default mode, fully controlled by the cloud), (monitor = 1 Transitional mode, local optimization code to be validated with cloud, still fully controller by cloud), (enable = 2 Fully device controlled))"
     echo "       -mwo_broker: mqtt broker or ip"
     echo "       -mwo_port: mqtt port"
     echo "       -mwo_topic: mqtt topic"
@@ -158,9 +158,9 @@ case $1 in
         if [ "$mode" == "1" ]; then
             echo "monitor"
         elif [ "$mode" == "2" ]; then
-            echo "offline"
+            echo "enable"
         else
-            echo "off"
+            echo "disable"
         fi
         shift 1
         ;;
