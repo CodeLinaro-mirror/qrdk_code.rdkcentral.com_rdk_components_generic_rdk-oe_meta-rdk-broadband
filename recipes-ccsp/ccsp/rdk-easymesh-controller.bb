@@ -1,4 +1,4 @@
-# Component can be added to build with: DISTRO_FEATURES_append = " easymesh-controller"
+# Component can be added to build with: MESH_FEATURES = " easymesh-controller"
 
 SUMMARY = "RDK EasyMesh Controller component"
 

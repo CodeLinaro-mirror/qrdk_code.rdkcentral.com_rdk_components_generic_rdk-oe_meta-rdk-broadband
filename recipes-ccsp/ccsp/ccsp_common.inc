@@ -100,7 +100,7 @@ CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'nat46', '-DFEATURE_S
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', ' -DWAN_FAILOVER_SUPPORTED -DRBUS_BUILD_FLAG_ENABLE', '', d)}"
 
 # Adding flag for EasyMesh Controller
-CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'easymesh-controller', '-DFEATURE_SUPPORT_EASYMESH_CONTROLLER', '', d)}"
+CFLAGS_append += " ${@bb.utils.contains('MESH_FEATURES', 'easymesh-controller', '-DFEATURE_SUPPORT_EASYMESH_CONTROLLER', '', d)}"
 
 # Adding flag for Rbus Build Flag
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'RbusBuildFlagEnable', ' -DRBUS_BUILD_FLAG_ENABLE', '', d)}"
