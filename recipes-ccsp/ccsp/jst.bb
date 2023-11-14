@@ -25,11 +25,14 @@ do_install_append() {
  install -d ${D}/usr/www2/includes
  install -d ${D}/usr/video_analytics
  install -m 755 ${S}/jsts/php.jst ${D}/usr/www2/includes
-
-
  install -m 755 ${S}/jsts/php.jst ${D}/usr/video_analytics/
  install -m 755 ${S}/jsts/jst_prefix.js ${D}/usr/video_analytics/
  install -m 755 ${S}/jsts/jst_suffix.js ${D}/usr/video_analytics/
+ if ${@bb.utils.contains("DISTRO_FEATURES", "lte_usb_support", "true", "false", d)}; then
+  install -d ${D}/etc/firmware_download/
+  install -d ${D}/etc/firmware_download/includes
+  install -m 755 ${S}/jsts/php.jst ${D}/etc/firmware_download/includes/php.jst
+ fi
 }
 FILES_${PN}-ccsp = " \
 "
@@ -37,5 +40,5 @@ FILES_${PN} += "/usr/*"
 FILES_${PN} += "/usr/www2/*"
 FILES_${PN} += "/usr/www2/includes/*"
 FILES_${PN} += "/usr/video_analytics/*"
-
-
+FILES_${PN} += "/etc/firmware_download/*"
+FILES_${PN} += "/etc/firmware_download/includes/*"
