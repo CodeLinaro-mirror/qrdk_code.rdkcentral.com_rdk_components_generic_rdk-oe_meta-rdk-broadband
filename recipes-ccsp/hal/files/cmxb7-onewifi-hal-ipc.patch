@@ -38,7 +38,7 @@ new file mode 100644
 index 0000000..f88bdff
 --- /dev/null
 +++ wifi/hal_ipc/client/client_hal_ipc_api.c
-@@ -0,0 +1,1370 @@
+@@ -0,0 +1,1384 @@
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <errno.h>
@@ -309,7 +309,7 @@ index 0000000..f88bdff
 +    }
 +
 +    *neighbor_ap_array = (wifi_neighbor_ap2_t*) malloc(desc->out.get_neighbor_wifi_status.output_array_size*sizeof(wifi_neighbor_ap2_t));
-+    if (!(*neighbor_ap_array)){
++    if (!(*neighbor_ap_array)) {
 +        hal_wifi_print("%s:%d: scratch_buf_size:%d scratch_buf:%p\n", __func__, __LINE__, desc->scratch_buf_size, desc->scratch_buf);
 +        if ((desc->scratch_buf_size != 0) && (desc->scratch_buf != NULL)) {
 +            free(desc->scratch_buf);
@@ -397,6 +397,13 @@ index 0000000..f88bdff
 +
 +    if (send_to_sm_socket(node, desc) != 0) {
 +        hal_wifi_print("%s:%d: ipc  processor failed\n", __func__, __LINE__);
++        return -1;
++    }
++
++    *stats_array = (wifi_associated_dev_rate_info_rx_stats_t *) malloc(desc->out.get_ap_assoc_dev_rx_stats_result.output_array_size * sizeof(wifi_associated_dev_rate_info_rx_stats_t));
++
++    if (*stats_array == NULL){
++        hal_wifi_print("%s:%d: failed to allocate memory for %d wifi_associated_dev_rate_info_rx_stats_t structs\n", __func__, __LINE__, desc->out.get_ap_assoc_dev_rx_stats_result.output_array_size);
 +        return -1;
 +    }
 +
@@ -931,6 +938,13 @@ index 0000000..f88bdff
 +
 +    if (send_to_sm_socket(node, desc) != 0) {
 +        hal_wifi_print("%s:%d: ipc  processor failed\n", __func__, __LINE__);
++        return -1;
++    }
++
++    *stats_array = (wifi_associated_dev_rate_info_tx_stats_t *) malloc(desc->out.get_ap_assoc_dev_tx_stats_result.output_array_size * sizeof(wifi_associated_dev_rate_info_tx_stats_t));
++
++    if (*stats_array == NULL){
++        hal_wifi_print("%s:%d: failed to allocate memory for %d wifi_associated_dev_rate_info_tx_stats_t structs\n", __func__, __LINE__, desc->out.get_ap_assoc_dev_tx_stats_result.output_array_size);
 +        return -1;
 +    }
 +
@@ -1629,7 +1643,7 @@ new file mode 100644
 index 0000000..34117cf
 --- /dev/null
 +++ wifi/hal_ipc/client/client_hal_ipc_core.c
-@@ -0,0 +1,1318 @@
+@@ -0,0 +1,1334 @@
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <stdbool.h>
@@ -2571,13 +2585,13 @@ index 0000000..34117cf
 +    // in case of sending to server some structure or
 +    // array of structures for processing.
 +    // Anyway we need to check desc->len against value of socket max_size bytes.
-+    if (desc->len > max_size){
++    if (sizeof(hal_ipc_processor_desc_t) > max_size) {
 +        nbytes = 0;
 +        target_bytes = 0;
 +        tmp = (unsigned char *) desc;
 +
-+        while (target_bytes < desc->len) {
-+            if ((nbytes = send(cli_sock, tmp, ((desc->len - target_bytes) > max_size) ? max_size : (desc->len - target_bytes), 0)) == -1) {
++        while (target_bytes < sizeof(hal_ipc_processor_desc_t)) {
++            if ((nbytes = send(cli_sock, tmp, ((sizeof(hal_ipc_processor_desc_t) - target_bytes) > max_size) ? max_size : (sizeof(hal_ipc_processor_desc_t) - target_bytes), 0)) == -1) {
 +                hal_wifi_print("%s:%d:sending desc in chunks failed err: %d\n", __func__, __LINE__, errno);
 +                // if size of descriptor data is more than just descriptor struct
 +                // it means that in ipc_input_client function we allocated
@@ -2603,6 +2617,22 @@ index 0000000..34117cf
 +        return -1;
 +    }
 +
++    target_bytes = 0;
++    nbytes = 0;
++
++    if (desc->len > sizeof(hal_ipc_processor_desc_t)) {
++       tmp = desc->scratch_buf;
++       while (target_bytes < desc->scratch_buf_size) {
++            if ((nbytes = send(cli_sock, tmp, ((desc->scratch_buf_size - target_bytes) > max_size) ? max_size : desc->scratch_buf_size - target_bytes, 0)) == -1) {
++                hal_wifi_print("%s:%d:sending desc in chunks failed err: %d\n", __func__, __LINE__, errno);
++                close(cli_sock);
++                free(desc->scratch_buf);
++                return -1;
++            }
++            tmp += nbytes;
++            target_bytes += nbytes;
++        }
++    }
 +    hal_wifi_print("%s:%d: sent %d bytes from client\n", __func__, __LINE__, nbytes);
 +
 +    // free memory allocated (if any) in client parameters input function.
@@ -2789,7 +2819,7 @@ index 0000000..34117cf
 +            continue;
 +        }
 +
-+        assert(target_bytes == desc.len);
++        //assert(target_bytes == desc.len);
 +        hal_wifi_print("%s:%d: Descriptor %s received OK.\n", __func__, __LINE__, desc.name);
 +
 +        target_bytes = 0;
@@ -2833,7 +2863,7 @@ index 0000000..34117cf
 +            }
 +        }
 +
-+        assert(nbytes == desc.len);
++        //assert(nbytes == desc.len);
 +        hal_wifi_print("%s:%d: Descriptor %s notification data size checked OK. Executing...\n", __func__, __LINE__, desc.name);
 +
 +        // Execute notification server processor
@@ -3233,7 +3263,7 @@ index 0000000..95913f0
 +        // wifi_setBTMRequest
 +        struct {
 +            UINT ap_index;
-+            CHAR peer_mac[HAL_IPC_MAC_ADDR_SIZE_BYTES];
++            mac_address_t peer_mac;
 +            wifi_BTMRequest_t request;
 +        } set_btm_request;
 +        //----------------------------------------------------------------------
@@ -3245,7 +3275,7 @@ index 0000000..95913f0
 +        // wifi_setRMBeaconRequest
 +        struct {
 +            UINT ap_index;
-+            CHAR peer_mac[HAL_IPC_MAC_ADDR_SIZE_BYTES];
++            mac_address_t peer_mac;
 +            wifi_BeaconRequest_t in_request;
 +        } set_rm_beacon_request;
 +        //----------------------------------------------------------------------
@@ -3504,7 +3534,7 @@ new file mode 100644
 index 0000000..e4771e1
 --- /dev/null
 +++ wifi/hal_ipc/client/client_hal_ipc_processors.c
-@@ -0,0 +1,1050 @@
+@@ -0,0 +1,1055 @@
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <errno.h>
@@ -3520,6 +3550,8 @@ index 0000000..e4771e1
 +                     void *arg5)
 +{
 +    hal_wifi_print("%s:%d Enter: handled client input parameters for %s\n", __func__, __LINE__, desc->name);
++    mac_address_t sta_mac;
++    memset(sta_mac, 0, sizeof(mac_address_t));
 +
 +    desc->len = sizeof(hal_ipc_processor_desc_t);
 +    desc->scratch_buf = NULL;
@@ -3810,9 +3842,11 @@ index 0000000..e4771e1
 +
 +            desc->in.set_btm_request.ap_index = *(UINT*) arg1;
 +
++            sscanf((char *)arg2, "%02x:%02x:%02x:%02x:%02x:%02x", &sta_mac[0], &sta_mac[1], &sta_mac[2],&sta_mac[3], &sta_mac[4], &sta_mac[5]);
++
 +            if (!memcpy((unsigned char*) &desc->in.set_btm_request.peer_mac[0],
-+                      (unsigned char*) arg2,
-+                      sizeof(HAL_IPC_MAC_ADDR_SIZE_BYTES))) {
++                      (unsigned char*) sta_mac,
++                      sizeof(mac_address_t))) {
 +                hal_wifi_print("%s:%d FAIL memcpy for %s peer_mac.\n", __func__, __LINE__, desc->name);
 +                return -1;
 +            }
@@ -3841,9 +3875,11 @@ index 0000000..e4771e1
 +
 +            desc->in.set_rm_beacon_request.ap_index = *(UINT*) arg1;
 +
++            sscanf((char *)arg2, "%02x:%02x:%02x:%02x:%02x:%02x", &sta_mac[0], &sta_mac[1], &sta_mac[2],&sta_mac[3], &sta_mac[4], &sta_mac[5]);
++
 +            if (!memcpy((unsigned char*) &desc->in.set_rm_beacon_request.peer_mac[0],
-+                      (unsigned char*) arg2,
-+                      sizeof(HAL_IPC_MAC_ADDR_SIZE_BYTES))) {
++                      (unsigned char*) sta_mac,
++                      sizeof(mac_address_t))) {
 +                hal_wifi_print("%s:%d FAIL memcpy for %s peer_mac.\n", __func__, __LINE__, desc->name);
 +                return -1;
 +            }
@@ -4538,7 +4574,6 @@ index 0000000..e4771e1
 +                    hal_wifi_print("%s:%d: FAIL AP index %d client's BTM response event callback is NULL pointer.\n", __func__, __LINE__, desc->in.rm_beacon_report_event_data.apIndex);
 +                    return -1;
 +                }
-+
 +                if ((ret = client_btm_response_cb(apIndex, desc->in.btm_response_event_data.peerMac, &client_response))) {
 +                    hal_wifi_print("%s:%d FAIL AP index %d BTM response callback returned %d\n", __func__, __LINE__, apIndex, ret);
 +                    return -1;
@@ -5115,7 +5150,7 @@ index 4653a7c..4472c5a 100644
  }
  
  INT wifi_getApIndexFromName(CHAR *inputSsidString, INT *output_int)
-@@ -3320,11 +3337,88 @@
+@@ -3320,11 +3343,94 @@
      return RETURN_ERR;
  }
  
@@ -5163,7 +5198,10 @@ index 4653a7c..4472c5a 100644
 +//--------------------------------------------------------------------------------------------------
 +int wifi_RMBeaconRequestCallbackRegister(unsigned int apIndex, wifi_RMBeaconReport_callback cb_fn)
 +{
-+    return ipc_wifi_RMBeaconRequestCallbackRegister(apIndex, cb_fn);
++    for (unsigned int vap_index = 0; vap_index < MAX_VAP; vap_index++) {
++        ipc_wifi_RMBeaconRequestCallbackRegister(vap_index, cb_fn);
++    }
++    return RETURN_OK;
 +}
 +
 +//--------------------------------------------------------------------------------------------------
@@ -5189,7 +5227,10 @@ index 4653a7c..4472c5a 100644
 +        wifi_BTMQueryRequest_callback btmQueryCallback,
 +        wifi_BTMResponse_callback btmResponseCallback)
 +{
-+    return ipc_wifi_BTMQueryRequest_callback_register(apIndex, btmQueryCallback, btmResponseCallback);
++    for (unsigned int vap_index = 0; vap_index < MAX_VAP; vap_index++) {
++        ipc_wifi_BTMQueryRequest_callback_register(vap_index, btmQueryCallback, btmResponseCallback);
++    }
++    return RETURN_OK;
 +}
 +
 +//--------------------------------------------------------------------------------------------------
