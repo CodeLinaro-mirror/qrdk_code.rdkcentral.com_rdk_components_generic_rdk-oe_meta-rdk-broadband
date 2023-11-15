@@ -38,7 +38,7 @@ new file mode 100644
 index 0000000..f88bdff
 --- /dev/null
 +++ wifi/hal_ipc/client/client_hal_ipc_api.c
-@@ -0,0 +1,1355 @@
+@@ -0,0 +1,1370 @@
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <errno.h>
@@ -305,6 +305,17 @@ index 0000000..f88bdff
 +
 +    if (send_to_sm_socket(node, desc) != 0) {
 +        hal_wifi_print("%s:%d: ipc  processor failed\n", __func__, __LINE__);
++        return -1;
++    }
++
++    *neighbor_ap_array = (wifi_neighbor_ap2_t*) malloc(desc->out.get_neighbor_wifi_status.output_array_size*sizeof(wifi_neighbor_ap2_t));
++    if (!(*neighbor_ap_array)){
++        hal_wifi_print("%s:%d: scratch_buf_size:%d scratch_buf:%p\n", __func__, __LINE__, desc->scratch_buf_size, desc->scratch_buf);
++        if ((desc->scratch_buf_size != 0) && (desc->scratch_buf != NULL)) {
++            free(desc->scratch_buf);
++            desc->scratch_buf = NULL;
++        }
++        hal_wifi_print("%s:%d: failed to allocate memory for %d wifi_neighbor_ap2_t structs\n", __func__, __LINE__, desc->out.get_neighbor_wifi_status.output_array_size);
 +        return -1;
 +    }
 +
@@ -1239,20 +1250,24 @@ index 0000000..f88bdff
 +
 +    if ((input_func != NULL) && (input_func(desc, &apIndex, client_mac_addr, &req_ies_size, NULL, NULL) != 0)) {
 +        hal_wifi_print("%s:%d: Client input processor failed\n", __func__, __LINE__);
++        free(client_mac_addr);
 +        return -1;
 +    }
 +
 +    if (send_to_bm_socket(node, desc) != 0) {
 +        hal_wifi_print("%s:%d: ipc  processor failed\n", __func__, __LINE__);
++        free(client_mac_addr);
 +        return -1;
 +    }
 +
 +    if ((output_func != NULL) &&
 +            (output_func(desc, req_ies, req_ies_len, NULL, NULL, NULL)) != 0) {
 +        hal_wifi_print("%s:%d: Client output processor failed\n", __func__, __LINE__);
++        free(client_mac_addr);
 +        return -1;
 +    }
 +
++    free(client_mac_addr);
 +    return 0;
 +}
 +
@@ -3489,7 +3504,7 @@ new file mode 100644
 index 0000000..e4771e1
 --- /dev/null
 +++ wifi/hal_ipc/client/client_hal_ipc_processors.c
-@@ -0,0 +1,1047 @@
+@@ -0,0 +1,1050 @@
 +#include <stdio.h>
 +#include <stdlib.h>
 +#include <errno.h>
@@ -3999,12 +4014,15 @@ index 0000000..e4771e1
 +                hal_wifi_print("%s:%d function %s require 1 argument.\n", __func__, __LINE__, desc->name);
 +                return -1;
 +            }
-+            *(UINT*) arg1 = desc->out.start_neighbor_scan.chan_list;
++            if (desc->in.start_neighbor_scan.scan_mode == WIFI_RADIO_SCAN_MODE_OFFCHAN) {
++                *(UINT*) arg1 = desc->out.start_neighbor_scan.chan_list;
++            }
 +            break;
 +
 +        case hal_ipc_desc_type_get_neighbor_wifi_status:
 +            if (!arg1 || !arg2) {
 +                hal_wifi_print("%s:%d function %s require 2 arguments.\n", __func__, __LINE__, desc->name);
++                free(desc->scratch_buf);
 +                return -1;
 +            }
 +
