@@ -1,7 +1,7 @@
 SUMMARY = "RDK LED Manager component"
 
 LICENSE = "Apache-2.0"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=e32b0a505c9a82d64d7970df0a5c1ece"
 
 DEPENDS = "ccsp-common-library rdk-logger utopia hal-platform hal-ledmanager libunpriv"
 
