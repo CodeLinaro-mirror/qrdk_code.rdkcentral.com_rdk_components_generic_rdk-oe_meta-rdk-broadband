@@ -81,6 +81,9 @@ CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-psm-db', '-DFEA
 #Add flags to support Off Channel Scan for 5G Radio
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'offchannel_scan_5g', '-DFEATURE_OFF_CHANNEL_SCAN_5G', '', d)}"
 
+#Add flags to support Rx-Tx feature for XB6
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'rxtx_bytes_xb6', '-DFEATURE_RXTX_XB6', '', d)}"
+
 # Add flag to support HIGH split 
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'highsplit', '-D_CM_HIGHSPLIT_SUPPORTED_', '', d)}"
 
