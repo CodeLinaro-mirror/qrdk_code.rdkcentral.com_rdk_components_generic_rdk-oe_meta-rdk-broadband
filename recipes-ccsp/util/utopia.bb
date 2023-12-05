@@ -4,6 +4,7 @@ HOMEPAGE = "http://github.com/belvedere-yocto/Utopia"
 LICENSE = "Apache-2.0 & BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=baa21dec03307f641a150889224a157f"
 
+export PARTNER_DEFAULT_EXT="${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','yes', 'no', d)}"
 
 DEPENDS = "ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi zlib dbus libnetfilter-queue libupnp cjson halinterface libevent libsyswrapper"
 DEPENDS_append_libc-musl = " libtirpc"
@@ -27,6 +28,10 @@ PV = "${RDK_RELEASE}"
 S = "${WORKDIR}/git"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
 
+FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
+SRC_URI_append = " \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','file://ApplySystemDefaults.service','',d)} \
+"
 #This configuration is commented in utopia configure.ac file. As long as this is not enabled in configure file, passing the OE configuration is giving error in kirkstone.
 #EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '--enable-wanfailover', '', d)}"
 
@@ -108,6 +113,11 @@ do_install_append () {
     install -d ${D}${includedir}/ccsp
     install -m 644 ${S}/source/util/print_uptime/print_uptime.h ${D}${includedir}/ccsp
 
+    DISTRO_PARTNER_DEFAULT_EXT="${@bb.utils.contains('DISTRO_FEATURES','partner_default_ext','true','false',d)}"
+    if [ $DISTRO_PARTNER_DEFAULT_EXT = 'true' ]; then
+        install -D -m 755 ${WORKDIR}/ApplySystemDefaults.service ${D}${systemd_unitdir}/system/ApplySystemDefaults.service
+    fi
+
     # Creating symbolic links to install files in specific directory as in legacy builds
     ln -sf /usr/bin/syscfg ${D}${bindir}/syscfg_create
     ln -sf /usr/bin/syscfg ${D}${bindir}/syscfg_destroy
@@ -155,6 +165,8 @@ PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', 
 FILES_${PN}-gtest = "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/Utopia_gtest.bin', '', d)} \
 "
+FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','${systemd_unitdir}/system/ApplySystemDefaults.service','',d)}"
+SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','ApplySystemDefaults.service','',d)}"
 
 DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-Utopia', '', d)}"
 inherit comcast-package-deploy
