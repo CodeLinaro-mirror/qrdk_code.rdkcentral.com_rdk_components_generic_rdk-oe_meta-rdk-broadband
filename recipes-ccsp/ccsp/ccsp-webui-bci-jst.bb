@@ -22,7 +22,7 @@ SRCREV = "${AUTOREV}"
 SRCREV_xb3 = "${AUTOREV}"
 SRCREV_FORMAT = "default_xb3"
 
-PV = "${RDK_RELEASE}+git${SRCPV}"
+PV = "${RDK_RELEASE}"
 
 S = "${WORKDIR}/git/source/Styles/xb3"
 

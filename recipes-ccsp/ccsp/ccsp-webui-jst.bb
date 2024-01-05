@@ -17,7 +17,7 @@ SRCREV_webui = "${AUTOREV}"
 SRCREV_xb3 = "${AUTOREV}"
 SRCREV_FORMAT = "webui_xb3"
 
-PV = "${RDK_RELEASE}+git${SRCPV}"
+PV = "${RDK_RELEASE}"
 
 S = "${WORKDIR}/git/source/Styles/xb3"
 

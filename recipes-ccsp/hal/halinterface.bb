@@ -10,7 +10,7 @@ SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/halinterface;protocol
 SRCREV_halinterface = "${AUTOREV}"
 SRCREV_FORMAT = "halinterface"
 
-PV = "${RDK_RELEASE}+git${SRCPV}"
+PV = "${RDK_RELEASE}"
 
 S = "${WORKDIR}/git"
 

@@ -15,7 +15,7 @@ do_install_append() {
         install -d ${D}/usr/include/ccsp
 	install -m 0644 ${S}/source/libnet.h ${D}/usr/include/ccsp
 }
-PV = "${RDK_RELEASE}+git${SRCPV}"
+
 PACKAGES += "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
 
 FILES_${PN}-gtest = "\

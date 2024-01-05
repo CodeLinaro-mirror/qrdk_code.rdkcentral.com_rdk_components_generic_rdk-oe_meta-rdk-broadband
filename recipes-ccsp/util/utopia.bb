@@ -22,7 +22,7 @@ SRCREV_Utopia = "${AUTOREV}"
 
 SRCREV_FORMAT = "Utopia"
 
-PV = "${RDK_RELEASE}+git${SRCPV}"
+PV = "${RDK_RELEASE}"
 
 S = "${WORKDIR}/git"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
