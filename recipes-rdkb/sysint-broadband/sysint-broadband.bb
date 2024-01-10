@@ -14,7 +14,11 @@ HASDSL = "${@bb.utils.contains('DISTRO_FEATURES', 'dsl', 'true', 'false', d)}"
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/sysint;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=sysintbroadband"
 SRC_URI += "${CMF_GIT_ROOT}/rdkb/devices/intel-x86-pc/emulator/sysint;module=.;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=git/device;name=sysintdevice"
 
-SRCREV = "${AUTOREV}"
+SRCREV_sysintbroadband = "${AUTOREV}"
+SRCREV_sysintdevice = "${AUTOREV}"
+SRCREV_FORMAT = "sysintbroadband_sysintdevice"
+
+#SRCREV = "${AUTOREV}"
 
 S = "${WORKDIR}/git"
 
