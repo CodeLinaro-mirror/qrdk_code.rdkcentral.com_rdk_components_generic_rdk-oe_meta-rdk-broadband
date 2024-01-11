@@ -53,12 +53,6 @@ do_install_append () {
     ln -sf /usr/bin/PsmSsp ${D}/usr/ccsp/PsmSsp
 }
 
-do_install_append_qemux86 () {
-    # Config files and scripts
-    install -d ${D}/usr/ccsp/config
-    install -m 644 ${S}/config/bbhm_def_cfg_pc.xml ${D}/usr/ccsp/config/bbhm_def_cfg.xml
-}
-
 do_install_append_qemuarm () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/config

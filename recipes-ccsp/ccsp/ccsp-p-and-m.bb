@@ -183,10 +183,10 @@ do_install_append () {
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/RebootCondition.sh ${D}/etc/RebootCondition.sh
 }
 
-do_install_append_qemux86 () {
-   #Config files and scripts
-    install -m 644 ${S}/config-pc/COSAXcalibur.XML -t ${D}/usr/ccsp/pam
-}
+#do_install_append_qemux86 () {
+#   #Config files and scripts
+#    install -m 644 ${S}/config-pc/COSAXcalibur.XML -t ${D}/usr/ccsp/pam
+#}
 
 PACKAGES += "${PN}-ccsp"
 PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
@@ -222,9 +222,9 @@ FILES_${PN}-dbg = " \
     ${bindir}/.debug \
     ${libdir}/.debug \
 "
-FILES_${PN}-ccsp_append_qemux86 = " \
-    ${prefix}/ccsp/pam/COSAXcalibur.XML \
-"
+#FILES_${PN}-ccsp_append_qemux86 = " \
+#    ${prefix}/ccsp/pam/COSAXcalibur.XML \
+#"
 
 DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-CcspPandMSsp', '', d)}"
 inherit comcast-package-deploy
