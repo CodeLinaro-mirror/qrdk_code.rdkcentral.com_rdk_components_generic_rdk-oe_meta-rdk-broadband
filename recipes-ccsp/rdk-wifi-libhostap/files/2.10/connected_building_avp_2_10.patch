@@ -1,13 +1,13 @@
 --- a/source/hostap-2.10/src/ap/ap_config.h	2023-07-26 00:45:55.331555487 +0000
 +++ b/source/hostap-2.10/src/ap/ap_config.h	2023-07-26 00:47:18.910883690 +0000
-@@ -930,6 +930,7 @@
- #ifdef CONFIG_DRIVER_BRCM
- 	int spp_amsdu;
- #endif /* CONFIG_DRIVER_BRCM */
-+	int connected_building_avp;
- };
- 
- /**
+@@ -664,6 +664,7 @@
+
+    u8 wps_rf_bands; /* RF bands for WPS (WPS_RF_*) */
+
++   int connected_building_avp;
+ #ifdef CONFIG_RADIUS_TEST
+    char *dump_msk_file;
+ #endif /* CONFIG_RADIUS_TEST */
 --- a/source/hostap-2.10/src/radius/radius.h	2023-07-26 16:27:49.730362016 +0000
 +++ b/source/hostap-2.10/src/radius/radius.h	2023-07-26 16:28:57.753795897 +0000
 @@ -242,6 +242,7 @@
