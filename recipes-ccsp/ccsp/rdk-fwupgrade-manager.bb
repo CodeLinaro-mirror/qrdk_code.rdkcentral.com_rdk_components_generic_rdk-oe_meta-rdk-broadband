@@ -15,7 +15,7 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF_append  = " ${@bb.utils.contains('DISTRO_FEATURES','kirkstone','','--with-ccsp-platform=bcm --with-ccsp-arch=arm',d)} "
 
 inherit autotools pkgconfig
 
