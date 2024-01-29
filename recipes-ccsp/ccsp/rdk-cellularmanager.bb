@@ -105,6 +105,7 @@ SKIP_MAIN_PKG="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', 
 DOWNLOAD_ON_DEMAND="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
 
 ENABLE_CELLULAR_MGR_LITE = "--enable-cellularmgrlite=${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', 'yes', 'no', d)}"
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
 EXTRA_OECONF_append  = " ${ENABLE_CELLULAR_MGR_LITE}"
 EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
