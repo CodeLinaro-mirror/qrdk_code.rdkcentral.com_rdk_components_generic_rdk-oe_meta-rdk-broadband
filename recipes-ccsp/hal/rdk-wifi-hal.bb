@@ -32,7 +32,7 @@ EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'ONE_WIFIBU
 EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
-S = "${WORKDIR}/git/src/"
+S = "${WORKDIR}/git/src"
 
 CFLAGS_append = " -I=${includedir}/ccsp "
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'passpoint', '-DFEATURE_SUPPORT_PASSPOINT', '', d)}"
