@@ -21,7 +21,7 @@ SRCREV_FORMAT = "webui_xb3"
 
 PV = "${RDK_RELEASE}"
 
-S = "${WORKDIR}/git/source/CcspPhpExtension/"
+S = "${WORKDIR}/git/source/CcspPhpExtension"
 
 inherit autotools systemd
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"

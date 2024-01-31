@@ -18,15 +18,15 @@ SRC_URI_append = " \
                  file://cosalogs.sh \
                  file://ajax_maintenance_window_conf.php \
                  file://bci_maintenance_window.patch;apply=no \
-                 " 
-                 
+                 "
+
 SRCREV = "${AUTOREV}"
 SRCREV_xb3 = "${AUTOREV}"
 SRCREV_FORMAT = "default_xb3"
 
 PV = "${RDK_RELEASE}"
 
-S = "${WORKDIR}/git/source/CcspPhpExtension/"
+S = "${WORKDIR}/git/source/CcspPhpExtension"
 
 inherit autotools systemd
 

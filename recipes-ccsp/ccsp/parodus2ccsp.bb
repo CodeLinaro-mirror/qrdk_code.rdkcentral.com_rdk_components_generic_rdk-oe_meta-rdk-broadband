@@ -21,7 +21,7 @@ do_configure_prepend () {
 
 BRANCH = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "webconfig_phase1", "master", d)}"
 SRC_URI = "\
-    git://github.com/xmidt-org/parodus2ccsp.git;branch=${BRANCH}  \
+    git://github.com/xmidt-org/parodus2ccsp.git;branch=${BRANCH};protocol=https  \
     file://WebPA_drop_root.patch \
     "
 PV = "git+${SRCPV}"
