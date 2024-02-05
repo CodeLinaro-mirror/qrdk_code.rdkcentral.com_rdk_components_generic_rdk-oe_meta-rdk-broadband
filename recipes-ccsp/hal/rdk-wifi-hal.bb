@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://../LICENSE;md5=5d50b1d1fb741ca457897f9e370bc747"
 PROVIDES = "rdk-wifi-hal"
 RPROVIDES_${PN} = "rdk-wifi-hal"
 
-DEPENDS += " openssl halinterface rdk-wifi-util cjson libpcap "
+DEPENDS += " openssl halinterface rdk-wifi-util cjson libpcap pkgconfig-native"
 DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' rdk-wifi-libhostap libnl ', '', d)} "
 
 SRC_URI = "${RDKB_CCSP_ROOT_GIT}/hal/rdk-wifi-hal;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};name=rdk-wifi-hal"
@@ -37,6 +37,9 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator',
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', '-DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
 CFLAGS_append_kirkstone = " -Wno-deprecated-declarations "
 
+###########################LEGACY#####################
+#This should be removed after you implement the propagation of additional definitions via pkg-config
+#for the ALL transitive targets for the ALL platform
 ONEWIFI_CONFIG_FLAGS = " \
     -DCONFIG_LIBNL32 \
     -DCONFIG_DRIVER_NL80211 \
@@ -106,6 +109,20 @@ ONEWIFI_CONFIG_FLAGS = " \
     -DCONFIG_IEEE80211AX \
     -DCONFIG_ACS \
 "
+###########################LEGACY#####################
+
+#!FIXME!
+#Ensure proper propagation of CFLAGS and LIBS through the build system.
+#configure.ac:
+#PKG_CHECK_MODULES([LIBHOSTAP], [libhostap >= 2.9])
+#
+#Makefile.am:
+#target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
+#target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
+do_configure_prepend () {
+  export CFLAGS="${CFLAGS} ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '$(pkg-config --exists libhostap && pkg-config --cflags libhostap)', '', d)}"
+}
+
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CONFIG_FLAGS}', '', d)}"
 
 inherit autotools
