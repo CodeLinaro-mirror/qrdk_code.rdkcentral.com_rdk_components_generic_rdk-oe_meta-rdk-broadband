@@ -38,6 +38,7 @@ LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -ls
 LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 #CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' -DFEATURE_RDKB_WAN_MANAGER', '', d)}"
+CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'ra_monitor_support', ' -DRA_MONITOR_SUPPORT', '', d)}"
 
 #LDFLAGS_append_dunfell = " -lrt"
 
@@ -56,6 +57,14 @@ CFLAGS_append = " -DDHCPV4_CLIENT_SUPPORT "
 CFLAGS_append = " -DDHCPV6_CLIENT_SUPPORT "
 
 CFLAGS_append = " -UFEATURE_RDKB_WAN_MANAGER"
+CFLAGS_append = " -DDHCPV4_CLIENT_UDHCPC "
+CFLAGS_append = " -DDHCPV6_CLIENT_DIBBLER "
+CFLAGS_append = " -DDUID_UUID_ENABLE "
+CFLAGS_append = " -DDHCPV6C_PSM_ENABLE "
+CFLAGS_append = " -DCONFIGURABLE_OPTIONS "
+CFLAGS_append = " -DFEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE "
+CFLAGS_append = " -DUDHCPC_RUN_IN_FOREGROUND "
+
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
@@ -81,6 +90,7 @@ LDFLAGS_append = " \
     -lsysevent \
     -lsecure_wrapper \
     -lprivilege \
+    -lnanomsg \
     "
 do_compile_prepend () {
 	(${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-DHCPMgr.XML ${S}/source/DHCPMgrSsp/dm_pack_datamodel.c)
@@ -89,6 +99,8 @@ do_compile_prepend () {
 do_install_append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/dhcpmgr
+    install -d ${D}/etc/ipv6rtmon/
+    install -m 755 ${S}/config/notify.sh ${D}/etc/ipv6rtmon/
     install -m 644 ${S}/config/TR181-DHCPMgr.XML -t ${D}/usr/ccsp/dhcpmgr
     if ${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager', 'true', 'false', d)}; then
         install -D -m 0644 ${S}/config/CcspDHCPMgr.service ${D}${systemd_unitdir}/system/CcspDHCPMgr.service
