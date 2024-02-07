@@ -63,6 +63,9 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'acl_nl_support', ' -D
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
 
+# DISTRO_FEATURES_append = "FEATURE_IEEE80211BE" should be declared in local.conf
+CFLAGS_append = " ${@bb.utils.contains("DISTRO_FEATURES", 'FEATURE_IEEE80211BE', ' -DFEATURE_IEEE80211BE', '', d)}"
+
 LDFLAGS_append = " \
     -ltelemetry_msgsender \
     -lrbus \
