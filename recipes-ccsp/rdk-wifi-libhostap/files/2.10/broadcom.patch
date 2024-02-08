@@ -26,8 +26,8 @@ index 3325937..a5571ad 100644
  
  ifdef CONFIG_WPS
 +ifdef CONFIG_DRIVER_BRCM_MAP
-+endif
 +CFLAGS += -DCONFIG_DRIVER_BRCM_MAP
++endif
  CFLAGS += -DCONFIG_WPS -DEAP_SERVER_WSC
  OBJS += ../src/utils/uuid.o
  OBJS += ../src/ap/wps_hostapd.o
@@ -437,18 +437,6 @@ index ccd073d..c5ee1fc 100644
  	hostapd_set_sta_flags(hapd, sta);
  	wpa_auth_sm_event(sta->wpa_sm, WPA_DISASSOC);
  	sta->acct_terminate_cause = RADIUS_ACCT_TERMINATE_CAUSE_USER_REQUEST;
-@@ -1223,7 +1227,11 @@ void hostapd_notify_auth_ft_finish(void *ctx, const u8 *dst,
- 		       HOSTAPD_LEVEL_DEBUG, "authentication OK (FT)");
- 	sta->flags |= WLAN_STA_AUTH;
- 
-+#ifdef CONFIG_DRIVER_BRCM
-+	brcm_build_ft_auth_resp_send(ctx, dst, status, ies, ies_len);
-+#else
- 	hostapd_sta_auth(hapd, dst, auth_transaction, status, ies, ies_len);
-+#endif
- }
- #endif /* CONFIG_IEEE80211R_AP */
- 
 @@ -2093,6 +2101,14 @@ void wpa_supplicant_event(void *ctx, enum wpa_event_type event,
  			data->wds_sta_interface.ifname,
  			data->wds_sta_interface.sta_addr);
@@ -682,22 +670,6 @@ index 394e292..ea53a5e 100644
  
  #ifdef CONFIG_FILS
  static struct wpabuf *
-@@ -449,10 +451,14 @@ static void handle_auth_ft_finish(void *ctx, const u8 *dst, const u8 *bssid,
- 	struct sta_info *sta;
- 	int reply_res;
- 
-+#ifdef CONFIG_DRIVER_BRCM
-+	brcm_build_ft_auth_resp_send(ctx, dst, status, ies, ies_len);
-+	reply_res = status;
-+#else
- 	reply_res = send_auth_reply(hapd, NULL, dst, bssid, WLAN_AUTH_FT,
- 				    auth_transaction, status, ies, ies_len,
- 				    "auth-ft-finish");
--
-+#endif /* CONFIG_DRIVER_BRCM */
- 	sta = ap_get_sta(hapd, dst);
- 	if (sta == NULL)
- 		return;
 @@ -669,7 +675,12 @@ static int auth_sae_send_commit(struct hostapd_data *hapd,
  				    WLAN_AUTH_SAE, 1,
  				    status, wpabuf_head(data),
@@ -1028,30 +1000,6 @@ index d2a3600..07c51c4 100644
  };
  
  struct wpa_authenticator * wpa_init(const u8 *addr,
-diff --git a/source/hostap-2.10/src/ap/wpa_auth_ft.c b/source/hostap-2.10/src/ap/wpa_auth_ft.c
-index 7a97613..80edebc 100644
---- a/source/hostap-2.10/src/ap/wpa_auth_ft.c
-+++ b/source/hostap-2.10/src/ap/wpa_auth_ft.c
-@@ -3636,6 +3636,9 @@ static void wpa_ft_rrb_rx_request_cb(void *ctx, const u8 *dst, const u8 *bssid,
- 		   MAC2STR(sm->addr));
- 	wpa_ft_send_rrb_auth_resp(sm, sm->ft_pending_current_ap, sm->addr,
- 				  WLAN_STATUS_SUCCESS, ies, ies_len);
-+#ifdef CONFIG_DRIVER_BRCM
-+	brcm_add_ft_ds_sta(sm, sm->addr, WLAN_STATUS_SUCCESS, ies, ies_len);
-+#endif
- }
- 
- 
-@@ -3672,6 +3675,9 @@ static int wpa_ft_rrb_rx_request(struct wpa_authenticator *wpa_auth,
- 
- 	res = wpa_ft_send_rrb_auth_resp(sm, current_ap, sta_addr, status,
- 					resp_ies, resp_ies_len);
-+#ifdef CONFIG_DRIVER_BRCM
-+	brcm_add_ft_ds_sta(sm, sta_addr, status, resp_ies, resp_ies_len);
-+#endif
- 	os_free(resp_ies);
- 	return res;
- }
 diff --git a/source/hostap-2.10/src/ap/wpa_auth_glue.c b/source/hostap-2.10/src/ap/wpa_auth_glue.c
 index f1724c3..aedac41 100644
 --- a/source/hostap-2.10/src/ap/wpa_auth_glue.c
@@ -2499,7 +2447,7 @@ diff --git a/source/hostap-2.10/src/wps/http_server.c b/source/hostap-2.10/src/w
 index 507abe8..9de220b 100644
 --- a/source/hostap-2.10/src/wps/http_server.c
 +++ b/source/hostap-2.10/src/wps/http_server.c
-@@ -244,8 +244,12 @@ struct http_server * http_server_init(struct in_addr *addr, int port,
+@@ -244,8 +244,13 @@ struct http_server * http_server_init(struct in_addr *addr, int port,
  	if (srv->fd < 0)
  		goto fail;
  
@@ -2509,7 +2457,8 @@ index 507abe8..9de220b 100644
 +#else
  	if (setsockopt(srv->fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
 -	{
-+#endif /* CONFIG_DRIVER_BRCM */	{
++#endif /* CONFIG_DRIVER_BRCM */
++	{
  		wpa_printf(MSG_DEBUG,
  			   "HTTP: setsockopt(SO_REUSEADDR) failed: %s",
  			   strerror(errno));
