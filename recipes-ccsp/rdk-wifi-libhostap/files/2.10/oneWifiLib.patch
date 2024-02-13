@@ -366,7 +366,7 @@ Index: git/source/hostap-2.10/src/Makefile.am
 ===================================================================
 --- /dev/null
 +++ git/source/hostap-2.10/src/Makefile.am
-@@ -0,0 +1,382 @@
+@@ -0,0 +1,383 @@
 +##########################################################################
 +# If not stated otherwise in this file or this component's LICENSE
 +# file the following copyright and licenses apply:
@@ -417,6 +417,7 @@ Index: git/source/hostap-2.10/src/Makefile.am
 +libhostap_la_SOURCES += ap/pmksa_cache_auth.c
 +libhostap_la_SOURCES += ap/tkip_countermeasures.c
 +libhostap_la_SOURCES += ap/ieee802_11.c
++libhostap_la_SOURCES += ap/ieee802_11_he.c
 +libhostap_la_SOURCES += ap/ieee802_11_ht.c
 +libhostap_la_SOURCES += ap/ieee802_11_vht.c
 +libhostap_la_SOURCES += ap/ieee802_11_shared.c
@@ -508,6 +509,12 @@ Index: git/source/hostap-2.10/src/Makefile.am
 +#libhostap_la_SOURCES += eap_server/eap_server_sim.c
 +#libhostap_la_SOURCES += eap_server/eap_sim_db.c
 +libhostap_la_SOURCES += eap_server/ikev2.c
++libhostap_la_SOURCES += eapol_supp/eapol_supp_sm.c
++libhostap_la_SOURCES += rsn_supp/wpa.c
++libhostap_la_SOURCES += rsn_supp/wpa_ie.c
++libhostap_la_SOURCES += rsn_supp/wpa_ft.c
++libhostap_la_SOURCES += rsn_supp/pmksa_cache.c
++libhostap_la_SOURCES += rsn_supp/preauth.c
 +
 +libhostap_la_SOURCES += common/wpa_common.c
 +libhostap_la_SOURCES += common/wpa_ctrl.c
@@ -526,6 +533,7 @@ Index: git/source/hostap-2.10/src/Makefile.am
 +libhostap_la_SOURCES += utils/ip_addr.c
 +libhostap_la_SOURCES += utils/uuid.c
 +libhostap_la_SOURCES += utils/base64.c
++libhostap_la_SOURCES += utils/crc32.c
 +
 +libhostap_la_SOURCES += crypto/random.c
 +#libhostap_la_SOURCES += crypto/md5.c
@@ -742,14 +750,6 @@ Index: git/source/hostap-2.10/src/Makefile.am
 +#AM_CFLAGS += -DCONFIG_CTRL_IFACE_UDP
 +
 +libhostap_la_LDFLAGS = -lpthread -ldl -lssl
-+libhostap_la_SOURCES += rsn_supp/wpa.c
-+libhostap_la_SOURCES += rsn_supp/wpa_ie.c
-+libhostap_la_SOURCES += rsn_supp/wpa_ft.c
-+libhostap_la_SOURCES += rsn_supp/pmksa_cache.c
-+libhostap_la_SOURCES += rsn_supp/preauth.c
-+libhostap_la_SOURCES += eapol_supp/eapol_supp_sm.c
-+libhostap_la_SOURCES += ap/ieee802_11_he.c
-\ No newline at end of file
 Index: git/source/hostap-2.10/src/ap/ap_config.c
 ===================================================================
 --- git.orig/source/hostap-2.10/src/ap/ap_config.c
@@ -916,7 +916,7 @@ Index: git/source/hostap-2.10/src/ap/hostapd.c
  			return 0;
  		}
  	}
-@@ -3866,7 +3863,10 @@ struct hostapd_data * hostapd_get_iface(
+@@ -3869,7 +3866,10 @@ struct hostapd_data * hostapd_get_iface(
  					const char *ifname)
  {
  	size_t i, j;
