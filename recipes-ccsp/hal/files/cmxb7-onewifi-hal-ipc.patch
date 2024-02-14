@@ -2664,16 +2664,16 @@ index 0000000..34117cf
 +    if (sizeof(hal_ipc_processor_desc_t) > max_size) {
 +        while(target_bytes < sizeof(hal_ipc_processor_desc_t))
 +        {
-+            if ((nbytes = recv(cli_sock, tmp, (sizeof(hal_ipc_processor_desc_t) - target_bytes > max_size) ? max_size : (sizeof(hal_ipc_processor_desc_t) - target_bytes), 0)) == -1) {
-+                hal_wifi_print("%s:%d:receiving command response failed err: %d\n", __func__, __LINE__, errno);
++            if (((nbytes = recv(cli_sock, tmp, (sizeof(hal_ipc_processor_desc_t) - target_bytes > max_size) ? max_size : (sizeof(hal_ipc_processor_desc_t) - target_bytes), 0)) == -1) || (nbytes == 0)) {
++                hal_wifi_print("%s:%d:receiving command response failed err: %d data len:%d\n", __func__, __LINE__, errno, nbytes);
 +                close(cli_sock);
 +                return -1;
 +            }
 +            tmp += nbytes;
 +            target_bytes += nbytes;
 +        }
-+    } else if ((nbytes = recv(cli_sock, (unsigned char *)desc, sizeof(hal_ipc_processor_desc_t), 0)) == -1) {
-+        hal_wifi_print("%s:%d:receiving command response failed err: %d\n", __func__, __LINE__, errno);
++    } else if (((nbytes = recv(cli_sock, (unsigned char *)desc, sizeof(hal_ipc_processor_desc_t), 0)) == -1) || (nbytes == 0)) {
++        hal_wifi_print("%s:%d:receiving command response failed err: %d data len:%d\n", __func__, __LINE__, errno, nbytes);
 +        close(cli_sock);
 +        return -1;
 +    }
@@ -2710,8 +2710,8 @@ index 0000000..34117cf
 +
 +    if (desc->scratch_buf_size > max_size) {
 +        while (target_bytes < desc->scratch_buf_size) {
-+            if ((nbytes = recv(cli_sock, tmp, (desc->scratch_buf_size - target_bytes) > max_size ? max_size : (desc->scratch_buf_size - target_bytes), 0)) == -1) { 
-+                hal_wifi_print("%s:%d:receiving desc scratch buf in chunks failed err: %d\n", __func__, __LINE__, errno);
++            if (((nbytes = recv(cli_sock, tmp, (desc->scratch_buf_size - target_bytes) > max_size ? max_size : (desc->scratch_buf_size - target_bytes), 0)) == -1) || (nbytes == 0)) {
++                hal_wifi_print("%s:%d:receiving desc scratch buf in chunks failed err: %d data len:%d\n", __func__, __LINE__, errno, nbytes);
 +                free(desc->scratch_buf);
 +                close(cli_sock);
 +                return -1;
@@ -2720,8 +2720,8 @@ index 0000000..34117cf
 +            target_bytes += nbytes;
 +        }
 +        nbytes = target_bytes;
-+    } else if ((nbytes = recv(cli_sock, (unsigned char *)tmp, desc->scratch_buf_size, 0)) == -1) {
-+        hal_wifi_print("%s:%d:receiving command response failed err: %d\n", __func__, __LINE__, errno);
++    } else if (((nbytes = recv(cli_sock, (unsigned char *)tmp, desc->scratch_buf_size, 0)) == -1) || (nbytes == 0)) {
++        hal_wifi_print("%s:%d:receiving command response failed err: %d data len:%d\n", __func__, __LINE__, errno, nbytes);
 +        free(desc->scratch_buf);
 +        close(cli_sock);
 +        return -1;
@@ -2800,8 +2800,8 @@ index 0000000..34117cf
 +        // descriptor structure first
 +        if (sizeof(hal_ipc_processor_desc_t) > max_size) {
 +            while (target_bytes < sizeof(hal_ipc_processor_desc_t)) {
-+                if ((nbytes = recv(cli_sock, tmp, (sizeof(hal_ipc_processor_desc_t) - target_bytes > max_size) ? max_size : (sizeof(hal_ipc_processor_desc_t) - target_bytes), 0)) == -1) {
-+                    hal_wifi_print("%s:%d:receiving command response failed err: %d\n", __func__, __LINE__, errno);
++                if (((nbytes = recv(cli_sock, tmp, (sizeof(hal_ipc_processor_desc_t) - target_bytes > max_size) ? max_size : (sizeof(hal_ipc_processor_desc_t) - target_bytes), 0)) == -1) || (nbytes == 0)) {
++                    hal_wifi_print("%s:%d:receiving command response failed err: %d data len:%d\n", __func__, __LINE__, errno, nbytes);
 +                    close(cli_sock);
 +                    break_cycle = 1;
 +                    break;
@@ -2813,8 +2813,8 @@ index 0000000..34117cf
 +                continue;
 +            }
 +            nbytes = target_bytes;
-+        } else if ((nbytes = recv(cli_sock, (unsigned char *) &desc, sizeof(hal_ipc_processor_desc_t), 0)) == -1) {
-+            hal_wifi_print("%s:%d:receiving command response failed err: %d\n", __func__, __LINE__, errno);
++        } else if (((nbytes = recv(cli_sock, (unsigned char *) &desc, sizeof(hal_ipc_processor_desc_t), 0)) == -1) || (nbytes == 0)) {
++            hal_wifi_print("%s:%d:receiving command response failed err: %d data len:%d\n", __func__, __LINE__, errno, nbytes);
 +            close(cli_sock);
 +            continue;
 +        }
@@ -2841,8 +2841,8 @@ index 0000000..34117cf
 +
 +            if (desc.scratch_buf_size > max_size) {
 +                while (target_bytes < desc.scratch_buf_size) {
-+                    if ((nbytes = recv(cli_sock, (unsigned char *)tmp, (desc.scratch_buf_size - target_bytes) > max_size ? max_size : (desc.scratch_buf_size - target_bytes), 0)) == -1) {
-+                        hal_wifi_print("%s:%d:receiving desc scratch buf in chunks failed err: %d\n", __func__, __LINE__, errno);
++                    if (((nbytes = recv(cli_sock, (unsigned char *)tmp, (desc.scratch_buf_size - target_bytes) > max_size ? max_size : (desc.scratch_buf_size - target_bytes), 0)) == -1) || (nbytes == 0)) {
++                        hal_wifi_print("%s:%d:receiving desc scratch buf in chunks failed err: %d data len:%d\n", __func__, __LINE__, errno, nbytes);
 +                        free(desc.scratch_buf);
 +                        close(cli_sock);
 +                        break_cycle = 1;
@@ -2855,8 +2855,8 @@ index 0000000..34117cf
 +                    continue;
 +                }
 +                nbytes = target_bytes;
-+            } else if ((nbytes = recv(cli_sock, (unsigned char *)tmp, desc.scratch_buf_size, 0)) == -1) {
-+                hal_wifi_print("%s:%d:receiving command response failed err: %d\n", __func__, __LINE__, errno);
++            } else if (((nbytes = recv(cli_sock, (unsigned char *)tmp, desc.scratch_buf_size, 0)) == -1) || (nbytes == 0)) {
++                hal_wifi_print("%s:%d:receiving command response failed err: %d data len:%d\n", __func__, __LINE__, errno, nbytes);
 +                free(desc.scratch_buf);
 +                close(cli_sock);
 +                continue;
