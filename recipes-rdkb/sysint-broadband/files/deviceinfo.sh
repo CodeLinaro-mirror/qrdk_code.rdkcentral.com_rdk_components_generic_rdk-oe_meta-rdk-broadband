@@ -27,6 +27,8 @@ usage()
     echo "       -mwo_port: mqtt port"
     echo "       -mwo_topic: mqtt topic"
     echo "       -mesh_enable: mesh rfc"
+    echo "       -offline_mqtt_broker : mqtt broker url"
+    echo "       -offline_mqtt_topic : offline mqtt topic"
     exit 1
 }
 
@@ -176,6 +178,22 @@ case $1 in
         mode=`syscfg get mwo_mqtt_config`
         PORT=${mode##*:}
         echo $PORT
+        shift 1
+        ;;
+
+    -offline_mqtt_broker)
+        broker=`syscfg get offline_mqtt_broker`
+        if [ -n "$broker" ]; then
+            echo $broker
+        fi
+        shift 1
+        ;;
+
+    -offline_mqtt_topic)
+        topic=`syscfg get offline_mqtt_topic`
+        if [ -n "$topic" ]; then
+            echo $topic
+        fi
         shift 1
         ;;
 
