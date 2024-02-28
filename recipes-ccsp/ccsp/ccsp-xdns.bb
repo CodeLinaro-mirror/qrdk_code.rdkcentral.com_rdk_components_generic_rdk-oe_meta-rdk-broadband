@@ -4,7 +4,7 @@ HOMEPAGE = "http://github.com/belvedere-yocto/CcspXDNS"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
-DEPENDS = "ccsp-common-library webconfig-framework dbus rdk-logger utopia trower-base64"
+DEPENDS = "ccsp-common-library webconfig-framework dbus rdk-logger utopia trower-base64 glog"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
@@ -41,12 +41,14 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/utctx \
     -I${STAGING_INCDIR}/ulog \
     -I${STAGING_INCDIR}/trower-base64 \
+    -I${STAGING_INCDIR}/glog \
     "
 
 LDFLAGS_append = " \
     -ldbus-1 \
     -lutctx \
     -lutapi \
+    -lglog \
     "
 
 do_compile_prepend () {
@@ -62,7 +64,8 @@ PACKAGES += "${PN}-ccsp"
 PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
 
 FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/CcspXdnsSsp_gtest.bin', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/CcspXdnsTest_gtest.bin', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/DnsmasqTest_gtest.bin', '', d)} \
 "
 
 FILES_${PN} += " \
