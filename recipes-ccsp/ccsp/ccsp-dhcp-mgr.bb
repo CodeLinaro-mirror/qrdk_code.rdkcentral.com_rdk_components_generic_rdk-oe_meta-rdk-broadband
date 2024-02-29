@@ -90,9 +90,11 @@ do_install_append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/dhcpmgr
     install -m 644 ${S}/config/TR181-DHCPMgr.XML -t ${D}/usr/ccsp/dhcpmgr
-    install -D -m 0644 ${S}/config/CcspDHCPMgr.service ${D}${systemd_unitdir}/system/CcspDHCPMgr.service
-    if ${@bb.utils.contains('DISTRO_FEATURES', 'bci', 'true', 'false', d)}; then
-        sed -i -- 's/WantedBy=.*/WantedBy=multi-user.target/g' ${D}${systemd_unitdir}/system/CcspDHCPMgr.service
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager', 'true', 'false', d)}; then
+        install -D -m 0644 ${S}/config/CcspDHCPMgr.service ${D}${systemd_unitdir}/system/CcspDHCPMgr.service
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'bci', 'true', 'false', d)}; then
+            sed -i -- 's/WantedBy=.*/WantedBy=multi-user.target/g' ${D}${systemd_unitdir}/system/CcspDHCPMgr.service
+        fi
     fi
 }
 FILES_${PN} += " \
