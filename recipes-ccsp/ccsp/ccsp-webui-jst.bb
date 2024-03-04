@@ -12,7 +12,6 @@ SRC_URI = "\
     git://${RDK_GIT}/rdk/rdkb/components/opensource/ccsp/webui/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};name=webui \
     git://${RDK_GIT}/rdk/rdkb/devices/rdkbemu/rdkbemu_xb3;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=xb3;name=xb3 \
     "
-SRC_URI_append = " file://CVE-2020-11022_fix.patch "
 
 SRCREV_webui = "${AUTOREV}"
 SRCREV_xb3 = "${AUTOREV}"
