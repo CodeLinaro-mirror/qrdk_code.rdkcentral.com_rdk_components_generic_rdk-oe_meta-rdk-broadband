@@ -78,17 +78,20 @@ do_compile_prepend () {
         sed -i '2i <?define FEATURE_RDKB_WAN_MANAGER=True?>' ${S}/config-arm/TR181-CM.XML
     fi
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config-arm/TR181-CM.XML ${S}/source/CMAgentSsp/dm_pack_datamodel.c)
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/xml_to_json.py ${S}/config-arm/TR181-CM.XML ${S}/source/CMAgent.json)
 }
 
 do_install_append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/cm
+    install -d ${D}${sysconfdir}
     ln -sf /usr/bin/CcspCMAgentSsp ${D}${prefix}/ccsp/cm/CcspCMAgentSsp
     install -d ${D}/usr/include/ccsp
     install -d ${D}/usr/include/middle_layer_src
     install -d ${D}/usr/include/middle_layer_src/cm
     install -m 644 ${S}/source/TR-181/middle_layer_src/*.h ${D}/usr/include/middle_layer_src/cm
     install -m 644 ${S}/source/TR-181/include/*.h ${D}/usr/include/ccsp
+    install -m 644 ${S}/source/CMAgent.json ${D}${sysconfdir}
 }
 
 PACKAGES += "${PN}-ccsp"
@@ -110,6 +113,10 @@ FILES_${PN}-dbg = " \
     ${prefix}/src/debug \
     ${bindir}/.debug \
     ${libdir}/.debug \
+"
+
+FILES_${PN} += " \
+   ${sysconfdir}/CMAgent.json \
 "
 
 DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-CcspCMAgentSsp', '', d)}"

@@ -92,6 +92,7 @@ do_install_append_class-target () {
     install -d ${D}/usr/ccsp/tr069pa
     install -D -m 755 ${S}/scripts/cosa_stop.sh ${D}/usr/ccsp/cosa_stop.sh
     install -D -m 755 ${S}/scripts/cosa ${D}${sysconfdir}/ccsp/cosa
+    install -D -m 777 ${S}/scripts/autocomplete.sh ${D}/usr/bin/autocomplete.sh
 
     # RBUS related scripts
     install -d ${D}/lib/rdk
@@ -105,6 +106,7 @@ do_install_append_class-target () {
 do_install_class-native () {
     install -d ${D}${bindir}
     install -m 644 ${S}/source/dm_pack/dm_pack_code_gen.py ${D}${bindir}
+    install -m 644 ${S}/source/xml_to_json.py ${D}${bindir}
 }
 do_install_append_broadband() {
         install -d ${D}${systemd_unitdir}/system/CcspMtaAgentSsp.service.d
@@ -141,7 +143,10 @@ FILES_${PN}_append = " \
                      /usr/ccsp/pam/GwProvCheck.sh \
                       "
 
-FILES_${PN}-native = " ${bindir}/dm_pack_code_gen.py "
+FILES_${PN}-native = " \
+                       ${bindir}/dm_pack_code_gen.py \
+                       ${bindir}/xml_to_json.py \
+                     "
 
 BBCLASSEXTEND = "native"
 

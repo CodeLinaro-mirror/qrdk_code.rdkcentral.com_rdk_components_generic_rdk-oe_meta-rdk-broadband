@@ -164,6 +164,7 @@ do_compile_prepend () {
             sed -i '2i <?define FEATURE_RDKB_DHCP_MANAGER=True?>' ${S}/config-arm/TR181-USGv2.XML
         fi
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config-arm/TR181-USGv2.XML ${S}/source/PandMSsp/dm_pack_datamodel.c)
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/xml_to_json.py ${S}/config-arm/TR181-USGv2.XML ${S}/source/PandM.json)
 }
 do_install_append () {
     # Config files and scripts
@@ -181,6 +182,7 @@ do_install_append () {
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/restart_services.sh ${D}/etc/restart_services.sh
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/AutoReboot.sh ${D}/etc/AutoReboot.sh
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/RebootCondition.sh ${D}/etc/RebootCondition.sh
+    install -m 644 ${S}/source/PandM.json ${D}/etc/PandM.json
 }
 
 do_install_append_qemux86 () {
