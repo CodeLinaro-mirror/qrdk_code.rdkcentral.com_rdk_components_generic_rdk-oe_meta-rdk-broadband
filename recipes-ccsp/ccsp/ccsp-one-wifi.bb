@@ -23,7 +23,7 @@ DEPENDS_append += " libunpriv"
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-implicit-function-declaration -Wno-type-limits -Wno-unused-parameter "
 
-CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-address-of-packed-member -Wno-tautological-compare -Wno-stringop-truncation -Wno-enum-conversion -fcommon -Wno-mismatched-dealloc"
+CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-compare -Wno-stringop-truncation -Wno-enum-conversion -fcommon -Wno-mismatched-dealloc"
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/OneWifi;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=OneWifi"
 
