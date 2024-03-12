@@ -23,6 +23,7 @@ BRANCH = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "webconfig
 SRC_URI = "\
     git://github.com/xmidt-org/parodus2ccsp.git;branch=${BRANCH};protocol=https  \
     file://WebPA_drop_root.patch \
+    file://WebPA_getValues.patch \
     "
 PV = "git+${SRCPV}"
 S = "${WORKDIR}/git"
