@@ -40,6 +40,7 @@ CFLAGS_append = " \
 
 CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_voice_manager_dmltr104_v2','-DFEATURE_RDKB_VOICE_DM_TR104_V2=ON','', d)}"
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '-DRBUS_BUILD_FLAG_ENABLE', '', d)}"
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'telco_voice_feature_enable_persist', '-DTELCO_VOICE_FEATURE_ENABLE_PERSIST', '', d)}"
 
 DATAMODEL_XML = "config/${@bb.utils.contains('DISTRO_FEATURES','rdkb_voice_manager_dmltr104_v2','RdkTelcoVoiceManager_v2.xml','RdkTelcoVoiceManager_v1.xml',d)}"
 
@@ -80,11 +81,18 @@ if [ ${ISRDKB_VOICE_DM_TR104_V2} = "true" ]; then
     install -m 644 ${S}/config/RdkTelcoVoiceManager_v2.xml ${D}/usr/rdk/voicemanager/RdkTelcoVoiceManager.xml
     install -m 644 ${S}/hal_schema/telcovoice_hal_schema_v2.json ${D}/${sysconfdir}/rdk/schemas/telcovoice_hal_schema.json
     install -m 644 ${S}/config/telcovoice_config_default_v2.json ${D}/usr/rdk/voicemanager/telcovoice_config_default.json
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'telco_voice_feature_enable_persist', 'true', 'false', d)}; then
+        sed -i '/VOICESERVICE1/a \\t\t"X_RDK_Enable\": \"0\",' ${D}/usr/rdk/voicemanager/telcovoice_config_default.json
+    fi
+
 else
     install -m 644 ${S}/source/TR-181/integration_src.shared/VoiceDiagnostics.avsc ${D}/usr/ccsp/harvester/
     install -m 644 ${S}/config/RdkTelcoVoiceManager_v1.xml ${D}/usr/rdk/voicemanager/RdkTelcoVoiceManager.xml
     install -m 644 ${S}/hal_schema/telcovoice_hal_schema_v1.json ${D}/${sysconfdir}/rdk/schemas/telcovoice_hal_schema.json
     install -m 644 ${S}/config/telcovoice_config_default.json ${D}/usr/rdk/voicemanager/telcovoice_config_default.json
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'telco_voice_feature_enable_persist', 'true', 'false', d)}; then
+        sed -i '/VoiceServiceIndex/a \\t\t"X_RDK_Enable\": \"0\",' ${D}/usr/rdk/voicemanager/telcovoice_config_default.json
+    fi
 fi
     install -m 644 ${S}/config/telcovoice_manager_conf.json ${D}${sysconfdir}/rdk/conf/
 }
