@@ -19,6 +19,18 @@ def getowe_defined(d):
         return '-DCONFIG_OWE'
     else:
         return ''
+def getowe_defined(d):
+    if d.getVar('MACHINE_IMAGE_NAME', True) in [ 'SG417DBCT' ]:
+        return '-DCONFIG_OWE'
+    else:
+        return ''
+def getowe_defined(d):
+    if d.getVar('MACHINE_IMAGE_NAME', True) in [ 'CGM601TCOM' ]:
+        return '-DCONFIG_OWE'
+    else:
+        return ''
+
+
 
 def get_hostapd_pv(d):
     ret_val = '2.9' #HOSTAPD=DEFAULT
