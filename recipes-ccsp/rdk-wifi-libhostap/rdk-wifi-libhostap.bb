@@ -83,6 +83,7 @@ CFLAGS_append = "${@' \
         -DCONFIG_ACS \
         -DFEATURE_SUPPORT_RADIUSGREYLIST \
         -DCONFIG_WNM_AP \
+        -DCONFIG_IPV6 \
     ' + getowe_defined(d) \
     + bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' -DRDK_ONEWIFI', '', d) \
     if d.getVar('PRIOR_BUILD', True) == 'true' else ''} \

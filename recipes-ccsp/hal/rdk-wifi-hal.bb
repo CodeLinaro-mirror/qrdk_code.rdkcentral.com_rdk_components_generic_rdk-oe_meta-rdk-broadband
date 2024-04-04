@@ -111,6 +111,7 @@ ONEWIFI_CONFIG_FLAGS = " \
     -DRDK_ONEWIFI \
     -DCONFIG_IEEE80211AX \
     -DCONFIG_ACS \
+    -DCONFIG_IPV6 \
 "
 ###########################LEGACY#####################
 
