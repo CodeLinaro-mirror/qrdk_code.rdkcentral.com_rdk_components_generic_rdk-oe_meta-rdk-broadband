@@ -3,7 +3,7 @@ SUMMARY = "This recipe compiles rfc-agent"
 SECTION = "console/utils"
 
 LICENSE = "CLOSED"
-DEPENDS = "utopia rbus trower-base64 msgpack-c webconfig-framework"
+DEPENDS = "utopia rbus trower-base64 msgpack-c webconfig-framework cjson libparodus libsyswrapper hal-platform ccsp-misc hal-cm"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS_class-native = ""
 
@@ -24,6 +24,8 @@ CFLAGS += " \
     -I${STAGING_INCDIR}/trower-base64 \
     -I${STAGING_INCDIR}/msgpackc \
     -I${STAGING_INCDIR}/syscfg \
+    -I${STAGING_INCDIR}/cjson \
+    -I${STAGING_INCDIR}/libparodus \
     "
 
 
@@ -43,6 +45,10 @@ LDFLAGS += " \
     -lsyscfg \
     -ltrower-base64 \
     -lsecure_wrapper \
+    -lcjson \
+    -lhal_platform \
+    -lm \
+    -lccsp_common \
 "
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
