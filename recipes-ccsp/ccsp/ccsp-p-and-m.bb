@@ -8,6 +8,7 @@ RPROVIDES_${PN} = "ccsp-p-and-m"
 DEPENDS = "ccsp-common-library webconfig-framework ccsp-lm-lite telemetry ccsp-hotspot"
 DEPENDS_append = " utopia hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi curl ccsp-misc ccsp-hotspot cjson libsyswrapper cjson trower-base64 msgpack-c nanomsg wrp-c libparodus rbus"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
+DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler', 'rdk-scheduler', " ", d)}"
 
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' hal-fwupgrade', '',d)}"
@@ -50,6 +51,7 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'ethstats', '-DETH_STA
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wifimotion', '-DFEATURE_COGNITIVE_WIFIMOTION', '', d)}"
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '-lnanomsg', '', d)}"
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', '-lfw_upgrade', '', d)}"
+LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler', '-lrdk_scheduler', " ", d)}"
 
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
@@ -76,6 +78,8 @@ EXTRA_OECONF_append = " ${ENABLE_MAPT}"
 
 ENABLE_WIFI_MANAGE = "--enable-wifimanagesupport=${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', 'yes', 'no', d)}"
 EXTRA_OECONF_append = " ${ENABLE_WIFI_MANAGE}"
+
+EXTRA_OECONF_append += "${@bb.utils.contains("DISTRO_FEATURES", "SpeedBoostSupportEnable", "--enable-speedboost=yes", " ", d)}"
 
 CFLAGS_append = " -DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_INTERNET2P0 -DCONFIG_CISCO_HOTSPOT"
 

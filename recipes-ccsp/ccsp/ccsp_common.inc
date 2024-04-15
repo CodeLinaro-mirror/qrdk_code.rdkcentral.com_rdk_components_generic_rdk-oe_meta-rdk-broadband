@@ -136,6 +136,9 @@ CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'uselinux_bridge', '
 # Add flags to support the partner default ext RDKBDEV-694
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext', '-DPARTNER_DEFAULT_EXT', '', d)}"
 
+# Adding flag for SpeedBoostSupport 
+CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'SpeedBoostSupportEnable', ' -DSPEED_BOOST_SUPPORTED', '', d)}"
+
 FILES_${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"
