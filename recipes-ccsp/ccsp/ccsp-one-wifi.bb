@@ -59,6 +59,7 @@ CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIFI_HAL_VERSION_3', '', d)}"
 CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'acl_nl_support', ' -DNL80211_ACL', '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
