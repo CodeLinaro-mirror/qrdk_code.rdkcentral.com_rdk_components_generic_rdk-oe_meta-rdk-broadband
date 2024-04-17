@@ -1,4 +1,4 @@
-DEPENDS += " ccsp-common-library webconfig-framework libunpriv dbus"
+DEPENDS += " ccsp-common-library webconfig-framework libunpriv dbus mountutils libsyswrapper"
 
 LDFLAGS_append = " \
         -lprivilege \
@@ -34,3 +34,4 @@ FILES_${PN}_append = " \
 
 EXTRA_OECONF += " --enable-ccspsupport --enable-libsyswrapper"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
+EXTRA_OECONF += " --enable-mountutils"

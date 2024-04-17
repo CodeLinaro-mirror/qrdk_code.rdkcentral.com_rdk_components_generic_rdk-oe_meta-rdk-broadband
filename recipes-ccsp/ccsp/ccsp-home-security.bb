@@ -4,7 +4,7 @@ HOMEPAGE = "http://github.com/belvedere-yocto/CcspHomeSecurity"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
-DEPENDS = "libxml2 ccsp-common-library utopia curl"
+DEPENDS = "libxml2 ccsp-common-library utopia curl mountutils"
 require ccsp_common.inc
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/CcspHomeSecurity;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=CcspHomeSecurity"
 
@@ -17,6 +17,13 @@ S = "${WORKDIR}/git"
 inherit autotools breakpad-logmapper
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-format-truncation "
+
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+
+LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 CFLAGS_append = " \
     -I=${includedir}/dbus-1.0 \
