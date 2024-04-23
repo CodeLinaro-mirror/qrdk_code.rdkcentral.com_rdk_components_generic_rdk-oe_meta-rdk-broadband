@@ -5,9 +5,10 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 DEPENDS = "ccsp-common-library hal-platform utopia libunpriv"
-RDEPENDS_${PN} = " trower-base64 "
-DEPENDS += " trower-base64"
+RDEPENDS_${PN} = " trower-base64"
+DEPENDS += " trower-base64 "
 
+DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp',' rdkbgmock','',d)}"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' rdk-scheduler','',d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 require ccsp_common.inc
