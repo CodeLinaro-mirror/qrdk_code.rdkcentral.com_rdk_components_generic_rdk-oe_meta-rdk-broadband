@@ -18,7 +18,7 @@ SRC_URI[obuspa.sha256sum] = "28186decb8764343e550dc8c7d12fbb07830dcac1c09a9bf723
 
 # USPPA is the RDK specializations
 SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=main;name=usppa"
-SRCREV_usppa = "e85245f2508918582a4fbb46377ea15771a3437b"
+SRCREV_usppa = "9e455266800f9b7ceb73c89f69ed9a42b35d9320"
 
 
 # Patches for OBUSPA
