@@ -46,35 +46,35 @@ index 0000000..f88bdff
 +#include "client_hal_ipc_core.h"
 +
 +
-+static volatile BOOL sm_socket_in_use = FALSE;
-+static volatile BOOL bm_socket_in_use = FALSE;
++//used this variable for sm/bm process data synchronization
++static volatile BOOL sm_bm_socket_in_use = FALSE;
 +
 +static int send_to_sm_socket(hal_ipc_node_t *node, hal_ipc_processor_desc_t *desc)
 +{
-+    while (sm_socket_in_use){ };
++    while (sm_bm_socket_in_use){ };
 +
-+    sm_socket_in_use = TRUE;
++    sm_bm_socket_in_use = TRUE;
 +    if (hal_ipc_exec(node, desc) != 0) {
 +        hal_wifi_print("%s:%d: ipc  processor failed\n", __func__, __LINE__);
-+        sm_socket_in_use = FALSE;
++        sm_bm_socket_in_use = FALSE;
 +        return -1;
 +    }
-+    sm_socket_in_use = FALSE;
++    sm_bm_socket_in_use = FALSE;
 +
 +    return 0;
 +}
 +
 +static int send_to_bm_socket(hal_ipc_node_t *node, hal_ipc_processor_desc_t *desc)
 +{
-+    while (bm_socket_in_use){ };
++    while (sm_bm_socket_in_use){ };
 +
-+    bm_socket_in_use = TRUE;
++    sm_bm_socket_in_use = TRUE;
 +    if (hal_ipc_exec(node, desc) != 0) {
 +        hal_wifi_print("%s:%d: ipc  processor failed\n", __func__, __LINE__);
-+        bm_socket_in_use = FALSE;
++        sm_bm_socket_in_use = FALSE;
 +        return -1;
 +    }
-+    bm_socket_in_use = FALSE;
++    sm_bm_socket_in_use = FALSE;
 +
 +    return 0;
 +}
