@@ -1,3 +1,7 @@
+Date: 28-Nov-2023
+From: roman_skakun@comcast.com
+Source: COMCAST
+
 diff --git a/source/hostap-2.10/src/wps/wps.h b/source/hostap-2.10/src/wps/wps.h
 index fed3e28..5119d85 100644
 --- a/source/hostap-2.10/src/wps/wps.h
