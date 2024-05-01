@@ -64,8 +64,15 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration',
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
 
-# DISTRO_FEATURES_append = "FEATURE_IEEE80211BE" should be declared in local.conf
-CFLAGS_append = " ${@bb.utils.contains("DISTRO_FEATURES", 'FEATURE_IEEE80211BE', ' -DFEATURE_IEEE80211BE', '', d)}"
+#!FIXME!
+#Ensure proper propagation of CFLAGS and LIBS through the build system.
+#configure.ac:
+#PKG_CHECK_MODULES([LIBHOSTAP], [libhostap >= 2.9])
+#
+#Makefile.am:
+#target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
+#target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
+CFLAGS_append = " `pkg-config --exists libhostap && pkg-config --cflags libhostap`"
 
 LDFLAGS_append = " \
     -ltelemetry_msgsender \

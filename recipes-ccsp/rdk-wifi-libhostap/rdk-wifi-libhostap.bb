@@ -19,18 +19,6 @@ def getowe_defined(d):
         return '-DCONFIG_OWE'
     else:
         return ''
-def getowe_defined(d):
-    if d.getVar('MACHINE_IMAGE_NAME', True) in [ 'SG417DBCT' ]:
-        return '-DCONFIG_OWE'
-    else:
-        return ''
-def getowe_defined(d):
-    if d.getVar('MACHINE_IMAGE_NAME', True) in [ 'CGM601TCOM' ]:
-        return '-DCONFIG_OWE'
-    else:
-        return ''
-
-
 
 def get_hostapd_pv(d):
     ret_val = '2.9' #HOSTAPD=DEFAULT
@@ -105,16 +93,14 @@ FILES_${PN} = " \
         ${libdir}/libhostap.so* \
 "
 
-hostapd_patching () {
+do_hostapd_patch () {
     if ! ${PRIOR_BUILD}; then
         install -m 0644 ${WORKDIR}/.config ${WORKDIR}/libhostap.mk ${S}/source/hostap-${HOSTAPD_PV}/hostapd/
         echo "include libhostap.mk" >> ${S}/source/hostap-${HOSTAPD_PV}/hostapd/Makefile
     fi
 }
 
-do_patch_append () {
-    bb.build.exec_func('hostapd_patching', d)
-}
+addtask hostapd_patch after do_patch before do_configure
 
 do_configure_append () {
     if ! ${PRIOR_BUILD}; then

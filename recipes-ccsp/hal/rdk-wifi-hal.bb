@@ -123,9 +123,7 @@ ONEWIFI_CONFIG_FLAGS = " \
 #Makefile.am:
 #target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
 #target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
-do_configure_prepend () {
-  export CFLAGS="${CFLAGS} ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '$(pkg-config --exists libhostap && pkg-config --cflags libhostap)', '', d)}"
-}
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' `pkg-config --exists libhostap && pkg-config --cflags libhostap`', '', d)}"
 
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CONFIG_FLAGS}', '', d)}"
 

@@ -24,8 +24,18 @@ CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
-# DISTRO_FEATURES_append = "FEATURE_IEEE80211BE" should be declared in local.conf
-CFLAGS_append = " ${@bb.utils.contains("DISTRO_FEATURES", 'FEATURE_IEEE80211BE', ' -DFEATURE_IEEE80211BE', '', d)}"
+CFLAGS_append = " ${@bb.utils.contains("DISTRO_FEATURES", 'CONFIG_IEEE80211BE', ' -DCONFIG_IEEE80211BE', '', d)}"
+
+#!FIXME!
+#Ensure proper propagation of CFLAGS and LIBS through the build system.
+#configure.ac:
+#PKG_CHECK_MODULES([LIBHOSTAP], [libhostap >= 2.9])
+#
+#Makefile.am:
+#target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
+#target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
+CFLAGS_append = " `pkg-config --exists libhostap && pkg-config --cflags libhostap`"
+
 CFLAGS_append_kirkstone = " -Wno-deprecated-declarations"
 
 LDFLAGS_append = " -lrbus "

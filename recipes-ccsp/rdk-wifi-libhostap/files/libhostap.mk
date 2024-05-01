@@ -16,31 +16,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 ##########################################################################
-NAME := hostap
 LIB_PRFIX := lib
 LIB_NAME := $(LIB_PRFIX)$(NAME)
 LIB_NAME_PKG := $(LIB_NAME).pc
-LIB_VERSION := $(subst $(NAME)-,,$(shell basename $(shell dirname $(CURDIR))))
-LIB_VERSION_MAJOR := $(word 1,$(subst ., ,$(LIB_VERSION)))
-LIB_VERSION_MINOR := $(word 2,$(subst ., ,$(LIB_VERSION)))
 LIB_NAME_REAL := $(LIB_NAME).so
 LIB_NAME_LINKER := $(LIB_NAME_REAL).$(LIB_VERSION)
 LIB_NAME_SO := $(LIB_NAME_REAL).$(LIB_VERSION_MAJOR)
 
 LIB_OBJS := ../src/common/wpa_ctrl.o
-
-#1_MAJOR_VERSION
-#2_NINOR VERSION
-#3 cmp orepation:
-# eq Equal
-# ne Not equal
-# lt Less than
-# le Less than or equal
-# gt Greater than
-# ge Greater than or equal
-#4_MAJOR_VERSION
-#5_NINOR_VERSION
-VERSION_CMP = $(shell test $(shell expr $(1) \* 10000 \+ $(2) \* 100) -$(3) $(shell expr $(4) \* 10000 \+ $(5) \* 100) && echo true)
 
 #################part of `wpa_supplicant`#################
 ifdef CONFIG_EAP_TLS
