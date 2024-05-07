@@ -2690,7 +2690,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
 +			drv->ifindex, bss->ifname);
 +	msg = nl80211_bss_msg(bss, 0, NL80211_CMD_DEL_BEACON);
 +	nl80211_put_wiphy_data_ap(bss);
-+	return send_and_recv_msgs(drv, msg, NULL, NULL, NULL, NULL);
++	return send_and_recv_cmd(drv, msg);
 +}
 +#endif /* CONFIG_DRIVER_BRCM */
  
