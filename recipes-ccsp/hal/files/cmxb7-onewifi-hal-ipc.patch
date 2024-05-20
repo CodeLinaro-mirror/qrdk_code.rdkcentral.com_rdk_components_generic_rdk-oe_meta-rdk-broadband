@@ -1019,7 +1019,7 @@ index 0000000..f88bdff
 +    input_func = desc->ipc_processor[processor_type_ipc_client_input];
 +    output_func = desc->ipc_processor[processor_type_ipc_client_output];
 +
-+    if ((input_func != NULL) && (input_func(desc, &steeringgroupIndex, &apIndex, &client_mac, config, NULL) != 0)) {
++    if ((input_func != NULL) && (input_func(desc, &steeringgroupIndex, &apIndex, client_mac, config, NULL) != 0)) {
 +        hal_wifi_print("%s:%d: Client input processor failed\n", __func__, __LINE__);
 +        return -1;
 +    }
@@ -1058,7 +1058,7 @@ index 0000000..f88bdff
 +
 +    input_func = desc->ipc_processor[processor_type_ipc_client_input];
 +
-+    if ((input_func != NULL) && (input_func(desc, &steeringgroupIndex, &apIndex, &client_mac, NULL, NULL) != 0)) {
++    if ((input_func != NULL) && (input_func(desc, &steeringgroupIndex, &apIndex, client_mac, NULL, NULL) != 0)) {
 +        hal_wifi_print("%s:%d: Client input processor failed\n", __func__, __LINE__);
 +        return -1;
 +    }
