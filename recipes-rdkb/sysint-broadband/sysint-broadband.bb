@@ -25,6 +25,7 @@ S = "${WORKDIR}/git"
 inherit systemd breakpad-logmapper
 
 do_install() {
+        install -d ${D}/bin
 	install -d ${D}${sysconfdir}
         install -d ${D}/rdklogger
         install -d ${D}${systemd_unitdir}/system
@@ -75,6 +76,7 @@ do_install() {
 	fi
         install -m 0644 ${S}/etc/telemetry2_0.properties ${D}${sysconfdir}
 	install -m 755 ${S}/log_timestamp.sh ${D}${sysconfdir}
+	install -m 755 ${S}/timestamp ${D}/bin
    	install -m 755 ${S}/postwanstatusevent.sh ${D}${base_libdir}/rdk
         if ${@bb.utils.contains('DISTRO_FEATURES', 'snmppa', 'true', 'false', d)}; then
              install -m 755 ${S}/handlesnmpv3.sh ${D}${base_libdir}/rdk
@@ -133,6 +135,7 @@ SYSTEMD_SERVICE_${PN}_append_qemux86broadband = "  dropbear.service"
 SYSTEMD_SERVICE_${PN}_append_rdkzram = " rdkzram.service"
 SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'ocsp-support.service', '', d)}"
 
+FILES_${PN} += "/bin/*"
 FILES_${PN} += "${sysconfdir}/*"
 FILES_${PN} += "rdklogger/*"
 FILES_${PN} += "${base_libdir}/rdk/*"
