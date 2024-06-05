@@ -6,20 +6,16 @@ SUMMARY = "USP Pa component"
 DESCRIPTION = "Agent for USP protocol"
 DEPENDS = "openssl sqlite3 curl zlib ccsp-common-library mosquitto libwebsockets"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://LICENSE;md5=706c802a2e6a2d6ca6322c8497ec7f65"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=a3a4606e52c16f583aefb8b47a9db31a"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
 
 # OBUSPA is the reference USP agent codebase
-OBUSPA_REL="7.0.0"
-SRC_URI = "https://github.com/BroadbandForum/obuspa/releases/download/v${OBUSPA_REL}-master/obuspa-${OBUSPA_REL}.tar.gz;name=obuspa"
-SRC_URI[obuspa.sha256sum] = "28186decb8764343e550dc8c7d12fbb07830dcac1c09a9bf723da7ee82182ab4"
+SRC_URI += "git://github.com/BroadbandForum/obuspa;protocol=http;branch=master;rev=8355c200afb6430e3fc55ebabe8a9a709ae5d04f;name=obuspa;destsuffix=obuspa"
 
 # USPPA is the RDK specializations
-SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=main;name=usppa"
-SRCREV_usppa = "9e455266800f9b7ceb73c89f69ed9a42b35d9320"
-
+SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=main;rev=c455c7cec7564ea8edb4dce3936cb3d0b94e489a;name=usppa;destsuffix=usp-pa-vendor-rdk"
 
 # Patches for OBUSPA
 #SRC_URI += "file://patches/remove_duplicate_min_max_define.patch"
@@ -38,7 +34,7 @@ SRC_URI += "file://usp-pa.service"
 
 
 # Make sure our source directory (for the build) matches the directory structure in the tarball
-S = "${WORKDIR}/obuspa-${OBUSPA_REL}"
+S = "${WORKDIR}/obuspa"
 
 # Specify the rules to use to build and install this package
 inherit autotools pkgconfig systemd
@@ -54,7 +50,7 @@ LDFLAGS += "-ldbus-1 -lccsp_common"
 
 # Specialize the OBUSPA release by copying across the RDK specific source files to the source directory
 do_configure_prepend() {
-    cp ${WORKDIR}/git/src/vendor/* ${S}/src/vendor
+    cp ${WORKDIR}/usp-pa-vendor-rdk/src/vendor/* ${S}/src/vendor
 }
 
 # Copy files to staging area
