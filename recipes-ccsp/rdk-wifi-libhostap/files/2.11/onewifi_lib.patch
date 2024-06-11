@@ -2379,44 +2379,6 @@ diff --color -Naur git.orig/source/hostap-2.11/src/common/hw_features_common.c g
 diff --color -Naur git.orig/source/hostap-2.11/src/common/ieee802_11_common.c git/source/hostap-2.11/src/common/ieee802_11_common.c
 --- git.orig/source/hostap-2.11/src/common/ieee802_11_common.c	2024-02-01 01:21:16.093432733 +0200
 +++ git/source/hostap-2.11/src/common/ieee802_11_common.c	2024-02-01 02:00:26.981505994 +0200
-@@ -1523,7 +1523,27 @@
- 		*op_class = 0; /* TODO */
- 		return HOSTAPD_MODE_IEEE80211A;
- 	}
--
-+#ifdef CONFIG_DRIVER_BRCM 
-+    /* New 6GHz channelization - May 2020 */
-+    if (freq == 5935) {
-+        *channel = 2;
-+        *op_class = 131;
-+        return HOSTAPD_MODE_IEEE80211A;
-+    } else if (freq >= 5955 && freq <= 7125) {
-+        int bw;
-+        u8 idx;
-+        if (freq % 5)
-+            return NUM_HOSTAPD_MODES;
-+        idx = (freq - 5950) / 5;
-+        bw = center_idx_to_bw_6ghz(idx);
-+        if (bw < 0)
-+            return NUM_HOSTAPD_MODES;
-+
-+        *channel = idx;
-+        *op_class = 131 + bw;
-+        return HOSTAPD_MODE_IEEE80211A;
-+    }
-+#else
- 	if (freq > 5950 && freq <= 7115) {
- 		if ((freq - 5950) % 5)
- 			return NUM_HOSTAPD_MODES;
-@@ -1558,7 +1578,7 @@
- 		*channel = (freq - 5925) / 5;
- 		return HOSTAPD_MODE_IEEE80211A;
- 	}
--
-+#endif /* CONFIG_DRIVER_BRCM */
- 	/* 56.16 GHz, channel 1..6 */
- 	if (freq >= 56160 + 2160 * 1 && freq <= 56160 + 2160 * 6) {
- 		if (sec_channel)
 @@ -1944,7 +1964,13 @@
  	case 137: /* UHB channels, 320 MHz: 31, 63, 95, 127, 159, 191 */
  		if (chan < 1 || chan > 233)
