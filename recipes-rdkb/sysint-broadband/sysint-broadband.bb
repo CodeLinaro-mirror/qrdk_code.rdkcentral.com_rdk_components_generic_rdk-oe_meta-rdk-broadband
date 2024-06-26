@@ -10,6 +10,13 @@ SYSINTB_DEVICE ??= "intel-x86-pc/rdk-broadband"
 HASBCI = "${@bb.utils.contains('DISTRO_FEATURES', 'bci', 'true', 'false', d)}"
 HASEPON = "${@bb.utils.contains('DISTRO_FEATURES', 'epon', 'true', 'false', d)}"
 HASDSL = "${@bb.utils.contains('DISTRO_FEATURES', 'dsl', 'true', 'false', d)}"
+MOCA_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'moca_not_supported', 'true', 'false', d)}"
+DOCSIS_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'docsis_not_supported', 'true', 'false', d)}"
+BRIDGE_MODE_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'bridge_mode_not_supported', 'true', 'false', d)}"
+DEVICE_TYPE_ROUTER = "${@bb.utils.contains('DISTRO_FEATURES', 'device_type_router', 'true', 'false', d)}"
+NO_ETH2_XFINITY_CONNECTION = "${@bb.utils.contains('DISTRO_FEATURES', 'eth_port2_xfinity_home', 'true', 'false', d)}"
+BATTERY_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'battery_not_supported', 'true', 'false', d)}"
+WPS_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'wps_not_supported', 'true', 'false', d)}"
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/sysint;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=sysintbroadband"
 SRC_URI += "${CMF_GIT_ROOT}/rdkb/devices/intel-x86-pc/emulator/sysint;module=.;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=git/device;name=sysintdevice"
@@ -67,6 +74,48 @@ do_install() {
 	else
 	    echo "WAN_TYPE=DOCSIS" >> ${D}${sysconfdir}/device.properties
 	fi
+	
+	if [ ${NO_ETH2_XFINITY_CONNECTION} = "true" ]; then
+            echo "ETH_PORT2_XFINITY_HOME=false" >> ${D}${sysconfdir}/device.properties
+ 	else
+            echo "ETH_PORT2_XFINITY_HOME=true" >> ${D}${sysconfdir}/device.properties
+ 	fi
+
+	if [ ${MOCA_NOT_SUPPORTED} = "true" ]; then
+            echo "MOCA_SUPPORTED=false" >> ${D}${sysconfdir}/device.properties
+ 	else
+            echo "MOCA_SUPPORTED=true" >> ${D}${sysconfdir}/device.properties
+ 	fi
+        
+	if [ ${DOCSIS_NOT_SUPPORTED} = "true" ]; then
+            echo "DOCSIS_SUPPORTED=false" >> ${D}${sysconfdir}/device.properties
+        else
+            echo "DOCSIS_SUPPORTED=true" >> ${D}${sysconfdir}/device.properties
+        fi
+	
+	if [ ${BRIDGE_MODE_NOT_SUPPORTED} = "true" ]; then
+            echo "BRIDGE_MODE_SUPPORTED=false" >> ${D}${sysconfdir}/device.properties
+ 	else
+            echo "BRIDGE_MODE_SUPPORTED=true" >> ${D}${sysconfdir}/device.properties
+ 	fi
+	
+	if [ ${DEVICE_TYPE_ROUTER} = "true" ]; then
+            echo "DEVICE_ROUTER=true" >> ${D}${sysconfdir}/device.properties
+        else
+            echo "DEVICE_ROUTER=false" >> ${D}${sysconfdir}/device.properties
+        fi
+
+	if [ ${BATTERY_NOT_SUPPORTED} = "true" ]; then
+            echo "BATTERY_SUPPORTED=false" >> ${D}${sysconfdir}/device.properties
+        else
+            echo "BATTERY_SUPPORTED=true" >> ${D}${sysconfdir}/device.properties
+	fi
+	
+	if [ ${WPS_NOT_SUPPORTED} = "true" ]; then
+            echo "WPS_SUPPORTED=false" >> ${D}${sysconfdir}/device.properties
+        else
+            echo "WPS_SUPPORTED=true" >> ${D}${sysconfdir}/device.properties
+        fi
 
 	if [ -f ${S}/device/etc/dcm.properties ]; then
 	    install -m 0644 ${S}/device/etc/dcm.properties ${D}${sysconfdir}
