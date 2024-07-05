@@ -85,6 +85,11 @@ CFLAGS_append = "${@' \
     + bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' -DRDK_ONEWIFI', '', d) \
     if d.getVar('PRIOR_BUILD', True) == 'true' else ''} \
 "
+
+
+CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', ' -DCONFIG_SME', '', d)}"
+CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', ' -DCONFIG_GAS', '', d)}"
+
 #Lib hostap compilation changes for compiling libhostap.so
 #!!This has to be first patch!!
 SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10','file://2.10/oneWifiLib.patch file://2.10/greylist.patch file://2.10/broadcom.patch file://2.10/one_wifi_radius_greylist.patch file://2.10/RDKB-48455-hostap-2.10-crash.patch file://2.10/owe_radius_auth_vlan_32.patch file://2.10/RDKB_47882_VLAN_2_10.patch file://2.10/onewifi_cac.patch file://2.10/mbr.patch file://2.10/wpa_auth_vlogger_crash.patch file://2.10/connected_building_avp_2_10.patch file://2.10/enable-wnm-flag-2-10.patch file://2.10/Supported_Rates_Per_Vap_CAC.patch file://2.10/greylist_connectivity_openvap_2.10.patch file://2.10/wps_pin_led.patch file://2.10/wps_indication_deinit.patch file://2.10/RDKB-53254_Telemetry_2.10.patch file://2.10/wps_term_session.patch file://2.10/CMXB7-5998.patch file://2.10/cmxb7_dfs.patch file://2.10/cohosted_bss_param_210.patch file://2.10/ht_rifs_210.patch file://2.10/rem_dup_beacon_tags_210.patch file://2.10/vht_oper_basic_mcs_set_210.patch file://2.10/tx_pwr_envelope_210.patch file://2.10/pwr_constraint_210.patch file://2.10/supported_op_classes_210.patch file://2.10/he_2ghz_40mghz_bw_210.patch file://2.10/rnr_col_210.patch ',\
@@ -94,6 +99,26 @@ SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10','file://2.10
 
 #use below format for adding new distro features
 #SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', ' file://2.9/no_ack.patch', '', d) if d.getVar('PRIOR_BUILD', True) == 'true' else ''}"
+
+EMULATOR_FEATURE_ENABLED = "${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', '1', '0', d)}"
+
+HOSTAPD_PATCH = "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'file://2.10/nl80211_change.patch', 'file://2.9/nl80211_change.patch', d)}"
+SRC_URI += "${@'${HOSTAPD_PATCH}' if '${EMULATOR_FEATURE_ENABLED}' == '1' and d.getVar('PRIOR_BUILD', True) == 'true' else ''}"
+
+AP_FLAG = "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', ' -DCONFIG_AP', '', d)}"
+CFLAGS_append = " ${@'${AP_FLAG}' if '${EMULATOR_FEATURE_ENABLED}' == '1' else ''} "
+
+HOSTAPD_PATCH_2_11 = "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', 'file://2.11/nl80211_change.patch', '', d)}"
+SRC_URI += "${@'${HOSTAPD_PATCH_2_11}' if '${EMULATOR_FEATURE_ENABLED}' == '1' and d.getVar('PRIOR_BUILD', True) == 'false' else ''}"
+
+EMULATOR_SUPPLICANT_PATCH = "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'file://2.10/supplicant.patch', '', d)}"
+SRC_URI += "${@'${EMULATOR_SUPPLICANT_PATCH}' if '${EMULATOR_FEATURE_ENABLED}' == '1' and d.getVar('PRIOR_BUILD', True) == 'true' else ''}"
+
+EMULATOR_SUPPLICANT_PATCH_2_11 = "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', 'file://2.11/supplicant.patch', '', d)}"
+SRC_URI += "${@'${EMULATOR_SUPPLICANT_PATCH_2_11}' if '${EMULATOR_FEATURE_ENABLED}' == '1' and d.getVar('PRIOR_BUILD', True) == 'false' else ''}"
+
+EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', '--disable-static --enable-shared', '', d)}"
+
 ###########################PRIOR_BUILD#####################
 
 S = "${WORKDIR}/git/"
@@ -101,7 +126,7 @@ S = "${WORKDIR}/git/"
 FILES_${PN} = " \
         ${libdir}/libhostap.so* \
 "
-
+EXTRA_OEMAKE += "${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'WIFI_EMULATOR=true', 'WIFI_EMULATOR=false', d)}"
 do_hostapd_patch () {
     if ! ${PRIOR_BUILD}; then
         install -m 0644 ${WORKDIR}/.config ${WORKDIR}/libhostap.mk ${S}/source/hostap-${HOSTAPD_PV}/hostapd/
@@ -125,6 +150,19 @@ do_compile () {
     fi
 }
 
+do_configure_prepend () {
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'true', 'false', d)}; then
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'true', 'false', d)}; then
+            mv ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm.c ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm_test.c
+        fi
+    fi
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', 'true', 'false', d)}; then
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'true', 'false', d)}; then
+            mv ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm.c ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm_test.c
+        fi
+    fi
+}
+
 do_install () {
     if ${PRIOR_BUILD}; then
         autotools_do_install
@@ -139,5 +177,23 @@ do_install () {
         install -m 0755 ${S}/source/hostap-${HOSTAPD_PV}/hostapd/config_file.h ${D}${includedir}/rdk-wifi-libhostap/src/hostapd/
     else
         oe_runmake -C ${S}/source/hostap-${HOSTAPD_PV}/hostapd 'DESTDIR=${D}' install_libhostap
+    fi
+}
+
+do_install_append () {
+    if ${PRIOR_BUILD}; then
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'true', 'false', d)}; then
+            if ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'true', 'false', d)}; then
+                cd ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant && find . -type f -name "*.h" -exec install -D -m 0755 "{}" ${D}${includedir}/rdk-wifi-libhostap/src/"{}" \;
+                mv ${D}${includedir}/rdk-wifi-libhostap/src/config.h ${D}${includedir}/rdk-wifi-libhostap/src/config_supplicant.h
+            fi
+        fi
+    else
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', 'true', 'false', d)}; then
+            if ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'true', 'false', d)}; then
+                cd ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant && find . -type f -name "*.h" -exec install -D -m 0755 "{}" ${D}${includedir}/rdk-wifi-libhostap/src/"{}" \;
+                mv ${D}${includedir}/rdk-wifi-libhostap/src/config.h ${D}${includedir}/rdk-wifi-libhostap/src/config_supplicant.h
+            fi
+        fi
     fi
 }

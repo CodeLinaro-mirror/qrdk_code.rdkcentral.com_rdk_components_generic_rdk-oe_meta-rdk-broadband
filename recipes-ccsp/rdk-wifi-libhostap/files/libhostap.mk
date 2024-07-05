@@ -26,6 +26,35 @@ LIB_NAME_SO := $(LIB_NAME_REAL).$(LIB_VERSION_MAJOR)
 LIB_OBJS := ../src/common/wpa_ctrl.o
 
 #################part of `wpa_supplicant`#################
+ifeq ($(WIFI_EMULATOR), true)
+LIB_OBJS += ../wpa_supplicant/sme.o
+LIB_OBJS += ../wpa_supplicant/wmm_ac.o
+LIB_OBJS += ../wpa_supplicant/rrm_test.o
+LIB_OBJS += ../wpa_supplicant/wps_supplicant.o
+LIB_OBJS += ../wpa_supplicant/wpas_glue.o
+LIB_OBJS += ../wpa_supplicant/interworking.o
+LIB_OBJS += ../wpa_supplicant/op_classes.o
+LIB_OBJS += ../wpa_supplicant/events.o
+LIB_OBJS += ../wpa_supplicant/hs20_supplicant.o
+LIB_OBJS += ../wpa_supplicant/scan.o
+LIB_OBJS += ../wpa_supplicant/bss.o
+LIB_OBJS += ../wpa_supplicant/notify.o
+LIB_OBJS += ../wpa_supplicant/wpa_supplicant.o
+LIB_OBJS += ../wpa_supplicant/robust_av.o
+LIB_OBJS += ../wpa_supplicant/bssid_ignore.o
+LIB_OBJS += ../src/utils/bitfield.o
+
+LIB_OBJS += ../wpa_supplicant/wnm_sta.o
+LIB_OBJS += ../wpa_supplicant/config.o
+LIB_OBJS += ../wpa_supplicant/gas_query.o
+LIB_OBJS += ../wpa_supplicant/config_none.o
+LIB_OBJS += ../wpa_supplicant/ctrl_iface.o
+LIB_OBJS += ../wpa_supplicant/offchannel.o
+LIB_OBJS += ../wpa_supplicant/eap_register.o
+LIB_OBJS += ../wpa_supplicant/ap.o
+LIB_OBJS += ../wpa_supplicant/ctrl_iface_unix.o
+endif
+
 ifdef CONFIG_EAP_TLS
 # EAP-TLS
 CFLAGS += -DEAP_TLS
