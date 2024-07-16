@@ -25,15 +25,20 @@ CFLAGS += " -Wall -Werror -Wextra -Wno-implicit-function-declaration -Wno-type-l
 
 CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-compare -Wno-stringop-truncation -Wno-enum-conversion -fcommon -Wno-mismatched-dealloc"
 
-SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/OneWifi;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=OneWifi"
+SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/OneWifi;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=OneWifi" 
+
+SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
+
+SRCREV_OneWifi = "${AUTOREV}"
+SRCREV_WiFiCnxCtrl = "${AUTOREV}"
+SRCREV_FORMAT = "OneWifi"
+
+S = "${WORKDIR}/git"
 
 LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'Opensync_4.4', ' -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync_44/lib -low -losw -lopensync', ' -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync/lib -low -losw -lopensync', d)}"
 
-SRCREV_OneWifi = "${AUTOREV}"
-SRCREV_FORMAT = "OneWifi"
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig systemd ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
@@ -44,7 +49,7 @@ LDFLAGS_remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.
 LDFLAGS_append_dunfell = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'ONEWIFI_CAC_APP_SUPPORT=true', 'ONEWIFI_CAC_APP_SUPPORT=false', d)}"
 EXTRA_OECONF_append = " --disable-libwebconfig"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
@@ -60,6 +65,7 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIF
 CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'acl_nl_support', ' -DNL80211_ACL', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '-DONEWIFI_CAC_APP_SUPPORT', '', d)}"
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
@@ -83,6 +89,13 @@ LDFLAGS_append = " \
 "
 LDFLAGS_append += " -lprivilege"
 #LDFLAGS_append = " -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync/lib -low -losw -lopensync"
+do_compile_prepend () {
+    # Copy files specific to the cac cac distribution
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'true', 'false', d)}; then
+        mkdir -p ${S}/source/apps/cac/
+        cp -rf ${S}/../WiFiCnxCtrl/source/apps/cac/* ${S}/source/apps/cac/
+    fi
+}
 
 do_install_append () {
     # Config files and scripts

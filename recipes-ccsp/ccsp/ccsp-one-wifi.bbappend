@@ -8,6 +8,7 @@ RDEPENDS_${PN}_append = " libparodus"
 EXTRA_OECONF_append = " --enable-ccsp-common"
 EXTRA_OECONF_append = " --enable-dml"
 EXTRA_OECONF_append = " --enable-journalctl"
+EXTRA_OECONF_append = " ONEWIFI_CAC_APP_SUPPORT=true"
 
 CFLAGS_append = " -I${STAGING_INCDIR}/dbus-1.0"
 CFLAGS_append = " -I${STAGING_LIBDIR}/dbus-1.0/include"
