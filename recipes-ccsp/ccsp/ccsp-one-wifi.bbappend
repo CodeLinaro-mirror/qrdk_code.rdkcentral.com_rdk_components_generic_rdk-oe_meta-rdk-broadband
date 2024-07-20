@@ -13,6 +13,16 @@ CFLAGS_append = " -I${STAGING_INCDIR}/dbus-1.0"
 CFLAGS_append = " -I${STAGING_LIBDIR}/dbus-1.0/include"
 CFLAGS_append = " -I${STAGING_INCDIR}/libparodus"
 
+CFLAGS_append = " -DONEWIFI_CSI_APP_SUPPORT  \
+           -DONEWIFI_CAC_APP_SUPPORT \
+           -DONEWIFI_MOTION_APP_SUPPORT \
+           -DONEWIFI_HARVESTER_APP_SUPPORT \
+           -DONEWIFI_LEVL_APP_SUPPORT \
+           -DONEWIFI_WHIX_APP_SUPPORT \
+           -DONEWIFI_BLASTER_APP_SUPPORT \
+           -DONEWIFI_RDKB_APP_SUPPORT \
+           "
+
 LDFLAGS_append = " -ldbus-1"
 LDFLAGS_append = " -llibparodus"
 LDFLAGS_append = " -ltrower-base64"
