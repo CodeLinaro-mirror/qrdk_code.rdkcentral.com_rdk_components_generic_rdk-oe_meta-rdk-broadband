@@ -31,6 +31,10 @@ FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 SRC_URI_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','file://ApplySystemDefaults.service','',d)} \
 "
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'pm_lan_mgr', '--enable-lanmgr_enabled', '', d)}"
+
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', '--enable-no_moca_support', '', d)}"
+
 #This configuration is commented in utopia configure.ac file. As long as this is not enabled in configure file, passing the OE configuration is giving error in kirkstone.
 #EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '--enable-wanfailover', '', d)}"
 

@@ -139,6 +139,12 @@ CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext'
 # Adding flag for SpeedBoostSupport 
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'SpeedBoostSupportEnable', ' -DSPEED_BOOST_SUPPORTED', '', d)}"
 
+# Adding flag for Lanmanager support
+CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'pm_lan_mgr', ' -DLAN_MGR_SUPPORT ', '', d)}"
+
+CFLAGS_append =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DNO_MOCA_FEATURE_SUPPORT ', '', d)}"
+CFLAGS_remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DMOCA_DIAGONISTIC -DMOCA_HOME_ISOLATION -DCONFIG_SYSTEM_MOCA ', '', d)}"
+
 FILES_${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"

@@ -6,7 +6,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 RPROVIDES_${PN} = "ccsp-p-and-m"
 
 DEPENDS = "ccsp-common-library webconfig-framework ccsp-lm-lite telemetry ccsp-hotspot mountutils"
-DEPENDS_append = " utopia hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi curl ccsp-misc ccsp-hotspot cjson libsyswrapper cjson trower-base64 msgpack-c nanomsg wrp-c libparodus rbus"
+DEPENDS_append = " utopia hal-cm hal-dhcpv4c hal-ethsw hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi curl ccsp-misc ccsp-hotspot cjson libsyswrapper cjson trower-base64 msgpack-c nanomsg wrp-c libparodus rbus"
+DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', '', 'hal-moca', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler', 'rdk-scheduler', " ", d)}"
 
@@ -112,6 +113,9 @@ LDFLAGS_remove_morty = " -lsyscfg"
 
 do_compile_prepend () {
 
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', 'true', 'false', d)}; then
+    sed -i '2i <?define NO_MOCA_FEATURE_SUPPORT=True?>' ${S}/config-arm/TR181-USGv2.XML
+    fi
     if ${@bb.utils.contains('DISTRO_FEATURES', 'interworking', 'true', 'false', d)}; then
     sed -i '2i <?define FEATURE_SUPPORT_INTERWORKING=True?>' ${S}/config-arm/TR181-USGv2.XML
     fi
@@ -213,6 +217,10 @@ FILES_${PN}-ccsp = " \
     ${prefix}/ccsp/pam/RebootCondition.sh \
     /fss/gw/usr/sbin/ip \
     /fss/gw/usr/ccsp/pam/mapping.txt \
+"
+
+FILES_${PN}-ccsp_remove_no_moca_support = " \
+    ${prefix}/ccsp/pam/moca_status.sh \
 "
 
 FILES_${PN}-dbg = " \
