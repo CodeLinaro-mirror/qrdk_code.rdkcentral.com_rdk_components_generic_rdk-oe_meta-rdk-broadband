@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://../../LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 PROVIDES = "hal-moca"
 RPROVIDES_${PN} = "hal-moca"
 
-DEPENDS += "halinterface safec-common-wrapper"
+DEPENDS += "rdkb-halif-moca safec-common-wrapper"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/hal;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=mocahal"
 
