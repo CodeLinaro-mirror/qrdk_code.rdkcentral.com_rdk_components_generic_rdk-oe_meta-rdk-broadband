@@ -35,10 +35,7 @@ SRCREV_FORMAT = "OneWifi"
 
 S = "${WORKDIR}/git"
 
-LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'Opensync_4.4', ' -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync_44/lib -low -losw -lopensync', ' -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync/lib -low -losw -lopensync', d)}"
-
 PV = "${RDK_RELEASE}+git${SRCPV}"
-
 
 inherit autotools pkgconfig systemd ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
@@ -88,7 +85,6 @@ LDFLAGS_append = " \
     -lcjson \
 "
 LDFLAGS_append += " -lprivilege"
-#LDFLAGS_append = " -L${PKG_CONFIG_SYSROOT_DIR}/usr/opensync/lib -low -losw -lopensync"
 do_compile_prepend () {
     # Copy files specific to the cac cac distribution
     if ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'true', 'false', d)}; then
