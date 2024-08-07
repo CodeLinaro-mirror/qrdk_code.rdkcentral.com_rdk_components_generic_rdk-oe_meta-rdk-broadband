@@ -193,11 +193,6 @@ do_install_append () {
 #}
 
 PACKAGES += "${PN}-ccsp"
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/CcspPandMSsp_gtest.bin', '', d)} \
-"
 
 FILES_${PN}-ccsp = " \
     ${prefix}/ccsp/pam/CcspDmLib.cfg  \
@@ -230,11 +225,6 @@ FILES_${PN}-dbg = " \
 #    ${prefix}/ccsp/pam/COSAXcalibur.XML \
 #"
 
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-CcspPandMSsp', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "CcspPandMSsp"
 BREAKPAD_LOGMAPPER_LOGLIST = "PAMlog.txt.0"
