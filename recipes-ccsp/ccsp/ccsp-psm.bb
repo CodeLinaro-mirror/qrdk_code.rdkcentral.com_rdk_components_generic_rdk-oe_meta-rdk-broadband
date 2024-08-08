@@ -74,17 +74,6 @@ FILES_${PN}-dbg = " \
     ${libdir}/.debug \
 "
 
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/PsmSsp_gtest.bin', '', d)} \
-"
-
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-PsmSsp', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "PsmSsp"
 BREAKPAD_LOGMAPPER_LOGLIST = "PSMlog.txt.0"
