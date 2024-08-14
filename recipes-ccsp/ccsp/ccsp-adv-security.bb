@@ -70,19 +70,6 @@ FILES_${PN}-dbg += " \
     ${libdir}/.debug \
 "
 
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/CcspAdvSecurityDmlTest_gtest.bin', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/CcspAdvSecuritySanityTest_gtest.bin', '', d)} \
-"
-
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-CcspAdvSecuritySsp', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtest', '', d)}"
-SKIP_MAIN_PKG="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
-DOWNLOAD_ON_DEMAND="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
-
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "CcspAdvSecurity"
 BREAKPAD_LOGMAPPER_LOGLIST = "ADVSEClog.txt.0,agent.txt"
