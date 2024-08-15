@@ -22,6 +22,7 @@ CFLAGS_append = " -DONEWIFI_CSI_APP_SUPPORT  \
            -DONEWIFI_WHIX_APP_SUPPORT \
            -DONEWIFI_BLASTER_APP_SUPPORT \
            -DONEWIFI_RDKB_APP_SUPPORT \
+	   -DONEWIFI_DB_SUPPORT \
            "
 
 LDFLAGS_append = " -ldbus-1"
