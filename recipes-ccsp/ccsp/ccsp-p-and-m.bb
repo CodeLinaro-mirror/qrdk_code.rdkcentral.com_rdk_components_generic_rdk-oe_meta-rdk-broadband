@@ -83,6 +83,9 @@ EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--en
 ENABLE_MAPT = "--enable-maptsupport=${@bb.utils.contains('DISTRO_FEATURES', 'nat46', 'yes', 'no', d)}"
 EXTRA_OECONF_append = " ${ENABLE_MAPT}"
 
+ENABLE_MAPT_UNIFICATION = "--enable-maptunificationsupport=${@bb.utils.contains('DISTRO_FEATURES', 'unified_mapt', 'yes', 'no', d)}"
+EXTRA_OECONF_append = " ${ENABLE_MAPT_UNIFICATION}"
+
 ENABLE_WIFI_MANAGE = "--enable-wifimanagesupport=${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', 'yes', 'no', d)}"
 EXTRA_OECONF_append = " ${ENABLE_WIFI_MANAGE}"
 

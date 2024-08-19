@@ -124,8 +124,10 @@ CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_configurable_w
 # Adding flag for vendor_class_id
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'vendor_class_id_feature', ' -DVENDOR_CLASS_ID ', '', d)}"
 
-# Adding flag for Wan Manager Unification 
+# Adding flag for Wan Manager Unification  (Enable FEATURE_RDKB_CONFIGURABLE_WAN_INTERFACE by default for the WanManager unified builds)
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'WanManagerUnificationEnable', '-DWAN_MANAGER_UNIFICATION_ENABLED', '', d)}"
+# Add flags to support MAP-T NAT46 Unification Feature
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'unified_mapt', '-DMAPT_UNIFICATION_ENABLED', '', d)}"
 
 # Adding flag for WiFi Manange
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', ' -DWIFI_MANAGE_SUPPORTED', '', d)}"
