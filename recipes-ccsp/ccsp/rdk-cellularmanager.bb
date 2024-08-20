@@ -81,6 +81,7 @@ do_install_append () {
 
 FILES_${PN} = " \
    ${bindir}/* \
+   ${libdir}/libcellularmanager_hal.so* \
    ${exec_prefix}/rdk/cellularmanager/* \
    ${systemd_unitdir}/system/${V_SERVICE_FILE}.service \
 "
