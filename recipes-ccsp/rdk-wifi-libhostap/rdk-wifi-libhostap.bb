@@ -38,6 +38,7 @@ EXTRA_OEMAKE_append = " \
     'PN=rdk-wifi-libhostap' \
     'MACHINE_IMAGE_NAME=${MACHINE_IMAGE_NAME}' \
     ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'ONE_WIFI=y', '', d)} \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'CONFIG_IEEE80211BE', 'CONFIG_IEEE80211BE=y', '', d)} \
 "
 CFLAGS_append = " \
     -fcommon \
@@ -63,6 +64,10 @@ SRC_URI += " \
         file://${HOSTAPD_PV}/rnr_col_211.patch \
         file://${HOSTAPD_PV}/tpc_report_211.patch \
         file://${HOSTAPD_PV}/driver_aid_211.patch \
+        file://${HOSTAPD_PV}/sta_assoc_req.patch \
+        file://${HOSTAPD_PV}/wps_event_notify_cb.patch \
+        file://${HOSTAPD_PV}/nl_attr_rx_phy_rate_info.patch \
+        file://${HOSTAPD_PV}/hostapd_bss_link_deinit.patch \
         file://${HOSTAPD_PV}/radius_failover_2_11.patch \
     ','', d)} \
 "

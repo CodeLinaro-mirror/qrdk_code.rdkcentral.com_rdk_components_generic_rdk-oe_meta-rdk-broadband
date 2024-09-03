@@ -1,0 +1,13 @@
+diff --git a/source/hostap-2.11/src/ap/hostapd.c b/source/hostap-2.11/src/ap/hostapd.c
+index 48cc535..d6afaeb 100644
+--- a/source/hostap-2.11/src/ap/hostapd.c
++++ b/source/hostap-2.11/src/ap/hostapd.c
+@@ -617,7 +617,7 @@ void hostapd_free_hapd_data(struct hostapd_data *hapd)
+  * If the BSS being removed is the first link, the next link becomes the first
+  * link.
+  */
+-static void hostapd_bss_link_deinit(struct hostapd_data *hapd)
++void hostapd_bss_link_deinit(struct hostapd_data *hapd)
+ {
+ #ifdef CONFIG_IEEE80211BE
+ 	if (!hapd->conf || !hapd->conf->mld_ap)

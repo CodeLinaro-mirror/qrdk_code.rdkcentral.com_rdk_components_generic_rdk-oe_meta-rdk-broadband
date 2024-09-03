@@ -31,16 +31,6 @@ CFLAGS_append = " ${@bb.utils.contains("DISTRO_FEATURES", 'CONFIG_IEEE80211BE', 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'ONEWIFI_CAC_APP_SUPPORT=true', 'ONEWIFI_CAC_APP_SUPPORT=false', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '-DONEWIFI_CAC_APP_SUPPORT', '', d)}"
 
-#!FIXME!
-#Ensure proper propagation of CFLAGS and LIBS through the build system.
-#configure.ac:
-#PKG_CHECK_MODULES([LIBHOSTAP], [libhostap >= 2.9])
-#
-#Makefile.am:
-#target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
-#target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
-CFLAGS_append = " `pkg-config --exists libhostap && pkg-config --cflags libhostap`"
-
 CFLAGS_append_kirkstone = " -Wno-deprecated-declarations"
 
 LDFLAGS_append = " -lrbus "

@@ -162,7 +162,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ap_drv_ops.h git/source/ho
 diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hostap-2.11/src/ap/hostapd.c
 --- git.orig/source/hostap-2.11/src/ap/hostapd.c	2024-01-18 13:16:27.634546695 +0200
 +++ git/source/hostap-2.11/src/ap/hostapd.c	2024-01-18 16:18:39.479347828 +0200
-@@ -1187,6 +1187,17 @@
+@@ -1303,6 +1303,17 @@
  	if (hapd->driver && hapd->driver->set_operstate)
  		hapd->driver->set_operstate(hapd->drv_priv, 1);
  
@@ -180,7 +180,20 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hosta
  	return 0;
  }
  
-@@ -1208,7 +1219,7 @@
+@@ -1330,7 +1341,11 @@ static int hostapd_bss_radius_init(struct hostapd_data *hapd)
+ 		return -1;
+ 	}
+ 
+-	if (conf->radius_das_port) {
++#ifdef FEATURE_SUPPORT_RADIUSGREYLIST
++        if (conf->radius_das_port && conf->rdk_greylist) {
++#else /* FEATURE_SUPPORT_RADIUSGREYLIST */
++        if (conf->radius_das_port) {
++#endif /* FEATURE_SUPPORT_RADIUSGREYLIST */
+ 		struct radius_das_conf das_conf;
+ 
+ 		os_memset(&das_conf, 0, sizeof(das_conf));
+@@ -1377,7 +1392,7 @@ static int hostapd_bss_radius_init(struct hostapd_data *hapd)
   * initialized. Most of the modules that are initialized here will be
   * deinitialized in hostapd_cleanup().
   */
@@ -189,20 +202,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hosta
  			     bool start_beacon)
  {
  	struct hostapd_bss_config *conf = hapd->conf;
-@@ -1388,7 +1399,11 @@
- 			return -1;
- 		}
- 
--		if (conf->radius_das_port) {
-+#ifdef FEATURE_SUPPORT_RADIUSGREYLIST
-+        if (conf->radius_das_port && conf->rdk_greylist) {
-+#else /* FEATURE_SUPPORT_RADIUSGREYLIST */
-+        if (conf->radius_das_port) {
-+#endif /* FEATURE_SUPPORT_RADIUSGREYLIST */
- 			struct radius_das_conf das_conf;
- 
- 			os_memset(&das_conf, 0, sizeof(das_conf));
-@@ -1859,9 +1874,6 @@
+@@ -2064,9 +2079,6 @@ static int setup_interface(struct hostapd_iface *iface)
  		if (os_strncmp(previous_country, country, 2) != 0) {
  			wpa_printf(MSG_DEBUG, "Continue interface setup after channel list update");
  			iface->wait_channel_update = 1;
@@ -303,10 +303,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
 diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.h git/source/hostap-2.11/src/ap/ieee802_11.h
 --- git.orig/source/hostap-2.11/src/ap/ieee802_11.h	2024-01-18 13:16:27.634546695 +0200
 +++ git/source/hostap-2.11/src/ap/ieee802_11.h	2024-01-18 16:05:46.122181406 +0200
-@@ -258,5 +258,9 @@ const char * sae_get_password(struct hos
- struct sta_info * hostapd_ml_get_assoc_sta(struct hostapd_data *hapd,
- 					   struct sta_info *sta,
- 					   struct hostapd_data **assoc_hapd);
+@@ -263,5 +263,9 @@ int hostapd_process_assoc_ml_info(struct hostapd_data *hapd,
+ 				  const u8 *ies, size_t ies_len,
+ 				  bool reassoc, int tx_link_status,
+ 				  bool offload);
 +u16 send_assoc_resp(struct hostapd_data *hapd, struct sta_info *sta,
 +			const u8 *addr, u16 status_code, int reassoc,
 +			const u8 *ies, size_t ies_len, int rssi,
@@ -1337,10 +1337,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/gas_serv.c git/source/host
 diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hostap-2.11/src/ap/hostapd.c
 --- git.orig/source/hostap-2.11/src/ap/hostapd.c	2024-02-01 01:21:16.085432720 +0200
 +++ git/source/hostap-2.11/src/ap/hostapd.c	2024-02-01 01:30:02.853890947 +0200
-@@ -4401,3 +4401,36 @@
- 	return NULL;
+@@ -4949,3 +4961,36 @@ u16 hostapd_get_punct_bitmap(struct hostapd_data *hapd)
+ 
+        return punct_bitmap;
  }
- #endif /* CONFIG_IEEE80211BE */
 +
 +#ifdef CONFIG_DRIVER_BRCM
 +/*
@@ -1417,7 +1417,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
  
  #ifdef CONFIG_FILS
  static struct wpabuf *
-@@ -513,11 +515,14 @@
+@@ -508,11 +522,14 @@
  	struct hostapd_data *hapd = ctx;
  	struct sta_info *sta;
  	int reply_res;
@@ -1426,7 +1426,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
 +	//brcm_build_ft_auth_resp_send(ctx, dst, status, ies, ies_len);
 +	//reply_res = status;
 +//#else
- 	reply_res = send_auth_reply(hapd, NULL, dst, bssid, WLAN_AUTH_FT,
+ 	reply_res = send_auth_reply(hapd, NULL, dst, WLAN_AUTH_FT,
  				    auth_transaction, status, ies, ies_len,
  				    "auth-ft-finish");
 -
@@ -1538,7 +1538,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
  			hostapd_logger(hapd, mgmt->sa,
  				       HOSTAPD_MODULE_IEEE80211,
  				       HOSTAPD_LEVEL_INFO,
-@@ -5393,9 +5445,15 @@
+@@ -5489,6 +5559,7 @@ static void handle_assoc(struct hostapd_data *hapd,
  			send_deauth(hapd, mgmt->sa,
  				    WLAN_REASON_CLASS2_FRAME_FROM_NONAUTH_STA);
  			return;
@@ -1546,15 +1546,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
  		}
  	}
  
-+	os_free(sta->assoc_req);
-+	sta->assoc_req = os_malloc(len);
-+	os_memcpy(sta->assoc_req, (u8 *)mgmt, len);
-+	sta->assoc_req_len = len;
-+
- 	if ((fc & WLAN_FC_RETRY) &&
- 	    sta->last_seq_ctrl != WLAN_INVALID_MGMT_SEQ &&
- 	    sta->last_seq_ctrl == seq_ctrl &&
-@@ -5933,6 +5991,7 @@
+@@ -6008,6 +6079,7 @@ static int handle_action(struct hostapd_data *hapd,
  		return 0;
  	}
  
@@ -1562,7 +1554,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
  	if (sta && (sta->flags & WLAN_STA_MFP) &&
  	    !(mgmt->frame_control & host_to_le16(WLAN_FC_ISWEP)) &&
  	    robust_action_frame(mgmt->u.action.category)) {
-@@ -5942,6 +6001,7 @@
+@@ -6017,6 +6089,7 @@ static int handle_action(struct hostapd_data *hapd,
  			       "an MFP STA");
  		return 0;
  	}
@@ -1573,7 +1565,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
 diff --color -Naur git.orig/source/hostap-2.11/src/ap/sta_info.c git/source/hostap-2.11/src/ap/sta_info.c
 --- git.orig/source/hostap-2.11/src/ap/sta_info.c	2024-02-01 01:21:16.077432706 +0200
 +++ git/source/hostap-2.11/src/ap/sta_info.c	2024-02-01 01:38:21.065105301 +0200
-@@ -209,7 +209,18 @@
+@@ -245,7 +245,18 @@
  
  	if (!hapd->iface->driver_ap_teardown &&
  	    !(sta->flags & WLAN_STA_PREAUTH)) {
@@ -1584,10 +1576,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/sta_info.c git/source/host
 +		if (!(sta->flags & WLAN_STA_DRIVER_IND)) {
 +			wpa_printf(MSG_DEBUG, "%s %d AP: remove STA " MACSTR
 +					, __FUNCTION__, __LINE__, MAC2STR(sta->addr));
-+			hostapd_drv_sta_remove(hapd, sta->addr);
++			__ap_free_sta(hapd, sta);
 +		}
 +#else
- 		hostapd_drv_sta_remove(hapd, sta->addr);
+ 		__ap_free_sta(hapd, sta);
 +#endif /* CONFIG_DRIVER_BRCM */
  		sta->added_unassoc = 0;
  	}
@@ -2495,16 +2487,17 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver.h git/source/h
  	/**
  	 * EVENT_TX_WAIT_EXPIRE - TX wait timed out
  	 *
-diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/source/hostap-2.11/src/drivers/driver_nl80211.c
---- git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c	2024-02-01 01:21:16.117432773 +0200
-+++ git/source/hostap-2.11/src/drivers/driver_nl80211.c	2024-02-01 02:08:02.344869181 +0200
-@@ -1360,6 +1360,18 @@
+diff --git a/source/hostap-2.11/src/drivers/driver_nl80211.c b/source/hostap-2.11/src/drivers/driver_nl80211.c
+index e6fbad9..3c6d4fb 100644
+--- a/source/hostap-2.11/src/drivers/driver_nl80211.c
++++ b/source/hostap-2.11/src/drivers/driver_nl80211.c
+@@ -1357,6 +1357,18 @@ static void wpa_driver_nl80211_event_rtm_newlink(void *ctx,
  			wpa_printf(MSG_DEBUG,
  				   "nl80211: Not the main interface (%s) - do not indicate interface down",
  				   drv->first_bss->ifname);
 +#ifdef CONFIG_DRIVER_BRCM
 +		struct i802_bss *bss = get_bss_ifindex(drv, ifi->ifi_index);
-+		if (bss == NULL) {
++		if (bss == NULL || bss->flink == NULL) {
 +			wpa_printf(MSG_INFO, "nl80211: BSS not avaliable");
 +			return;
 +		}
@@ -2512,41 +2505,41 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
 +		wpa_printf(MSG_INFO, "nl80211: stop beacon on %s", ifname);
 +		struct hostapd_data *hapd = (struct hostapd_data *)bss->ctx;
 +		hostapd_stop_beacon_on_vif(hapd);
-+		bss->beacon_set = 0;
++		bss->flink->beacon_set = 0;
 +#endif /* CONFIG_DRIVER_BRCM */
  		} else if (drv->ignore_if_down_event) {
  			wpa_printf(MSG_DEBUG, "nl80211: Ignore interface down "
  				   "event generated by mode change");
-@@ -1380,7 +1392,28 @@
- 				return;
+@@ -1378,6 +1390,28 @@ static void wpa_driver_nl80211_event_rtm_newlink(void *ctx,
  		}
  	}
+ 
 +#ifdef CONFIG_DRIVER_BRCM
 +	if ((ifi->ifi_flags & IFF_UP)
 +			&& (os_strcmp(drv->first_bss->ifname, ifname) != 0)) {
 +
 +		struct i802_bss *bss = get_bss_ifindex(drv, ifi->ifi_index);
-+		if (bss == NULL) {
++		if (bss == NULL || bss->flink == NULL) {
 +			wpa_printf(MSG_INFO, "nl80211: BSS not avaliable");
 +			goto event_newlink;
 +		}
 +
-+		if (bss->beacon_set == 0) {
++		if (bss->flink->beacon_set == 0) {
 +			wpa_printf(MSG_INFO, "nl80211: set beacon on %s", ifname);
 +			struct hostapd_data *hapd = (struct hostapd_data *)bss->ctx;
 +			hostapd_set_beacon_on_vif(hapd);
-+			bss->beacon_set = 1;
++			bss->flink->beacon_set = 1;
 +		} else {
 +			wpa_printf(MSG_DEBUG, "nl80211: beacon already set on %s", ifname);
 +		}
- 
++
 +		goto event_newlink;
 +	}
 +#endif /* CONFIG_DRIVER_BRCM */
  	if (drv->if_disabled && (ifi->ifi_flags & IFF_UP)) {
  		namebuf[0] = '\0';
  		if (if_indextoname(ifi->ifi_index, namebuf) &&
-@@ -1532,6 +1565,45 @@
+@@ -1529,6 +1563,45 @@ static void wpa_driver_nl80211_event_rtm_dellink(void *ctx,
  						 ifname);
  }
  
@@ -2592,7 +2585,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
  
  struct nl80211_get_assoc_freq_arg {
  	struct wpa_driver_nl80211_data *drv;
-@@ -2812,6 +2884,20 @@
+@@ -2823,6 +2896,20 @@ out_err:
  
  static int nl80211_mgmt_subscribe_ap_dev_sme(struct i802_bss *bss)
  {
@@ -2613,7 +2606,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
  	if (nl80211_alloc_mgmt_handle(bss))
  		return -1;
  	wpa_printf(MSG_DEBUG, "nl80211: Subscribe to mgmt frames with AP "
-@@ -2821,6 +2907,16 @@
+@@ -2832,6 +2919,16 @@ static int nl80211_mgmt_subscribe_ap_dev_sme(struct i802_bss *bss)
  		goto out_err;
  
  	if (bss->drv->device_ap_sme) {
@@ -2630,7 +2623,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
  		u16 type = (WLAN_FC_TYPE_MGMT << 2) | (WLAN_FC_STYPE_AUTH << 4);
  
  		/* Register for all Authentication frames */
-@@ -2828,6 +2924,7 @@
+@@ -2839,6 +2936,7 @@ static int nl80211_mgmt_subscribe_ap_dev_sme(struct i802_bss *bss)
  					   false) < 0)
  			wpa_printf(MSG_DEBUG,
  				   "nl80211: Failed to subscribe to handle Authentication frames - SAE offload may not work");
@@ -2638,27 +2631,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
  	}
  
  	nl80211_mgmt_handle_register_eloop(bss);
-@@ -3099,6 +3196,19 @@
- 	return send_and_recv_cmd(drv, msg);
- }
- 
-+#ifdef CONFIG_DRIVER_BRCM
-+static int wpa_driver_nl80211_del_beacon_bss(struct i802_bss *bss)
-+{
-+	struct nl_msg *msg;
-+	struct wpa_driver_nl80211_data *drv = bss->drv;
-+
-+	wpa_printf(MSG_INFO, "nl80211: Remove beacon (ifindex=%d, bss=%s)",
-+			drv->ifindex, bss->ifname);
-+	msg = nl80211_bss_msg(bss, 0, NL80211_CMD_DEL_BEACON);
-+	nl80211_put_wiphy_data_ap(bss);
-+	return send_and_recv_cmd(drv, msg);
-+}
-+#endif /* CONFIG_DRIVER_BRCM */
- 
- static void wpa_driver_nl80211_del_beacon_all(struct i802_bss *bss)
- {
-@@ -6026,7 +6136,10 @@
+@@ -6008,7 +6106,10 @@ static int nl80211_create_iface_once(struct wpa_driver_nl80211_data *drv,
  	msg = nl80211_cmd_msg(drv->first_bss, 0, NL80211_CMD_NEW_INTERFACE);
  	if (!msg ||
  	    nla_put_string(msg, NL80211_ATTR_IFNAME, ifname) ||
@@ -2670,7 +2643,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
  		goto fail;
  
  	if (iftype == NL80211_IFTYPE_MONITOR) {
-@@ -6043,12 +6156,15 @@
+@@ -6025,12 +6126,15 @@ static int nl80211_create_iface_once(struct wpa_driver_nl80211_data *drv,
  			goto fail;
  	}
  
@@ -2686,7 +2659,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
  
  	if ((addr && iftype == NL80211_IFTYPE_P2P_DEVICE) &&
  	    nla_put(msg, NL80211_ATTR_MAC, ETH_ALEN, addr))
-@@ -9947,6 +10063,9 @@
+@@ -9930,6 +10034,9 @@ static void * nl80211_global_init(void *ctx)
  	cfg->ctx = global;
  	cfg->newlink_cb = wpa_driver_nl80211_event_rtm_newlink;
  	cfg->dellink_cb = wpa_driver_nl80211_event_rtm_dellink;
@@ -2696,31 +2669,20 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
  	global->netlink = netlink_init(cfg);
  	if (global->netlink == NULL) {
  		os_free(cfg);
-@@ -13793,6 +13912,23 @@
+@@ -13831,6 +13938,12 @@ fail:
  	return ret;
  }
  
 +#ifdef CONFIG_DRIVER_BRCM
 +static int wpa_driver_nl80211_stop_bss(void *priv)
 +{
-+	struct i802_bss *bss = priv;
-+	struct wpa_driver_nl80211_data *drv = bss->drv;
-+	struct hostapd_data *hapd = (struct hostapd_data *)bss->ctx;
-+
-+	if (!is_ap_interface(drv->nlmode)) {
-+		return -1;
-+	}
-+
-+	wpa_driver_nl80211_del_beacon_bss(bss);
-+	bss->beacon_set = 0;
-+
-+	return 0;
++	return wpa_driver_nl80211_stop_ap(priv, NL80211_DRV_LINK_ID_NA);
 +}
 +#endif /* CONFIG_DRIVER_BRCM */
  
  #ifdef CONFIG_DPP
  static int nl80211_dpp_listen(void *priv, bool enable)
-@@ -13953,6 +14089,11 @@
+@@ -14018,6 +14131,11 @@ const struct wpa_driver_ops wpa_driver_nl80211_ops = {
  	.get_capa = wpa_driver_nl80211_get_capa,
  	.set_operstate = wpa_driver_nl80211_set_operstate,
  	.set_supp_port = wpa_driver_nl80211_set_supp_port,
@@ -2732,7 +2694,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c git/
  	.set_country = wpa_driver_nl80211_set_country,
  	.get_country = wpa_driver_nl80211_get_country,
  	.set_ap = wpa_driver_nl80211_set_ap,
-@@ -14076,6 +14217,9 @@
+@@ -14141,6 +14259,9 @@ const struct wpa_driver_ops wpa_driver_nl80211_ops = {
  	.update_connect_params = nl80211_update_connection_params,
  	.send_external_auth_status = nl80211_send_external_auth_status,
  	.set_4addr_mode = nl80211_set_4addr_mode,
@@ -2799,7 +2761,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.
  }
  
  
-@@ -2171,6 +2190,14 @@
+@@ -2179,6 +2198,14 @@
  {
  	u8 *peer_addr;
  	union wpa_event_data data;
@@ -2814,7 +2776,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.
  
  	if (tb[NL80211_ATTR_MAC] == NULL)
  		return;
-@@ -2184,6 +2211,15 @@
+@@ -2192,6 +2219,15 @@ static void nl80211_new_station_event(struct wpa_driver_nl80211_data *drv,
  		u8 *req_ies = NULL, *resp_ies = NULL;
  		size_t req_ies_len = 0, resp_ies_len = 0;
  
@@ -2827,7 +2789,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.
 +		struct nlattr *sinfo[NL80211_STA_INFO_MAX + 1];
 +#endif /* CONFIG_DRIVER_BRCM */
 +
- 		if (bss->links[0].link_id == NL80211_DRV_LINK_ID_NA &&
+ 		if (!bss->valid_links &&
  		    (tb[NL80211_ATTR_MLO_LINK_ID] ||
  		     tb[NL80211_ATTR_MLD_ADDR])) {
 @@ -2219,7 +2255,30 @@
@@ -3222,10 +3184,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps.h git/source/hostap-2
 diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_i.h git/source/hostap-2.11/src/wps/wps_i.h
 --- git.orig/source/hostap-2.11/src/wps/wps_i.h	2024-02-01 01:21:16.185432888 +0200
 +++ git/source/hostap-2.11/src/wps/wps_i.h	2024-02-01 02:22:28.499618583 +0200
-@@ -127,6 +127,9 @@
- 	struct wps_nfc_pw_token *nfc_pw_token;
+@@ -128,6 +128,9 @@ struct wps_data {
  
  	int multi_ap_backhaul_sta;
+ 	int multi_ap_profile;
 +#ifdef CONFIG_DRIVER_BRCM_MAP
 +    u8 map_ext_attr_e;              /* Enrolee multiap extension attribute */
 +#endif  /* CONFIG_DRIVER_BRCM_MAP */
