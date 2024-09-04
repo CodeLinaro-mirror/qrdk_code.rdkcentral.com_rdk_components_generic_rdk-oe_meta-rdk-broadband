@@ -6,7 +6,6 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 DEPENDS = "ccsp-common-library rdk-logger utopia libunpriv halinterface glib-2.0 webconfig-framework curl trower-base64 msgpack-c libgudev rbus"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_libqmi_support', 'libqmi', '', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
-DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp',' rdkbgmock','',d)}"
 
 SRC_URI ="${RDKB_CCSP_ROOT_GIT}/RdkCellularManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};name=CellularManager"
 
@@ -45,8 +44,6 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-confi
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', '-DCELLULAR_MGR_LITE ', '', d)}"
 LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-
-PACKAGES += "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
 
 do_compile_prepend () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', 'true', 'false', d)}; then
@@ -95,18 +92,7 @@ FILES_${PN}-dbg = " \
     ${libdir}/.debug \
 "
 
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/RdkCellularManager_gtest.bin', '', d)} \
-"
-
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-RdkCellularManager', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtest', '', d)}"
-SKIP_MAIN_PKG="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
-DOWNLOAD_ON_DEMAND="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
-
 ENABLE_CELLULAR_MGR_LITE = "--enable-cellularmgrlite=${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', 'yes', 'no', d)}"
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
 EXTRA_OECONF_append  = " ${ENABLE_CELLULAR_MGR_LITE}"
 EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 

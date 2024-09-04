@@ -110,12 +110,6 @@ do_install_append_bcm3390() {
     rm ${D}/usr/ccsp/wifi/br0_ip.sh
 }
 
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/CcspWifiSsp_gtest.bin', '', d)} \
-"
-
 FILES_${PN} = "\
     ${bindir}/CcspWifiSsp \
     ${libdir}/libwifi.so* \
@@ -155,11 +149,6 @@ FILES_${PN}_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${sy
 
 ERROR_QA_remove_morty = "la"
 
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-CcspWifiSsp', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "CcspWifiSsp,log_agent"
 BREAKPAD_LOGMAPPER_LOGLIST = "WiFilog.txt.0,WifiConsole.txt,wifihealth.txt"

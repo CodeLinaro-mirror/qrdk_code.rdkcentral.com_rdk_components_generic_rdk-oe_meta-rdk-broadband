@@ -7,7 +7,7 @@ SRCREV_CoreNetLib = "${AUTOREV}"
 SRCREV_FORMAT = "CoreNetLib"
 S = "${WORKDIR}/git"
 
-DEPENDS = " libnl gtest gtest-apps ccsp-common-library "
+DEPENDS = " libnl ccsp-common-library "
 
 inherit autotools pkgconfig
 
@@ -15,20 +15,6 @@ do_install_append() {
         install -d ${D}/usr/include/ccsp
 	install -m 0644 ${S}/source/libnet.h ${D}/usr/include/ccsp
 }
-
-PACKAGES += "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/libnet_gtest.bin', '', d)} \
-"
-
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-libnet', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"
-
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
 
 DEPENDS_remove_class-native = " safec-native"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"

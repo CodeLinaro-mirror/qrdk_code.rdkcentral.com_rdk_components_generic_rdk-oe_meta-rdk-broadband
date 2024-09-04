@@ -96,12 +96,6 @@ do_install_append_ciscoxb3atom () {
 
 PACKAGES += "${PN}-ccsp"
 
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/Dmcli_gtest.bin', '', d)} \
-"
-
 FILES_${PN}-ccsp = " \
     /fss/gw/usr/ccsp/* \
     ${prefix}/ccsp/* \
@@ -126,9 +120,3 @@ FILES_${PN}-dbg = " \
 
 # generating minidumps
 PACKAGECONFIG_append = " breakpad"
-
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-Dmcli', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"

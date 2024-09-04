@@ -57,11 +57,6 @@ do_install_append () {
 
 
 PACKAGES += "${PN}-ccsp"
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/CcspMtaAgentSsp_gtest.bin', '', d)} \
-"
 
 FILES_${PN}-ccsp = " \
     ${prefix}/ccsp/mta/CcspMta.cfg \
@@ -75,11 +70,6 @@ FILES_${PN}-dbg = " \
     ${libdir}/.debug \
 "
 
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-CcspMtaAgentSsp', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "CcspMtaAgentSsp"
 BREAKPAD_LOGMAPPER_LOGLIST = "MTAlog.txt.0"

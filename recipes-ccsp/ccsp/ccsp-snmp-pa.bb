@@ -76,18 +76,3 @@ FILES_${PN}-dbg = " \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "${bindir}/.debug ", " ", d)} \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "${libdir}/.debug ", " ", d)} \
 "
-
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/snmp_subagent_gtest.bin', '', d)} \
-"
-
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-snmp_subagent', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"
-# Breakpad processname and logfile mapping
-BREAKPAD_LOGMAPPER_PROCLIST = "snmp_subagent,snmpd"
-BREAKPAD_LOGMAPPER_LOGLIST = "SNMP.txt.0"

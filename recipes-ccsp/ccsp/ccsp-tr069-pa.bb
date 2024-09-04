@@ -55,11 +55,6 @@ do_install_append () {
 }
 
 PACKAGES += "${PN}-ccsp"
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/CcspTr069PaSsp_gtest.bin', '', d)} \
-"
 
 FILES_${PN}-ccsp = " \
     ${prefix}/ccsp/tr069pa/ccsp_tr069_pa_certificate_cfg.xml \
@@ -77,11 +72,6 @@ FILES_${PN}-dbg = " \
     ${libdir}/.debug \
 "
 
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-CcspTr069PaSsp', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "CcspTr069PaSsp"
 BREAKPAD_LOGMAPPER_LOGLIST = "TR69log.txt.0"

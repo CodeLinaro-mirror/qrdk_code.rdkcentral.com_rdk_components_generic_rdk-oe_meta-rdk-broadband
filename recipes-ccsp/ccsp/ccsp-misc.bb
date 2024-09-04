@@ -8,7 +8,6 @@ DEPENDS = "ccsp-common-library hal-platform utopia libunpriv"
 RDEPENDS_${PN} = " trower-base64"
 DEPENDS += " trower-base64 "
 
-DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp',' rdkbgmock','',d)}"
 DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' rdk-scheduler','',d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 require ccsp_common.inc
@@ -79,13 +78,6 @@ do_install_append () {
 
 PACKAGES += "${PN}-ccsp"
 
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/CcspMisc_gtest.bin', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/bridgeUtils_gtest.bin', '', d)} \
-"
-
 FILES_${PN}-ccsp = " \
     /usr/ccsp/psmcli \
 "
@@ -99,11 +91,6 @@ FILES_${PN}-dbg = " \
 # generating minidumps
 PACKAGECONFIG_append = " breakpad"
 
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-CcspMisc', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "meshAgent"
 BREAKPAD_LOGMAPPER_LOGLIST = "MeshAgentLog.txt.0,MeshServiceLog.txt.0"

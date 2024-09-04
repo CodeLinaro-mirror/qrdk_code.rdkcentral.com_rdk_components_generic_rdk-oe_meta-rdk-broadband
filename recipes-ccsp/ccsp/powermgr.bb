@@ -42,11 +42,6 @@ do_install_append () {
 }
 
 PACKAGES += "${PN}-ccsp"
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/rdkbPowerMgr_gtest.bin', '', d)} \
-"
 
 FILES_${PN}-ccsp = " \
     /fss/gw/usr/ccsp/* \
@@ -66,11 +61,6 @@ FILES_${PN}-dbg = " \
     ${bindir}/.debug \
     ${libdir}/.debug \
 "
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-rdkbPowerMgr', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtest', '', d)}"
-SKIP_MAIN_PKG="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
-DOWNLOAD_ON_DEMAND="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
 
 # generating minidumps
 PACKAGECONFIG_append = " breakpad"

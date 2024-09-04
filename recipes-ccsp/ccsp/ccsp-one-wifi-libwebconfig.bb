@@ -83,8 +83,4 @@ INSANE_SKIP_${PN} += "dev-so"
 
 ERROR_QA_remove_morty = "la"
 
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"
 # Breakpad processname and logfile mapping

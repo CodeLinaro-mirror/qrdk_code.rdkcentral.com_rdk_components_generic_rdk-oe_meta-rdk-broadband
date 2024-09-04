@@ -31,8 +31,6 @@ LDFLAGS_append = " \
 LDFLAGS_append = " -ltelemetry_msgsender -lsecure_wrapper"
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
-
 inherit pkgconfig autotools systemd
 
 do_install_append () {
@@ -52,16 +50,6 @@ do_install_append () {
 }
 
 SYSTEMD_SERVICE_${PN} = "OvsAgent.path"
-
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = " \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/OvsDbSocket_gtest.bin', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/OvsDbApi_gtest.bin', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/OvsAgentApi_gtest.bin', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/OvsAgent_gtest.bin', '', d)} \
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/JsonParser_gtest.bin', '', d)} \
-"
 
 FILES_${PN} += " \
     ${bindir}/OvsAgent \
@@ -85,8 +73,3 @@ FILES_${PN}-dbg = " \
     ${libdir}/.debug \
 "
 
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-OvsAgent', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="gtest"
-SKIP_MAIN_PKG="yes"
-DOWNLOAD_ON_DEMAND="yes"

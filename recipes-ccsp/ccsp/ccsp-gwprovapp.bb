@@ -47,19 +47,8 @@ do_install_append () {
 
 PACKAGES += "${PN}-ccsp"
 
-PACKAGES =+ "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
-
-FILES_${PN}-gtest = "\
-    ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/gw_prov_gtest.bin', '', d)} \
-"
-
 FILES_${PN}-ccsp = " /usr/ccsp/"
 
-DOWNLOAD_APPS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtestapp-gw_prov', '', d)}"
-inherit comcast-package-deploy
-CUSTOM_PKG_EXTNS="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'gtest', '', d)}"
-SKIP_MAIN_PKG="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
-DOWNLOAD_ON_DEMAND="${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', 'yes', 'no', d)}"
 #Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "gw_prov_utopia"
 BREAKPAD_LOGMAPPER_LOGLIST = "GWPROVLog.txt.0"
