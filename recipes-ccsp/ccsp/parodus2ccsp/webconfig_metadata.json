@@ -1757,7 +1757,7 @@
                                {
                                   "name": "moca",
                                   "bitposition": 1,
-                                  "support": true,
+                                  "support": false,
                                   "version": "1.0"
                                }
                             ]
