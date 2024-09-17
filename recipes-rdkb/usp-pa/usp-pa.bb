@@ -22,7 +22,7 @@ SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=m
 
 # Configure options for OBUSPA
 EXTRA_OECONF += "--disable-websockets --enable-mqtt"
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF_append_dunfell = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 # Configuration files for target
 SRC_URI += "file://conf/usp_factory_reset.conf"
