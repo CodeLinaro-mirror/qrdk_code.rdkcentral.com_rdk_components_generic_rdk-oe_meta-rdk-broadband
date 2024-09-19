@@ -29,6 +29,7 @@ usage()
     echo "       -mesh_enable: mesh rfc"
     echo "       -offline_mqtt_broker : mqtt broker url"
     echo "       -offline_mqtt_topic : offline mqtt topic"
+    echo "       -partner: Current Partner ID"
     exit 1
 }
 
@@ -193,6 +194,16 @@ case $1 in
         topic=`syscfg get offline_mqtt_topic`
         if [ -n "$topic" ]; then
             echo $topic
+        fi
+        shift 1
+        ;;
+
+    -partner)
+        partner=`syscfg get PartnerID`
+        if [ -n "$partner" ]; then
+            echo $partner
+        else
+            echo "unknown"
         fi
         shift 1
         ;;
