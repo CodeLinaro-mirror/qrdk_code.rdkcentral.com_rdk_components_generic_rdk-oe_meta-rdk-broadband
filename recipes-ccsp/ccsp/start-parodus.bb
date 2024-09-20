@@ -25,7 +25,7 @@ inherit autotools pkgconfig
 DEPENDS_append = " hal-platform hal-cm openssl cpgc lxy "
 RDEPENDS_${PN} += " cjson hal-platform hal-cm utopia "
 
-LDFLAGS_append = " -lbreakpadwrapper -lhal_platform -lcm_mgnt -lsyscfg -lcjson -lsysevent -lutapi -lutctx "
+LDFLAGS_append = " -lbreakpadwrapper -lhal_platform -lcm_mgnt -lsyscfg -lcjson -lsysevent -lutapi -lutctx -lm "
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
