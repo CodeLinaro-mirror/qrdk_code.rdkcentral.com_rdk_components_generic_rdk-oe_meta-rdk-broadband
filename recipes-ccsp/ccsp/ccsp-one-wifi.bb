@@ -50,6 +50,7 @@ EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'ONEWIFI_
 EXTRA_OECONF_append = " --disable-libwebconfig"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'EasyConnect', '--enable-easyconnect', '', d)}"
 ISSYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}"
 CFLAGS_append = " \
     -I${STAGING_INCDIR}/ccsp \
