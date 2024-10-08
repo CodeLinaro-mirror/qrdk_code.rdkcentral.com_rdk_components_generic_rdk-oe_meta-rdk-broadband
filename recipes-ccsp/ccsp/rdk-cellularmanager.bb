@@ -3,7 +3,7 @@ SUMMARY = "RDK Cellular Manager component"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
-DEPENDS = "ccsp-common-library rdk-logger utopia libunpriv halinterface glib-2.0 webconfig-framework curl trower-base64 msgpack-c libgudev rbus"
+DEPENDS = "ccsp-common-library rdk-logger utopia libunpriv halinterface glib-2.0 webconfig-framework curl trower-base64 msgpack-c libgudev rbus cjson"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_libqmi_support', 'libqmi', '', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
@@ -31,11 +31,12 @@ CFLAGS_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_libqmi_support', ' -I${STAGING_INCDIR}/libqmi-glib', '', d)} \
     -I${STAGING_INCDIR}/trower-base64 \
     -I${STAGING_INCDIR}/msgpackc \
+    -I${STAGING_INCDIR}/cjson \
     "
 
 
 LDFLAGS += " -lprivilege"
-LDFLAGS_append = " -ldbus-1"
+LDFLAGS_append = " -ldbus-1 -lcjson"
 LDFLAGS_remove_morty = " -ldbus-1"
 LDFLAGS += " -lgobject-2.0 -lgio-2.0 -lglib-2.0 -lgudev-1.0"
 LDFLAGS += " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_libqmi_support', '-lqmi-glib', '', d)}"
