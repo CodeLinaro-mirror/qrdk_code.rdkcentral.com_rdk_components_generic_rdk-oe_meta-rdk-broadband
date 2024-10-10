@@ -53,6 +53,8 @@ LIB_OBJS += ../wpa_supplicant/offchannel.o
 LIB_OBJS += ../wpa_supplicant/eap_register.o
 LIB_OBJS += ../wpa_supplicant/ap.o
 LIB_OBJS += ../wpa_supplicant/ctrl_iface_unix.o
+LIB_OBJS += ../wpa_supplicant/mbo.o
+LIB_OBJS += ../wpa_supplicant/wnm_sta.o
 endif
 
 ifdef CONFIG_EAP_TLS
