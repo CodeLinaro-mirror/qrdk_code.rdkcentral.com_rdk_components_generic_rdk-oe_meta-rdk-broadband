@@ -17,6 +17,7 @@ DEVICE_TYPE_ROUTER = "${@bb.utils.contains('DISTRO_FEATURES', 'device_type_route
 NO_ETH2_XFINITY_CONNECTION = "${@bb.utils.contains('DISTRO_FEATURES', 'eth_port2_xfinity_home', 'true', 'false', d)}"
 BATTERY_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'battery_not_supported', 'true', 'false', d)}"
 WPS_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'wps_not_supported', 'true', 'false', d)}"
+VOICE_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'voice_not_supported', 'true', 'false', d)}"
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/sysint;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=sysintbroadband"
 SRC_URI += "${CMF_GIT_ROOT}/rdkb/devices/intel-x86-pc/emulator/sysint;module=.;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=git/device;name=sysintdevice"
@@ -115,6 +116,12 @@ do_install() {
             echo "WPS_SUPPORTED=false" >> ${D}${sysconfdir}/device.properties
         else
             echo "WPS_SUPPORTED=true" >> ${D}${sysconfdir}/device.properties
+        fi
+
+	if [ ${VOICE_NOT_SUPPORTED} = "true" ]; then
+            echo "VOICE_SUPPORTED=false" >> ${D}${sysconfdir}/device.properties
+        else
+            echo "VOICE_SUPPORTED=true" >> ${D}${sysconfdir}/device.properties
         fi
 
 	if [ -f ${S}/device/etc/dcm.properties ]; then
