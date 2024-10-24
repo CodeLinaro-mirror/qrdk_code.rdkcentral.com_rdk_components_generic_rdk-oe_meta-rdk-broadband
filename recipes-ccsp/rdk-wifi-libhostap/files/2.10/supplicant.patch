@@ -27,6 +27,24 @@ Index: git/source/hostap-2.10/src/Makefile.am
  
  libhostap_la_SOURCES += radius/radius.c
  libhostap_la_SOURCES += radius/radius_client.c
+@@ -190,7 +208,7 @@ libhostap_la_SOURCES += crypto/aes-siv.c
+ #libhostap_la_SOURCES += crypto/aes-wrap.c
+ #libhostap_la_SOURCES += crypto/aes-unwrap.c
+ #libhostap_la_SOURCES += crypto/rc4.c
+-libhostap_la_SOURCES += crypto/tls_none.c
++#libhostap_la_SOURCES += crypto/tls_none.c
+ #libhostap_la_SOURCES += crypto/tls_internal.c
+ libhostap_la_SOURCES += crypto/ms_funcs.c
+ libhostap_la_SOURCES += crypto/dh_groups.c
+@@ -216,7 +234,7 @@ libhostap_la_SOURCES += crypto/sha384-kd
+ libhostap_la_SOURCES += crypto/sha512-kdf.c
+ libhostap_la_SOURCES += crypto/sha512-prf.c
+ #libhostap_la_SOURCES += crypto/fips_prf_internal.c
+-#libhostap_la_SOURCES += crypto/tls_openssl.c
++libhostap_la_SOURCES += crypto/tls_openssl.c
+ libhostap_la_SOURCES += crypto/crypto_openssl.c
+ 
+ #libhostap_la_SOURCES += crypto/dh_group5.c
 Index: git/source/hostap-2.10/src/drivers/driver.h
 ===================================================================
 --- git.orig/source/hostap-2.10/src/drivers/driver.h
