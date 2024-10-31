@@ -119,6 +119,8 @@ SRC_URI += "${@'${EMULATOR_SUPPLICANT_PATCH_2_11}' if '${EMULATOR_FEATURE_ENABLE
 
 EXTRA_OECONF += "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', '--disable-static --enable-shared', '', d)}"
 
+SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', ' file://2.10/add_progname.patch', '', d)}"
+
 ###########################PRIOR_BUILD#####################
 
 S = "${WORKDIR}/git/"
