@@ -15,7 +15,7 @@ require recipes-ccsp/ccsp/ccsp_common.inc
 SRC_URI += "git://github.com/BroadbandForum/obuspa;protocol=http;branch=master;rev=8355c200afb6430e3fc55ebabe8a9a709ae5d04f;name=obuspa;destsuffix=obuspa"
 
 # USPPA is the RDK specializations
-SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=main;rev=c455c7cec7564ea8edb4dce3936cb3d0b94e489a;name=usppa;destsuffix=usp-pa-vendor-rdk"
+SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=main;rev=36bb374c3b2f633437ad6ebd017e35377fa7963c;name=usppa;destsuffix=usp-pa-vendor-rdk"
 
 # Patches for OBUSPA
 #SRC_URI += "file://patches/remove_duplicate_min_max_define.patch"
@@ -26,7 +26,6 @@ EXTRA_OECONF_append_dunfell = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 # Configuration files for target
 SRC_URI += "file://conf/usp_factory_reset.conf"
-SRC_URI += "file://conf/usp_dm_comps.conf"
 SRC_URI += "file://conf/usp_dm_objs.conf"
 SRC_URI += "file://conf/usp_dm_params.conf"
 SRC_URI += "file://conf/usp_truststore.pem"
@@ -62,7 +61,6 @@ do_install() {
     
     install -m 0777 ${B}/obuspa ${D}${bindir}/UspPa
     install -m 0644 ${WORKDIR}/conf/usp_factory_reset.conf ${D}${sysconfdir}/usp-pa
-    install -m 0644 ${WORKDIR}/conf/usp_dm_comps.conf ${D}${sysconfdir}/usp-pa
     install -m 0644 ${WORKDIR}/conf/usp_dm_objs.conf ${D}${sysconfdir}/usp-pa
     install -m 0644 ${WORKDIR}/conf/usp_dm_params.conf ${D}${sysconfdir}/usp-pa
     install -m 0644 ${WORKDIR}/conf/usp_truststore.pem ${D}${sysconfdir}/usp-pa
@@ -73,7 +71,6 @@ do_install() {
 FILES_${PN} += "${bindir}/UspPa"
 FILES_${PN} += "${systemd_unitdir}/system/usp-pa.service"
 FILES_${PN} += "${sysconfdir}/usp-pa/usp_factory_reset.conf"
-FILES_${PN} += "${sysconfdir}/usp-pa/usp_dm_comps.conf"
 FILES_${PN} += "${sysconfdir}/usp-pa/usp_dm_objs.conf"
 FILES_${PN} += "${sysconfdir}/usp-pa/usp_dm_params.conf"
 FILES_${PN} += "${sysconfdir}/usp-pa/usp_truststore.pem"
@@ -87,5 +84,5 @@ DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', 'rbus', '', d)}"
 LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -lrbus ', '', d)}"
 CFLAGS  += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -isystem${STAGING_INCDIR}/rbus ', '', d)}"
 TARGET_CFLAGS  += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -DINCLUDE_LCM_DATAMODEL ', '', d)}"
-
-
+LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -lrbuscore ', '', d)}"
+CFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -I${STAGING_INCDIR}/rtmessage ', '', d)}"
