@@ -187,6 +187,12 @@ endif
 ifdef CONFIG_IEEE80211R
 LIB_OBJS += ../src/rsn_supp/wpa_ft.o
 endif
+
+ifdef CONFIG_MBO
+CFLAGS += -DCONFIG_MBO
+LIB_OBJS += ../src/ap/mbo_ap.o
+endif
+
 #################part of `wpa_supplicant`#################
 
 ifeq ($(call VERSION_CMP,$(LIB_VERSION_MAJOR),$(LIB_VERSION_MINOR),gt,2,9),true)
