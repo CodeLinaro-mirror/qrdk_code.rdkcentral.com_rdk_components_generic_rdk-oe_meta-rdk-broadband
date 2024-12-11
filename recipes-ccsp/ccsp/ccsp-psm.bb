@@ -77,3 +77,5 @@ FILES_${PN}-dbg = " \
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "PsmSsp"
 BREAKPAD_LOGMAPPER_LOGLIST = "PSMlog.txt.0"
+
+EXTRA_OECONF_append += "${@bb.utils.contains("DISTRO_FEATURES", "MountUtils", "--enable-mountutils=yes", " ", d)}"
