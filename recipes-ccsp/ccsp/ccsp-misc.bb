@@ -65,6 +65,8 @@ EXTRA_OECONF += "${@bb.utils.contains("DISTRO_FEATURES", "rdkscheduler_testapp",
 
 EXTRA_OECONF += "${@bb.utils.contains("DISTRO_FEATURES", "Socket_Example", " --enable-socketExampleEnable ", " ",d)}"
 
+EXTRA_OECONF += "${@bb.utils.contains("DISTRO_FEATURES", "dhcp_manager", " --enable-dhcp_manager=yes", " ",d)}"
+
 do_install_append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp
