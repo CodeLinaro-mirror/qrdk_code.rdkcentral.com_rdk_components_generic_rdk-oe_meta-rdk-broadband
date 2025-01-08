@@ -4,7 +4,7 @@ HOMEPAGE = "http://github.com/belvedere-yocto/CcspMtaAgent"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
-DEPENDS = "utopia ccsp-common-library dbus hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi"
+DEPENDS = "utopia ccsp-common-library dbus hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi libunpriv"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 require ccsp_common.inc
@@ -35,7 +35,7 @@ CFLAGS_append = " \
     -I=${includedir}/ccsp \
     "
 
-LDFLAGS += "-ldbus-1"
+LDFLAGS += "-ldbus-1 -lprivilege"
 
 do_compile_prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/CcspMtaAgent.xml ${S}/source/MtaAgentSsp/dm_pack_datamodel.c)

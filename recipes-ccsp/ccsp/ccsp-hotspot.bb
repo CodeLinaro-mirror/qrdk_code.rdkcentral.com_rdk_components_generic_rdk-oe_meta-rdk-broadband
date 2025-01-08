@@ -37,7 +37,7 @@ CFLAGS_append = " \
    -I${STAGING_INCDIR}/ccsp \
    "
 
-LDFLAGS += "-ldbus-1 -lbreakpadwrapper"
+LDFLAGS += "-ldbus-1 -lbreakpadwrapper -lprivilege"
 
 do_compile_prepend(){
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/source/hotspotfd/config/hotspot.XML ${S}/source/hotspotfd/dm_pack_datamodel.c)
