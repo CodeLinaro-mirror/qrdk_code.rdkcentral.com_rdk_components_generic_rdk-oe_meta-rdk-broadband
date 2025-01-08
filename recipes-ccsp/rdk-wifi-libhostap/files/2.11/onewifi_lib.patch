@@ -2371,21 +2371,6 @@ diff --color -Naur git.orig/source/hostap-2.11/src/common/hw_features_common.c g
 diff --color -Naur git.orig/source/hostap-2.11/src/common/ieee802_11_common.c git/source/hostap-2.11/src/common/ieee802_11_common.c
 --- git.orig/source/hostap-2.11/src/common/ieee802_11_common.c	2024-02-01 01:21:16.093432733 +0200
 +++ git/source/hostap-2.11/src/common/ieee802_11_common.c	2024-02-01 02:00:26.981505994 +0200
-@@ -1944,7 +1964,13 @@
- 	case 137: /* UHB channels, 320 MHz: 31, 63, 95, 127, 159, 191 */
- 		if (chan < 1 || chan > 233)
- 			return -1;
--		return 5950 + chan * 5;
-+#ifndef CONFIG_DRIVER_BRCM
-+		return 5940 + chan * 5;
-+#else
-+		/* New 6GHz channelization - May 2020 */
-+		if (chan == 2) return 5935;
-+		else return 5950 + chan * 5;
-+#endif /* CONFIG_DRIVER_BRCM */
- 	case 136: /* UHB channels, 20 MHz: 2 */
- 		if (chan == 2)
- 			return 5935;
 @@ -2772,7 +2798,11 @@
  
  bool is_6ghz_freq(int freq)
