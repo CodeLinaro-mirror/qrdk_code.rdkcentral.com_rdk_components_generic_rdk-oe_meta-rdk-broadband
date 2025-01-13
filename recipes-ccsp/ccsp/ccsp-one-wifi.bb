@@ -25,7 +25,10 @@ CFLAGS += " -Wall -Werror -Wextra -Wno-implicit-function-declaration -Wno-type-l
 
 CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-compare -Wno-stringop-truncation -Wno-enum-conversion -fcommon -Wno-mismatched-dealloc"
 
-SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/OneWifi;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=OneWifi" 
+# To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where
+# the changes are merged before creating a pull request to github.com/rdkcentral/OneWifi
+SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;name=OneWifi"
+SRCREV = "ca0af4d0643979da59614520b58043a86305b32c"
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 

@@ -2,7 +2,6 @@ SUMMARY = "RDK-WiFi-LIBHOSTAP for RDK CcspWiFiAgent components"
 SUMMARY = "This recipe compiles and installs the Opensource hostapd as a dynamic library for RDK hostap authenticator"
 SECTION = "base"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://source/hostap-2.10/README;md5=e3d2f6c2948991e37c1ca4960de84747"
 
 FILESEXTRAPATHS_prepend:="${THISDIR}/files:"
 PROVIDES = "rdk-wifi-libhostap"
@@ -11,9 +10,6 @@ DEPENDS += "libnl openssl"
 
 inherit autotools pkgconfig
 
-SRC_URI = "${RDKB_CCSP_ROOT_GIT}/rdk-wifi-libhostap;protocol=${RDK_GIT_PROTOCOL};branch=${RDK_GIT_BRANCH};name=rdk-wifi-libhostap"
-SRCREV_rdk-wifi-libhostap = "${AUTOREV}"
-SRCREV_FORMAT = "rdk-wifi-libhostap"
 def getowe_defined(d):
     if d.getVar('MACHINE_IMAGE_NAME', True) in [ 'CGM4981COM' ]:
         return '-DCONFIG_OWE'
@@ -33,6 +29,18 @@ HOSTAPD_PV = "${@get_hostapd_pv(d)}"
 #true for 2.9 and 2.10
 PRIOR_BUILD = "${@'true' if d.getVar('HOSTAPD_PV', True) == '2.9' or d.getVar('HOSTAPD_PV', True) == '2.10' else 'false'}"
 
+SRC_URI = "git://w1.fi/hostap.git;protocol=https;branch=main;destsuffix=${S}/source/hostap-${HOSTAPD_PV};name=${HOSTAPD_PV}"
+SRCREV_2.9 = "7cb441432c4379b92ef044059fa21eec7e3bb355"
+SRCREV_2.10 = "9d07b9447e76059a2ddef2a879c57d0934634188"
+SRCREV_2.11 = "e313f6c0a8e8a95ece631644e8356c6b4c7ca3c5"
+
+# LIC_FILES_CHKSUM for specific HOSTAPD_PV versions
+LIC_FILES_CHKSUM_2.9 = "file://source/hostap-2.9/README;md5=e7d3dbb01f75f0b9799e192731d1e1ff"
+LIC_FILES_CHKSUM_2.10 = "file://source/hostap-2.10/README;md5=e3d2f6c2948991e37c1ca4960de84747"
+LIC_FILES_CHKSUM_2.11 = "file://source/hostap-2.11/README;md5=6e4b25e7d74bfc44a32ba37bdf5210a6"
+
+LIC_FILES_CHKSUM = "${@d.getVar('LIC_FILES_CHKSUM_' + d.getVar('HOSTAPD_PV', True), True)}"
+
 EXTRA_OEMAKE_append = " \
     'BUILDDIR=${B}' \
     'PN=rdk-wifi-libhostap' \
@@ -49,6 +57,7 @@ SRC_URI += " \
     file://libhostap.mk \
     ${@bb.utils.contains('PRIOR_BUILD', 'false', ' \
         file://${HOSTAPD_PV}/ \
+        file://${HOSTAPD_PV}/comcast_changes_merged_to_source_2_11.patch \
         file://${HOSTAPD_PV}/onewifi_lib.patch \
         file://${HOSTAPD_PV}/RDKB-53254_Telemetry_2.11.patch \
         file://${HOSTAPD_PV}/wps_term_session.patch \
@@ -105,8 +114,8 @@ CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', ' -DCO
 
 #Lib hostap compilation changes for compiling libhostap.so
 #!!This has to be first patch!!
-SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10','file://2.10/oneWifiLib.patch file://2.10/greylist.patch file://2.10/broadcom.patch file://2.10/one_wifi_radius_greylist.patch file://2.10/RDKB-48455-hostap-2.10-crash.patch file://2.10/owe_radius_auth_vlan_32.patch file://2.10/RDKB_47882_VLAN_2_10.patch file://2.10/onewifi_cac.patch file://2.10/mbr.patch file://2.10/wpa_auth_vlogger_crash.patch file://2.10/connected_building_avp_2_10.patch file://2.10/enable-wnm-flag-2-10.patch file://2.10/Supported_Rates_Per_Vap_CAC.patch file://2.10/greylist_connectivity_openvap_2.10.patch file://2.10/wps_pin_led.patch file://2.10/wps_indication_deinit.patch file://2.10/RDKB-53254_Telemetry_2.10.patch file://2.10/wps_term_session.patch file://2.10/CMXB7-5998.patch file://2.10/cmxb7_dfs.patch file://2.10/cohosted_bss_param_210.patch file://2.10/ht_rifs_210.patch file://2.10/vht_oper_basic_mcs_set_210.patch file://2.10/tx_pwr_envelope_210.patch file://2.10/pwr_constraint_210.patch file://2.10/supported_op_classes_210.patch file://2.10/he_2ghz_40mghz_bw_210.patch file://2.10/rnr_col_210.patch file://2.10/tpc_report_210.patch file://2.10/driver_aid_210.patch file://2.10/radius_failover_2_10.patch file://2.10/mbssid_support.patch file://2.10/increase_eapol_timeout.patch file://2.10/Dynamic_NAS_IP_Update_2_10.patch file://2.10/wpa3_compatibility_hostap_2_10.patch ',\
-              'file://2.9/hostapd-lib-build-modify.patch file://2.9/hostapd-logger-module-changes.patch file://2.9/RDKB-48455-hostap-2.9-crash.patch file://2.9/lib-hostap-changes-xb7.diff \
+SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10','file://2.10/comcast_changes_merged_to_source_2_10.patch file://2.10/oneWifiLib.patch file://2.10/greylist.patch file://2.10/broadcom.patch file://2.10/one_wifi_radius_greylist.patch file://2.10/RDKB-48455-hostap-2.10-crash.patch file://2.10/owe_radius_auth_vlan_32.patch file://2.10/RDKB_47882_VLAN_2_10.patch file://2.10/onewifi_cac.patch file://2.10/mbr.patch file://2.10/wpa_auth_vlogger_crash.patch file://2.10/connected_building_avp_2_10.patch file://2.10/enable-wnm-flag-2-10.patch file://2.10/Supported_Rates_Per_Vap_CAC.patch file://2.10/greylist_connectivity_openvap_2.10.patch file://2.10/wps_pin_led.patch file://2.10/wps_indication_deinit.patch file://2.10/RDKB-53254_Telemetry_2.10.patch file://2.10/wps_term_session.patch file://2.10/CMXB7-5998.patch file://2.10/cmxb7_dfs.patch file://2.10/cohosted_bss_param_210.patch file://2.10/ht_rifs_210.patch file://2.10/vht_oper_basic_mcs_set_210.patch file://2.10/tx_pwr_envelope_210.patch file://2.10/pwr_constraint_210.patch file://2.10/supported_op_classes_210.patch file://2.10/he_2ghz_40mghz_bw_210.patch file://2.10/rnr_col_210.patch file://2.10/tpc_report_210.patch file://2.10/driver_aid_210.patch file://2.10/radius_failover_2_10.patch file://2.10/mbssid_support.patch file://2.10/increase_eapol_timeout.patch file://2.10/Dynamic_NAS_IP_Update_2_10.patch file://2.10/wpa3_compatibility_hostap_2_10.patch ',\
+              'file://2.9/comcast_changes_merged_to_source_2_9.patch file://2.9/hostapd-lib-build-modify.patch file://2.9/hostapd-logger-module-changes.patch file://2.9/RDKB-48455-hostap-2.9-crash.patch file://2.9/lib-hostap-changes-xb7.diff \
               file://2.9/wps.patch file://2.9/eloop_rfc_switch.patch file://2.9/greylist.patch file://2.9/one_wifi.patch file://2.9/one_wifi_bss_transition.patch file://2.9/one_wifi_radius_greylist.patch file://2.9/owe_radius_auth_vlan_32_2_9.patch file://2.9/RDKB_47882_VLAN_2_9.patch file://2.9/onewifi_cac.patch file://2.9/connected_building_avp_2_9.patch file://2.9/enable-wnm-flag.patch file://2.9/Supported_Rates_Per_Vap_CAC.patch file://2.9/RDKB-52761-change-deauth-reason-code.patch file://2.9/wps_pin_led.patch file://2.9/wps_indication_deinit.patch file://2.9/RDKB-53254_Telemetry_2.9.patch file://2.9/wps_term_session.patch file://2.9/driver_aid_209.patch file://2.9/radius_failover_2_9.patch file://2.9/increase_eapol_timeout.patch ', d) \
              if d.getVar('PRIOR_BUILD', True) == 'true' else ''}"
 
