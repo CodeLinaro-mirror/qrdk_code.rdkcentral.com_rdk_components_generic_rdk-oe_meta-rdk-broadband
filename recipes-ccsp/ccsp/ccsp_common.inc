@@ -129,6 +129,9 @@ CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'WanManagerUnificati
 # Add flags to support MAP-T NAT46 Unification Feature
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'unified_mapt', '-DMAPT_UNIFICATION_ENABLED', '', d)}"
 
+# Adding flag for MAP-T support
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'feature_mapt', '-DFEATURE_MAPT -DFEATURE_MAPT_DEBUG', '', d)}"
+
 # Adding flag for WiFi Manange
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', ' -DWIFI_MANAGE_SUPPORTED', '', d)}"
 
