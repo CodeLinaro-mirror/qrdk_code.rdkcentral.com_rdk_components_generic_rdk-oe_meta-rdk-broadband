@@ -18,10 +18,24 @@ CFLAGS_append = " -DONEWIFI_OVSDB_TABLE_SUPPORT   \
 
 EXTRA_OECONF_append = "${@bb.utils.contains('DISTRO_FEATURES', 'sm_app', ' --enable-sm-app', '', d)}"
 
+do_compile_append() {
+    oe_runmake -C source/platform
+}
+
 do_install_append() {
-    install -m 644 ${S}/source/platform/rdkb/bus.h ${D}/usr/include/ccsp
+    oe_runmake -C source/platform DESTDIR=${D} install
+    if "${@bb.utils.contains('DISTRO_FEATURES', 'dbus_support', 'true', 'false', d)}"; then
+        install -m 644 ${S}/source/platform/dbus/bus.h ${D}/usr/include/ccsp
+    else
+        install -m 644 ${S}/source/platform/rdkb/bus.h ${D}/usr/include/ccsp
+    fi
     install -m 644 ${S}/source/platform/common/bus_common.h ${D}/usr/include/ccsp
+    install -m 644 ${S}/source/platform/common/platform_common.h ${D}/usr/include/ccsp
     install -m 644 ${S}/source/platform/rdkb/misc.h ${D}/usr/include/ccsp
     install -m 644 ${S}/source/dml/rdkb/wifi_dml.h ${D}/usr/include/ccsp
     install -m 644 ${S}/source/ccsp/ccsp.h ${D}/usr/include/ccsp
 }
+
+FILES_${PN} += " \
+    ${libdir}/libwifi_bus.so* \
+"

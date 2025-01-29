@@ -10,7 +10,7 @@ SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;na
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_libwebconfig = "36496745f230a93ed6419ea7e6b5ced887ccbf33"
+SRCREV_libwebconfig = "30e95fb25f08cdca110d7f0ca02f62e7dc99ac4d"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "libwebconfig"
 PV = "${RDK_RELEASE}+git${SRCPV}"
@@ -23,7 +23,7 @@ DEPENDS = "halinterface opensync-headers rbus libsyswrapper jansson webconfig-fr
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-CFLAGS += " -Wall -Werror -Wextra -Wno-implicit-function-declaration -Wno-type-limits -Wno-unused-parameter \
+CFLAGS += " -Wall -Werror -Wextra -Wno-implicit-function-declaration -Wno-type-limits -Wno-unused-parameter -Wno-enum-conversion\
             -I${STAGING_INCDIR}/ccsp -I=${includedir}/rbus -DWIFI_HAL_VERSION_3"
 CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-compare -Wno-stringop-truncation -fcommon"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
@@ -32,11 +32,12 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_
 CFLAGS_append = " ${@bb.utils.contains("DISTRO_FEATURES", 'CONFIG_IEEE80211BE', ' -DCONFIG_IEEE80211BE', '', d)}"
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'ONEWIFI_CAC_APP_SUPPORT=true', 'ONEWIFI_CAC_APP_SUPPORT=false', d)}"
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'dbus_support', 'ONEWIFI_DBUS_SUPPORT=true', 'ONEWIFI_DBUS_SUPPORT=false', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '-DONEWIFI_CAC_APP_SUPPORT', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wps_support', '-DFEATURE_SUPPORT_WPS', '', d)}"
 CFLAGS_append_kirkstone = " -Wno-deprecated-declarations"
 
-LDFLAGS_append = " -lrbus "
+LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'dbus_support', '-ldbus-1', '-lrbus', d)} "
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 LDFLAGS_remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5 ', '', d)}"
 LDFLAGS_append_dunfell = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
@@ -71,6 +72,7 @@ do_install() {
 }
 
 FILES_${PN} += "${libdir}/*.so*"
+
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"
 
