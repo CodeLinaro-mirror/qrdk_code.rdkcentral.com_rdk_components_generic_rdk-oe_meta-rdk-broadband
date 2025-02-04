@@ -71,6 +71,10 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '-DRDK_ONEW
 EXTRA_OECONF += "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " --enable-rdkOneWifi=yes ", " ", d)}"
 EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
+DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"
+EXTRA_OECONF_append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "
+
 do_compile_prepend(){
 	(${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config-atom/Harvester.XML ${S}/source/HarvesterSsp/dm_pack_datamodel.c)
 }
