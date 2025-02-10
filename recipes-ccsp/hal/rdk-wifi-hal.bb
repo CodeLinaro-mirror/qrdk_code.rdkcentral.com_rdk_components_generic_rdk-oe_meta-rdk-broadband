@@ -35,9 +35,6 @@ LDFLAGS_append = " -lhal_platform "
 LDFLAGS_remove_tchxb7 = " -lhal_platform "
 LDFLAGS_remove_tchxb8 = " -lhal_platform "
 
-SRCREV_rdk-wifi-hal = "${AUTOREV}"
-SRCREV_FORMAT = "rdk-wifi-hal"
-
 EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'ONE_WIFIBUILD=true', '', d)}"
 EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
 EXTRA_OECONF_append_tchxb7 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB7_PORT=true', '', d)}"
