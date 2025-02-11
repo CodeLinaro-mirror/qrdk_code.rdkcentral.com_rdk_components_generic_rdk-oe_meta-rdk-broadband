@@ -83,6 +83,7 @@ SRC_URI += " \
         file://${HOSTAPD_PV}/Dynamic_NAS_IP_Update_2_11.patch \
         file://${HOSTAPD_PV}/wpa3_compatibility_telem_hostap_2_11.patch \
         file://${HOSTAPD_PV}/wpa3_compatibility_hostap_2_11.patch \
+        file://${HOSTAPD_PV}/add_group_mgmt_cipher_2_11.patch \
     ','', d)} \
 "
 
