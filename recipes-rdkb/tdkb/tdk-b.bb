@@ -111,4 +111,7 @@ FILES_${PN}-dbg = " \
     ${libdir}/.debug \
     ${tdkdir}/.debug \
 "
+do_compile_prepend() {
+    python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/tdkb_lib/cfg/TR181-TDKB.XML ${S}/tdkb_lib/src/dm_pack_datamodel.c
+}
 
