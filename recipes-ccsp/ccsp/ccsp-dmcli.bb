@@ -87,6 +87,14 @@ do_install_append_bcm3390 () {
   
 }
 
+do_install_append_xb10 () {
+    # Config files and scripts
+    ln -sf ${bindir}/dmcli ${D}${bindir}/ccsp_bus_client_tool
+    install -d ${D}/usr/ccsp
+    install -d ${D}/usr/ccsp/MsgBusTestServer
+    ln -sf ${bindir}/dmcli ${D}/usr/ccsp/ccsp_bus_client_tool
+}
+
 do_install_append_ciscoxb3atom () {
     # Config files and scripts
     install -d ${D}/usr/ccsp
