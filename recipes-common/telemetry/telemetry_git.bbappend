@@ -29,7 +29,6 @@ do_install_append () {
     install -d ${D}${sysconfdir}
     install -m 644 ${S}/config/T2Agent.cfg ${D}/usr/ccsp/telemetry
     install -m 644 ${S}/config/CcspDmLib.cfg ${D}/usr/ccsp/telemetry
-    install -m 755 ${S}/source/interChipHelper/scripts/interChipUtils.sh ${D}/lib/rdk/
     install -m 755 ${S}/config/Default_T2_ReportProfile.json ${D}${sysconfdir}/Default_T2_ReportProfile.json
 }
 
