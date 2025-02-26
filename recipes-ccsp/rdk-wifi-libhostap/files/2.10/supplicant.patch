@@ -2,7 +2,7 @@ Index: git/source/hostap-2.10/src/Makefile.am
 ===================================================================
 --- git.orig/source/hostap-2.10/src/Makefile.am
 +++ git/source/hostap-2.10/src/Makefile.am
-@@ -79,6 +79,24 @@ libhostap_la_SOURCES += ap/eth_p_oui.c
+@@ -79,6 +79,30 @@ libhostap_la_SOURCES += ap/eth_p_oui.c
  libhostap_la_SOURCES += ap/ctrl_iface_ap.c
  libhostap_la_SOURCES += ap/greylist.c
  libhostap_la_SOURCES += ap/wnm_ap.c
@@ -23,11 +23,17 @@ Index: git/source/hostap-2.10/src/Makefile.am
 +libhostap_la_SOURCES += ../wpa_supplicant/bssid_ignore.c
 +libhostap_la_SOURCES += ../wpa_supplicant/mbo.c
 +libhostap_la_SOURCES += ../wpa_supplicant/wnm_sta.c
++libhostap_la_SOURCES += ../wpa_supplicant/config.c
++libhostap_la_SOURCES += ../wpa_supplicant/gas_query.c
++libhostap_la_SOURCES += ../wpa_supplicant/offchannel.c
++libhostap_la_SOURCES += ../wpa_supplicant/config_file_wpa_sup.c
++libhostap_la_SOURCES += ../wpa_supplicant/eap_register_wpa_sup.c
 +libhostap_la_SOURCES += utils/bitfield.c
++libhostap_la_SOURCES += utils/config_utils.c
  
  libhostap_la_SOURCES += radius/radius.c
  libhostap_la_SOURCES += radius/radius_client.c
-@@ -190,7 +208,7 @@ libhostap_la_SOURCES += crypto/aes-siv.c
+@@ -190,7 +214,7 @@ libhostap_la_SOURCES += crypto/aes-siv.c
  #libhostap_la_SOURCES += crypto/aes-wrap.c
  #libhostap_la_SOURCES += crypto/aes-unwrap.c
  #libhostap_la_SOURCES += crypto/rc4.c
@@ -36,7 +42,7 @@ Index: git/source/hostap-2.10/src/Makefile.am
  #libhostap_la_SOURCES += crypto/tls_internal.c
  libhostap_la_SOURCES += crypto/ms_funcs.c
  libhostap_la_SOURCES += crypto/dh_groups.c
-@@ -216,7 +234,7 @@ libhostap_la_SOURCES += crypto/sha384-kd
+@@ -216,7 +240,7 @@ libhostap_la_SOURCES += crypto/sha384-kd
  libhostap_la_SOURCES += crypto/sha512-kdf.c
  libhostap_la_SOURCES += crypto/sha512-prf.c
  #libhostap_la_SOURCES += crypto/fips_prf_internal.c
@@ -49,7 +55,7 @@ Index: git/source/hostap-2.10/src/drivers/driver.h
 ===================================================================
 --- git.orig/source/hostap-2.10/src/drivers/driver.h
 +++ git/source/hostap-2.10/src/drivers/driver.h
-@@ -6201,6 +6201,8 @@ union wpa_event_data {
+@@ -6191,6 +6191,8 @@ union wpa_event_data {
  void wpa_supplicant_event(void *ctx, enum wpa_event_type event,
  			  union wpa_event_data *data);
  

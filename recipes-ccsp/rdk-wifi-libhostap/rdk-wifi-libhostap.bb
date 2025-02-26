@@ -109,8 +109,8 @@ CFLAGS_append = "${@' \
 "
 
 
-CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', ' -DCONFIG_SME', '', d)}"
-CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', ' -DCONFIG_GAS', '', d)}"
+CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', ' -DCONFIG_SME', '', d)}"
+CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', ' -DCONFIG_GAS', '', d)}"
 
 #Lib hostap compilation changes for compiling libhostap.so
 #!!This has to be first patch!!
@@ -120,9 +120,9 @@ SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10','file://2.10
              if d.getVar('PRIOR_BUILD', True) == 'true' else ''}"
 
 #use below format for adding new distro features
-#SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', ' file://2.9/no_ack.patch', '', d) if d.getVar('PRIOR_BUILD', True) == 'true' else ''}"
+#SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', ' file://2.9/no_ack.patch', '', d) if d.getVar('PRIOR_BUILD', True) == 'true' else ''}"
 
-EMULATOR_FEATURE_ENABLED = "${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', '1', '0', d)}"
+EMULATOR_FEATURE_ENABLED = "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', '1', '0', d)}"
 
 HOSTAPD_PATCH = "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'file://2.10/nl80211_change.patch', 'file://2.9/nl80211_change.patch', d)}"
 SRC_URI += "${@'${HOSTAPD_PATCH}' if '${EMULATOR_FEATURE_ENABLED}' == '1' and d.getVar('PRIOR_BUILD', True) == 'true' else ''}"
@@ -150,7 +150,7 @@ S = "${WORKDIR}/git/"
 FILES_${PN} = " \
         ${libdir}/libhostap.so* \
 "
-EXTRA_OEMAKE += "${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'WIFI_EMULATOR=true', 'WIFI_EMULATOR=false', d)}"
+EXTRA_OEMAKE += "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'WIFI_EMULATOR=true', 'WIFI_EMULATOR=false', d)}"
 do_hostapd_patch () {
     if ! ${PRIOR_BUILD}; then
         install -m 0644 ${WORKDIR}/.config ${WORKDIR}/libhostap.mk ${S}/source/hostap-${HOSTAPD_PV}/hostapd/
@@ -176,12 +176,15 @@ do_compile () {
 
 do_configure_prepend () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'true', 'false', d)}; then
-        if ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'true', 'false', d)}; then
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'true', 'false', d)}; then
             mv ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm.c ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm_test.c
+            mv ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/config_file.c ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/config_file_wpa_sup.c
+            mv ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/eap_register.c ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/eap_register_wpa_sup.c
+            mv ${S}/source/hostap-${HOSTAPD_PV}/src/utils/config.c  ${S}/source/hostap-${HOSTAPD_PV}/src/utils/config_utils.c
         fi
     fi
     if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', 'true', 'false', d)}; then
-        if ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'true', 'false', d)}; then
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'true', 'false', d)}; then
             mv ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm.c ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm_test.c
         fi
     fi
@@ -207,14 +210,14 @@ do_install () {
 do_install_append () {
     if ${PRIOR_BUILD}; then
         if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'true', 'false', d)}; then
-            if ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'true', 'false', d)}; then
+            if ${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'true', 'false', d)}; then
                 cd ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant && find . -type f -name "*.h" -exec install -D -m 0755 "{}" ${D}${includedir}/rdk-wifi-libhostap/src/"{}" \;
                 mv ${D}${includedir}/rdk-wifi-libhostap/src/config.h ${D}${includedir}/rdk-wifi-libhostap/src/config_supplicant.h
             fi
         fi
     else
         if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', 'true', 'false', d)}; then
-            if ${@bb.utils.contains('DISTRO_FEATURES', 'wifi-emulator', 'true', 'false', d)}; then
+            if ${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'true', 'false', d)}; then
                 cd ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant && find . -type f -name "*.h" -exec install -D -m 0755 "{}" ${D}${includedir}/rdk-wifi-libhostap/src/"{}" \;
                 mv ${D}${includedir}/rdk-wifi-libhostap/src/config.h ${D}${includedir}/rdk-wifi-libhostap/src/config_supplicant.h
             fi
