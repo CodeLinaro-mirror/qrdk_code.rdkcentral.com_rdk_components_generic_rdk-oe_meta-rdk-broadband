@@ -1,0 +1,11 @@
+[Unit]
+Description=Load nftables rules at startup
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/sbin/nft -f /etc/nftables/nftables.conf
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
