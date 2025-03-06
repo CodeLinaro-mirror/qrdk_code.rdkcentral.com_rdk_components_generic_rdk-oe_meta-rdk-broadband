@@ -37,7 +37,7 @@ LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5'
 LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-#CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' -DFEATURE_RDKB_WAN_MANAGER', '', d)}"
+CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' -DFEATURE_RDKB_WAN_MANAGER', '', d)}"
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'ra_monitor_support', ' -DRA_MONITOR_SUPPORT', '', d)}"
 
 #LDFLAGS_append_dunfell = " -lrt"
@@ -56,7 +56,6 @@ CFLAGS_append = " -DDHCPV6_SERVER_SUPPORT "
 CFLAGS_append = " -DDHCPV4_CLIENT_SUPPORT "
 CFLAGS_append = " -DDHCPV6_CLIENT_SUPPORT "
 
-CFLAGS_append = " -UFEATURE_RDKB_WAN_MANAGER"
 CFLAGS_append = " -DDHCPV4_CLIENT_UDHCPC "
 CFLAGS_append = " -DDHCPV6_CLIENT_DIBBLER "
 CFLAGS_append = " -DDUID_UUID_ENABLE "
