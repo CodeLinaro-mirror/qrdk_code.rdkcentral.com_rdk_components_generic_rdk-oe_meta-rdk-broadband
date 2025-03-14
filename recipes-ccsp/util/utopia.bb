@@ -172,3 +172,8 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' cor
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"
 EXTRA_OECONF_append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "
 EXTRA_OECONF_append  = " --with-ccsp-platform=bcm "
+
+python() {
+    if bb.utils.contains('DISTRO_FEATURES', 'nftables', 'true', 'false', d):
+        d.appendVar('EXTRA_OECONF', ' USE_NFTABLES=1')
+}
