@@ -2,7 +2,7 @@
 
 usage()
 {
-    echo "Usage: deviceinfo.sh -[mo|sn|fw|ms|mu|cmac|cip|cipv6|emac|eip|eipv6|lmac|lip|lipv6|optimization|mwo_broker|mwo_port|mwo_topic|mesh_enable|wifi_motion_enable|comodo_enabled]"
+    echo "Usage: deviceinfo.sh -[mo|sn|fw|ms|mu|cmac|cip|cipv6|emac|eip|eipv6|lmac|lip|lipv6|optimization|mwo_broker|mwo_port|mwo_topic|mesh_enable|wifi_motion_enable|comodo_enabled|country]"
     echo "       -mo:    Model number"
     echo "       -sn:    Serial number"
     echo "       -fw:    Firmware version"
@@ -30,6 +30,7 @@ usage()
     echo "       -offline_mqtt_broker : mqtt broker url"
     echo "       -offline_mqtt_topic : offline mqtt topic"
     echo "       -partner: Current Partner ID"
+    echo "       -country: Country code"
     echo "       -wifi_motion_enable : wifi motion enable"
     echo "       -comodo_enabled : is ca used is comodo"
     exit 1
@@ -218,6 +219,14 @@ case $1 in
             echo $partner
         else
             echo "unknown"
+        fi
+        shift 1
+        ;;
+
+    -country)
+        country=`ovsh s Wifi_Radio_State country -r`
+        if [ -n "$country" ]; then
+            echo $country
         fi
         shift 1
         ;;
