@@ -9,6 +9,11 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 
 SRC_URI ="${RDKB_CCSP_ROOT_GIT}/RdkInterDeviceManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};name=InterDeviceManager"
 
+SRC_URI += " \
+    file://RdkInterDeviceManager.conf \
+    file://idm_recovery.sh \
+"
+
 SRCREV_InterDeviceManager = "${AUTOREV}"
 SRCREV_FORMAT = "InterDeviceManager"
 
@@ -39,6 +44,11 @@ CFLAGS_prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'IDM_DEBUG',' -DIDM_
 EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 SYSTEMD_SERVICE_${PN} = "RdkInterDeviceManager.service"
+
+do_configure_prepend() {
+    cp ${WORKDIR}/RdkInterDeviceManager.conf ${S}/systemd_units/
+    cp ${WORKDIR}/idm_recovery.sh ${S}/source/InterDeviceManager/
+}
 
 do_install_append () {
     # Config files and scripts
