@@ -7,9 +7,9 @@ DEPENDS = "ccsp-common-library rdk-logger utopia hal-platform hal-ledmanager lib
 
 require ccsp_common.inc
 
-SRC_URI ="${RDKB_CCSP_ROOT_GIT}/RdkLedManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};name=LedManager"
+SRC_URI = "git://github.com/rdkcentral/RdkLedManager.git;protocol=https;branch=main;name=LedManager"
 
-SRCREV_LedManager = "${AUTOREV}"
+SRCREV_LedManager = "v2.0.0"
 SRCREV_FORMAT = "LedManager"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
