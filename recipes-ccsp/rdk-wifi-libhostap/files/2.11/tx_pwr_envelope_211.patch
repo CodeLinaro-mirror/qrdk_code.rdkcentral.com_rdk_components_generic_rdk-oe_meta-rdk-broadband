@@ -56,7 +56,7 @@ index 88906a6..391b8b2 100644
  
  /*
   * TODO: Extract power limits from channel data after 6G regulatory
-@@ -7023,8 +7046,41 @@ u8 * hostapd_eid_txpower_envelope(struct hostapd_data *hapd, u8 *eid)
+@@ -7023,8 +7046,45 @@ u8 * hostapd_eid_txpower_envelope(struct hostapd_data *hapd, u8 *eid)
  	if (is_6ghz_op_class(iconf->op_class)) {
  		enum max_tx_pwr_interpretation tx_pwr_intrpn;
  
@@ -85,6 +85,10 @@ index 88906a6..391b8b2 100644
 +			/* Max Transmit Power count = 3 (20, 40, 80, 160/80+80 MHz) */
 +			tx_pwr_count = 3;
 +			break;
++		case CONF_OPER_CHWIDTH_320MHZ:
++			/* Max Transmit Power count = 3 (20, 40, 80, 160/80+80 MHz, 320 MHz) */
++			tx_pwr_count = 4;
++			break;
 +
 +		default:
 +			return eid;
@@ -105,7 +109,7 @@ index 88906a6..391b8b2 100644
  			tx_pwr = REG_PSD_MAX_TXPOWER_FOR_DEFAULT_CLIENT * 2;
  
 -		eid = hostapd_add_tpe_info(eid, tx_pwr_count, tx_pwr_intrpn,
-+		eid = hostapd_add_tpe_info_psd(eid, tx_pwr_count, tx_pwr_intrpn,
++		eid = hostapd_add_tpe_info_psd(eid, 0, tx_pwr_intrpn,
  					   REG_DEFAULT_CLIENT, tx_pwr);
  
  		/* Indoor Access Point must include an additional TPE for
@@ -114,7 +118,7 @@ index 88906a6..391b8b2 100644
  			else
  				tx_pwr = REG_PSD_MAX_TXPOWER_FOR_SUBORDINATE_CLIENT * 2;
 -			eid = hostapd_add_tpe_info(eid, tx_pwr_count,
-+			eid = hostapd_add_tpe_info_psd(eid, tx_pwr_count,
++			eid = hostapd_add_tpe_info_psd(eid, 0,
  						   tx_pwr_intrpn,
  						   REG_SUBORDINATE_CLIENT,
  						   tx_pwr);
