@@ -126,5 +126,3 @@ FILES_${PN}-dbg = " \
     ${libdir}/.debug \
 "
 
-# generating minidumps
-PACKAGECONFIG_append = " breakpad"

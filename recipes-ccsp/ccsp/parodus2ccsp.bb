@@ -75,8 +75,6 @@ SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', 'fi
 SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file://webconfig_metadata.json', ' ', d)}"
 SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file://metadata_parser.py ', ' ', d)}"
 
-# generating minidumps
-PACKAGECONFIG_append = " breakpad"
 do_install_append() {
     install -d ${D}/usr/ccsp/webpa
 

@@ -31,8 +31,6 @@ LDFLAGS += "-lbreakpadwrapper -lpthread -lstdc++"
 LDFLAGS_append = " -lrt"
 LDFLAGS_remove_morty = " -lrt"
 
-#generating minidumps
-PACKAGECONFIG_append = " breakpad"
 
 CFLAGS_append = " \
     -I=${includedir}/ccsp \

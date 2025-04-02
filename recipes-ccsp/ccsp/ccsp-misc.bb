@@ -90,8 +90,6 @@ FILES_${PN}-dbg = " \
     ${bindir}/.debug \
     ${libdir}/.debug \
 "
-# generating minidumps
-PACKAGECONFIG_append = " breakpad"
 
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "meshAgent"
