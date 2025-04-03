@@ -4,7 +4,7 @@
 
 SUMMARY = "USP Pa component"
 DESCRIPTION = "Agent for USP protocol"
-DEPENDS = "openssl sqlite3 curl zlib ccsp-common-library mosquitto libwebsockets"
+DEPENDS = "openssl sqlite3 curl zlib ccsp-common-library mosquitto libwebsockets rbus"
 LICENSE = "BSD-3-Clause"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=a3a4606e52c16f583aefb8b47a9db31a"
 
@@ -12,13 +12,10 @@ require recipes-ccsp/ccsp/ccsp_common.inc
 
 
 # OBUSPA is the reference USP agent codebase
-SRC_URI += "git://github.com/BroadbandForum/obuspa;protocol=http;branch=master;rev=8355c200afb6430e3fc55ebabe8a9a709ae5d04f;name=obuspa;destsuffix=obuspa"
+SRC_URI += "git://github.com/BroadbandForum/obuspa;protocol=http;branch=master;rev=cdcfd9f736885305b214faa80d4f94000309b6cc;name=obuspa;destsuffix=obuspa"
 
 # USPPA is the RDK specializations
-SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=main;rev=36bb374c3b2f633437ad6ebd017e35377fa7963c;name=usppa;destsuffix=usp-pa-vendor-rdk"
-
-# Patches for OBUSPA
-#SRC_URI += "file://patches/remove_duplicate_min_max_define.patch"
+SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=main;rev=746b770744f074cf6a2728f3e6e59d2b9cbee4e2;name=usppa;destsuffix=usp-pa-vendor-rdk"
 
 # Configure options for OBUSPA
 EXTRA_OECONF += "--disable-websockets --enable-mqtt"
@@ -40,12 +37,10 @@ inherit autotools pkgconfig systemd
 
 
 CFLAGS += " \
-    -I${STAGING_INCDIR}/dbus-1.0 \
-    -I${STAGING_LIBDIR}/dbus-1.0/include \
-    -I${STAGING_INCDIR}/ccsp \
+    -I${STAGING_INCDIR}/rbus \
 "
 
-LDFLAGS += "-ldbus-1 -lccsp_common"
+LDFLAGS += "-lrbus"
 
 # Specialize the OBUSPA release by copying across the RDK specific source files to the source directory
 do_configure_prepend() {
@@ -58,7 +53,7 @@ do_install() {
     install -d ${D}${sysconfdir}
     install -d ${D}${sysconfdir}/usp-pa
     install -d ${D}${systemd_system_unitdir}
-    
+
     install -m 0777 ${B}/obuspa ${D}${bindir}/UspPa
     install -m 0644 ${WORKDIR}/conf/usp_factory_reset.conf ${D}${sysconfdir}/usp-pa
     install -m 0644 ${WORKDIR}/conf/usp_dm_objs.conf ${D}${sysconfdir}/usp-pa
@@ -79,10 +74,4 @@ FILES_${PN} += "${sysconfdir}/usp-pa/usp_truststore.pem"
 SYSTEMD_SERVICE_${PN} = "usp-pa.service"
 
 ## Additional steps for DAC Distro Feature
-DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', 'rbus', '', d)}"
-#add dependencies for the changes into compiler options
-LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -lrbus ', '', d)}"
-CFLAGS  += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -isystem${STAGING_INCDIR}/rbus ', '', d)}"
 TARGET_CFLAGS  += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -DINCLUDE_LCM_DATAMODEL ', '', d)}"
-LDFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -lrbuscore ', '', d)}"
-CFLAGS += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -I${STAGING_INCDIR}/rtmessage ', '', d)}"
