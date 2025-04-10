@@ -1,3 +1,10 @@
+##########################################
+Date: Feb 27 00:15:10 2025
+From: Amalesh_Nandh@comcast.com
+Subject: [PATCH] WPA3-Compatibility Telemetry Changes for 2.11
+Source: Comcast
+##########################################
+
 diff --git a/source/hostap-2.11/src/ap/ap_drv_ops.c b/source/hostap-2.11/src/ap/ap_drv_ops.c
 index 3fd2a52..0ed19ec 100644
 --- a/source/hostap-2.11/src/ap/ap_drv_ops.c

@@ -1,3 +1,10 @@
+##########################################
+Date: Feb 26 22:19:13 2025
+From: Amalesh_Nandh@comcast.com
+Subject: [PATCH] RSN Override for WPA3 Compatibility
+Source: Comcast
+##########################################
+
 diff --git a/source/hostap-2.10/src/ap/ap_config.c b/source/hostap-2.10/src/ap/ap_config.c
 index f84b6eb..77419ff 100644
 --- a/source/hostap-2.10/src/ap/ap_config.c
