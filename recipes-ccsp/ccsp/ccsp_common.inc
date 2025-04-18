@@ -144,6 +144,9 @@ CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext'
 # Adding flag for SpeedBoostSupport 
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'SpeedBoostSupportEnable', ' -DSPEED_BOOST_SUPPORTED', '', d)}"
 
+#Adding flag for Amenity network
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'AmenitiesNetworkSupportEnable', '-DAMENITIES_NETWORK_ENABLED', '', d)}"
+
 # Adding flag for Lanmanager support
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'pm_lan_mgr', ' -DLAN_MGR_SUPPORT ', '', d)}"
 
