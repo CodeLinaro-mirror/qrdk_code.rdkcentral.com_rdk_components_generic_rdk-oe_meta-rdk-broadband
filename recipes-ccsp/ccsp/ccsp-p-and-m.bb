@@ -91,7 +91,11 @@ EXTRA_OECONF_append = " ${ENABLE_WIFI_MANAGE}"
 
 EXTRA_OECONF_append += "${@bb.utils.contains("DISTRO_FEATURES", "SpeedBoostSupportEnable", "--enable-speedboost=yes", " ", d)}"
 
-CFLAGS_append = " -DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_INTERNET2P0 -DCONFIG_CISCO_HOTSPOT"
+ENABLE_HOTSPOT ?= "yes"
+EXTRA_OECONF_append += " --enable-hotspotsupport=${ENABLE_HOTSPOT}"
+
+CFLAGS_append = " -DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_INTERNET2P0"
+CFLAGS_append = " ${@ '-DCONFIG_CISCO_HOTSPOT' if d.getVar('ENABLE_HOTSPOT', True) == 'yes' else '-DHOTSPOT_DISABLE'}"
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION -DCONFIG_CISCO_TRUE_STATIC_IP -D_BCI_FEATURE_REQ', '', d)}"
 
@@ -154,7 +158,10 @@ do_compile_prepend () {
     fi
     sed -i '2i <?define CONFIG_INTERNET2P0=True?>' ${S}/config-arm/TR181-USGv2.XML
     sed -i '2i <?define CONFIG_VENDOR_CUSTOMER_COMCAST=True?>' ${S}/config-arm/TR181-USGv2.XML
+    if ${@'true' if d.getVar('ENABLE_HOTSPOT', True) == 'yes' else 'false'}; then
     sed -i '2i <?define CONFIG_CISCO_HOTSPOT=True?>' ${S}/config-arm/TR181-USGv2.XML
+    sed -i '2i <?define FEATURE_HOTSPOT_SUPPORT=True?>' ${S}/config-arm/TR181-USGv2.XML
+    fi
     
 
 	if ${@bb.utils.contains('DISTRO_FEATURES', 'bci', 'true', 'false', d)}; then
