@@ -31,7 +31,7 @@ SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;na
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_OneWifi = "ee5444d1c31b1a5ce323fc1605da42fe260db71b"
+SRCREV_OneWifi = "08c2def323556e16ac5dda54e602cb2f2db392fa"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"
 
@@ -66,6 +66,7 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIF
 CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '-DONEWIFI_CAC_APP_SUPPORT', '', d)}"
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wps_support', '-DFEATURE_SUPPORT_WPS', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'always_enable_ax_2g', '-DALWAYS_ENABLE_AX_2G', '', d)}" 
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"

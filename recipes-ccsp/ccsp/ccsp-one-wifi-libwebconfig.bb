@@ -10,7 +10,7 @@ SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;na
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_libwebconfig = "ee5444d1c31b1a5ce323fc1605da42fe260db71b"
+SRCREV_libwebconfig = "08c2def323556e16ac5dda54e602cb2f2db392fa"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "libwebconfig"
 PV = "${RDK_RELEASE}+git${SRCPV}"
@@ -33,7 +33,7 @@ CFLAGS_append = " ${@bb.utils.contains("DISTRO_FEATURES", 'CONFIG_IEEE80211BE', 
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'ONEWIFI_CAC_APP_SUPPORT=true', 'ONEWIFI_CAC_APP_SUPPORT=false', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '-DONEWIFI_CAC_APP_SUPPORT', '', d)}"
-
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wps_support', '-DFEATURE_SUPPORT_WPS', '', d)}"
 CFLAGS_append_kirkstone = " -Wno-deprecated-declarations"
 
 LDFLAGS_append = " -lrbus "
