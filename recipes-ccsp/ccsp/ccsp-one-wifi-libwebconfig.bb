@@ -10,7 +10,7 @@ SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;na
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_libwebconfig = "08c2def323556e16ac5dda54e602cb2f2db392fa"
+SRCREV_libwebconfig = "573ac08f481f01b4552f8660af142d0b90f1f967"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "libwebconfig"
 PV = "${RDK_RELEASE}+git${SRCPV}"
