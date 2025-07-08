@@ -12,7 +12,7 @@ SRCREV_FORMAT = "tdkb"
 
 S = "${WORKDIR}/git"
 
-DEPENDS += "jsoncpp jsonrpc ccsp-common-library ccsp-lm-lite hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi ccsp-cm-agent ccsp-mta-agent ccsp-p-and-m test-and-diagnostic trower-base64 rbus"
+DEPENDS += "jsoncpp jsonrpc ccsp-common-library ccsp-lm-lite hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi ccsp-cm-agent ccsp-mta-agent ccsp-p-and-m test-and-diagnostic trower-base64 rbus rdkb-halif-fwupgrade"
 
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
@@ -112,6 +112,6 @@ FILES_${PN}-dbg = " \
     ${tdkdir}/.debug \
 "
 do_compile_prepend() {
-    python ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/tdkb_lib/cfg/TR181-TDKB.XML ${S}/tdkb_lib/src/dm_pack_datamodel.c
+     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/tdkb_lib/cfg/TR181-TDKB.XML ${S}/tdkb_lib/src/dm_pack_datamodel.c)
 }
 
