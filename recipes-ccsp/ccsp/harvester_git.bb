@@ -95,8 +95,6 @@ FILES_${PN} += " \
 
 ERROR_QA_remove_morty = "la"
 
-# generating minidumps
-PACKAGECONFIG_append = " breakpad"
 
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "harvester"

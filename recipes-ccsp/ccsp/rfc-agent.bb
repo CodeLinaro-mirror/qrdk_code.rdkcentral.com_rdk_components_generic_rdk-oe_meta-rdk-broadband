@@ -34,7 +34,6 @@ inherit breakpad-wrapper
 DEPENDS += "breakpad breakpad-wrapper"
 BREAKPAD_BIN_append = " rfc_agent"
 CFLAGS += " -Wall -Werror -Wextra -DINCLUDE_BREAKPAD"
-PACKAGECONFIG_append = " breakpad"
 
 #CFLAGS_append_dunfell = " -Wno-restrict -Wno-format-truncation -Wno-format-overflow -Wno-cast-function-type -Wno-unused-function -Wno-implicit-fallthrough "
 

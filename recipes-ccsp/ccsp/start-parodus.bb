@@ -37,7 +37,5 @@ CFLAGS_append = " ${@bb.utils.contains("DISTRO_FEATURES", "seshat", " -DENABLE_S
 CFLAGS_append = " ${@bb.utils.contains("DISTRO_FEATURES", "WanFailOverSupportEnable", " -DWAN_FAILOVER_SUPPORTED ", " ", d)} "
 CFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_bin", "-DENABLE_WEBCFGBIN ", " ", d)}"
 
-# generating minidumps
-PACKAGECONFIG_append = " breakpad"
 
 FILES_${PN} += "/usr/bin/* "
