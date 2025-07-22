@@ -150,7 +150,7 @@ case $1 in
         ;;
 
     -comodo_enabled)
-        ca=`syscfg get comodo_ca_enable`
+        ca=`syscfg get comodo_rfc_enable`
         echo "$ca"
         shift 1
         ;;
