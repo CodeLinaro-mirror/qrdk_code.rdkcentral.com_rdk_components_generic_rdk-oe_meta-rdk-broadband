@@ -157,6 +157,20 @@ do_install() {
     	if ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_extender', 'true', 'false', d)}; then
        		echo "rdkb_extender=true" >> ${D}${sysconfdir}/device.properties
     	fi
+
+	install -m 0644 ${S}/ntp-data-collector.service ${D}${systemd_unitdir}/system
+        install -m 755 ${S}/ntp-data-collector.sh ${D}${base_libdir}/rdk
+	install -d ${D}${datadir}/dbus-1/system-services
+	install -m 0755 ${S}/org.freedesktop.nm_connectivity.service ${D}${datadir}/dbus-1/system-services/
+	install -m 0644 ${S}/notify-network-ready.service ${D}${systemd_unitdir}/system
+	install -m 0644 ${S}/network-up.path ${D}${systemd_unitdir}/system
+	install -m 0644 ${S}/network-up.target ${D}${systemd_unitdir}/system
+	install -m 0644 ${S}/network-up.timer ${D}${systemd_unitdir}/system
+	install -m 0644 ${S}/ntp-time-sync-event.service ${D}${systemd_unitdir}/system
+	install -m 0644 ${S}/system-time-event.service ${D}${systemd_unitdir}/system
+	install -m 0644 ${S}/system-time-set.target ${D}${systemd_unitdir}/system
+	install -m 0644 ${S}/system-time-set.path ${D}${systemd_unitdir}/system
+   	install -m 755 ${S}/send-time-events.sh ${D}${base_libdir}/rdk
 }
 
 do_install_append_qemux86broadband() {
@@ -197,12 +211,27 @@ do_install_append_rdkzram() {
 SYSTEMD_SERVICE_${PN}_append_qemux86broadband = "  dropbear.service"
 SYSTEMD_SERVICE_${PN}_append_rdkzram = " rdkzram.service"
 SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'ocsp-support.service', '', d)}"
+SYSTEMD_SERVICE_${PN} += "ntp-data-collector.service"
+
+
+SYSTEMD_SERVICE_${PN} += "network-up.path"
+SYSTEMD_SERVICE_${PN} += "network-up.timer"
+SYSTEMD_SERVICE_${PN} += "system-time-set.path"
+SYSTEMD_SERVICE_${PN} += "system-time-event.service"
+SYSTEMD_SERVICE_${PN} += "ntp-time-sync-event.service"
 
 FILES_${PN} += "/bin/*"
 FILES_${PN} += "${sysconfdir}/*"
 FILES_${PN} += "rdklogger/*"
 FILES_${PN} += "${base_libdir}/rdk/*"
 FILES_${PN}_append_qemux86broadband += "${systemd_unitdir}/system/*"
+FILES_${PN} += "${systemd_unitdir}/system/ntp-data-collector.service"
+
+
+
+
+FILES_${PN} += "${systemd_unitdir}/system/*"
+FILES_${PN} += "${datadir}/dbus-1/system-services/org.freedesktop.nm_connectivity.service"
 
 FILES_${PN}_append_arrisxb3atom += " \
           /rdklogger/atom_log_monitor.sh \

@@ -100,8 +100,8 @@ PR_pn-rdk-cellularmanager = "r0"
 PV_pn-start-parodus = "1.0.0"
 PR_pn-start-parodus = "r0"
 
-PV_pn-test-and-diagnostic = "1.0.2"
+PV_pn-test-and-diagnostic = "1.1.0"
 PR_pn-test-and-diagnostic = "r0"
 
-PV_pn-utopia = "1.1.0"
+PV_pn-utopia = "1.1.1"
 PR_pn-utopia = "r0"
