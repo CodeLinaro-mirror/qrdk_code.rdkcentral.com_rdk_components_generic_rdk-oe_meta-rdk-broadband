@@ -21,6 +21,7 @@ S = "${WORKDIR}/git"
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-type-limits -Wno-unused-parameter -Wno-format -Wno-misleading-indentation"
 
 CFLAGS_append_kirkstone = " -fcommon"
+CFLAGS:append:scarthgap = " -fcommon"
 
 RDEPENDS_${PN} += "libpcap"
 RDEPENDS_${PN}_append = " bash"
@@ -28,7 +29,7 @@ RDEPENDS_${PN}-ccsp_append = " bash"
 RDEPENDS_${PN}_remove_morty = "bash"
 RDEPENDS_${PN}-ccsp_remove_morty = "bash"
 
-inherit autotools ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
+inherit autotools ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)} breakpad-logmapper
 
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \

@@ -18,7 +18,7 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
+inherit autotools pkgconfig ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)} breakpad-logmapper
 
 CFLAGS_append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
@@ -32,6 +32,7 @@ CFLAGS_append = " \
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-enum-conversion -Wno-stringop-overflow -Wno-array-parameter"
 CFLAGS_append_kirkstone = " -Wno-format-truncation"
+CFLAGS:append:scarthgap = " -Wno-format-truncation"
 
 
 LDFLAGS_append = " \

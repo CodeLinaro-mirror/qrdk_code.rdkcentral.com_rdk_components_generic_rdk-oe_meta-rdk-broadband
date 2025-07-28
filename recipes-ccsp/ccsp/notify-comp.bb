@@ -15,7 +15,7 @@ SRCREV_notify-comp = "${AUTOREV}"
 SRCREV_FORMAT = "notify-comp"
 
 S = "${WORKDIR}/git/notify_comp"
-inherit autotools pkgconfig breakpad-wrapper coverity ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
+inherit autotools pkgconfig breakpad-wrapper coverity ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)} breakpad-logmapper
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 

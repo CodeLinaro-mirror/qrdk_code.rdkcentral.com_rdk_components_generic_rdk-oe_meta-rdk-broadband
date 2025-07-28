@@ -18,7 +18,7 @@ S = "${WORKDIR}/git"
 
 require ccsp_common.inc
 
-inherit autotools pkgconfig systemd ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} 
+inherit autotools pkgconfig systemd ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)} 
 
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
@@ -45,6 +45,7 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-confi
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', '-DCELLULAR_MGR_LITE ', '', d)}"
 LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append:scarthgap = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 
 do_compile_prepend () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', 'true', 'false', d)}; then
