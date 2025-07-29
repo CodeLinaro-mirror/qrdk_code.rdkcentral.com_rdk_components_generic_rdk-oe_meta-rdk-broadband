@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 SRC_URI = "git://github.com/rdkcentral/rdkb-halif-bridge-util.git;protocol=https;branch=main"
 
-SRCREV = "c98473a9fae6cc0888fc58973d395ae97f17b187"
+SRCREV = "15009f9e411ed6b0678254cffdb10919076d666d"
 
 S = "${WORKDIR}/git"
 
