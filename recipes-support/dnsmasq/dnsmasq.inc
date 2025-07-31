@@ -37,7 +37,7 @@ EXTRA_OEMAKE = "\
 
 SRC_URI += "${@bb.utils.contains('PACKAGECONFIG', 'resolvconf', 'file://dnsmasq.resolvconf file://99_dnsmasq file://dnsmasq-resolvconf-helper', '', d)}"
 
-do_compile_append() {
+do_compile:append() {
     # build dhcp_release
     cd ${S}/contrib/lease-tools
     oe_runmake

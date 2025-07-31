@@ -18,6 +18,6 @@ SRCREV_FORMAT = "rdk-wifi-util"
 PV = "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git/util"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 
 inherit autotools

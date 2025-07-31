@@ -14,18 +14,18 @@ S = "${WORKDIR}/git"
 
 CFLAGS += " -I=${includedir}/dbus-1.0 -I=${libdir}/dbus-1.0/include -I=${includedir}/ccsp -I=${includedir}/syscfg"
 
-LDFLAGS_append = " -ldbus-1 -lpthread -lhal_platform"
+LDFLAGS:append = " -ldbus-1 -lpthread -lhal_platform"
 
 EXTRA_OECONF += "--enable-agent-build --enable-client-build --enable-hwselftesttrigger-build"
 EXTRA_OECONF += " --with-diag-emmc --with-diag-moca --with-diag-wan --with-diag-bluetooth --with-diag-dram --with-diag-wifi --with-diag-mta --with-diag-xhs --with-diag-lan --with-diag-zigbee"
 
 DEPENDS = "jansson breakpad breakpad-wrapper xupnp ccsp-common-library dbus hal-platform"
-RDEPENDS_${PN}_append = "bash"
-RDEPENDS_${PN}_remove_morty = "bash"
+RDEPENDS_${PN}:append = "bash"
+RDEPENDS_${PN}:remove_morty = "bash"
 
 inherit autotools pkgconfig systemd
 
-do_install_append() {
+do_install:append() {
     install -d ${D}${systemd_unitdir}/system
     install -m 0644 ${S}/agent/rootfs/lib/systemd/system/hwselftest.service ${D}${systemd_unitdir}/system
     install -m 0644 ${S}/agent/rootfs/usr/bin/hwst_log.sh ${D}${bindir}

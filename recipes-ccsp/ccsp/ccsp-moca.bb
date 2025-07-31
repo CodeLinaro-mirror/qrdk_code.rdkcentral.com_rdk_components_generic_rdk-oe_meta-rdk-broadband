@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 DEPENDS = "ccsp-common-library webconfig-framework utopia hal-moca curl trower-base64 msgpack-c libunpriv"
 
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 require ccsp_common.inc
 
@@ -23,16 +23,16 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)} breakpad-logmapper
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
-LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
-LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS:append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS:append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 LDFLAGS:append:scarthgap = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -45,11 +45,11 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/msgpackc \
     "
 
-EXTRA_OECONF_append_mips = " --enable-notify"
+EXTRA_OECONF:append_mips = " --enable-notify"
 
-CFLAGS_append += "-DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_CISCO_HOTSPOT"
+CFLAGS:append += "-DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_CISCO_HOTSPOT"
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lutctx \
     -lutapi \
@@ -58,14 +58,14 @@ LDFLAGS_append = " \
     -lprivilege \
     "
 
-LDFLAGS_append = " -lsyscfg -lsysevent"
-LDFLAGS_remove_morty = " -lsyscfg -lsysevent"
+LDFLAGS:append = " -lsyscfg -lsysevent"
+LDFLAGS:remove_morty = " -lsyscfg -lsysevent"
 
-do_compile_prepend () {
+do_compile:prepend () {
 	(${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-MoCA.XML ${S}/source/MoCASsp/dm_pack_datamodel.c)
 }
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/moca
     install -m 644 ${S}/config/CcspMoCA.cfg ${D}/usr/ccsp/moca/CcspMoCA.cfg

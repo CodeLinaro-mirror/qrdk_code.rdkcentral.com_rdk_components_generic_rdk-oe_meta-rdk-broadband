@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://../../LICENSE;md5=ecf4e15f1559e48fc2b54f092948be4c"
 
 DEPENDS = "ccsp-common-library php chrpath-replacement-native ccsp-webui-csrf"
 
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 require ccsp_common.inc
 
@@ -24,14 +24,14 @@ PV = "${RDK_RELEASE}"
 S = "${WORKDIR}/git/source/CcspPhpExtension"
 
 inherit autotools systemd
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
-LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
-LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS:append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS:append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 LDFLAGS:append:scarthgap = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 inherit lxc
 LXC_TEMPLATE = "lxc-lighttpd"
@@ -40,7 +40,7 @@ LXC_LOG_PATH = "/rdklogs/logs"
 LXC_LOG_LEVEL = "8"
 
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
@@ -50,12 +50,12 @@ CFLAGS_append = " \
 LDFLAGS += " \
      -ldbus-1 \
      "
-do_configure_prepend () {
+do_configure:prepend () {
 	(cd ${S} && ${STAGING_BINDIR_CROSS}/phpize && aclocal && libtoolize --force && autoreconf)
 }
 
 EXTRA_OECONF = "--enable-cosa CCSP_COMMON_LIB=${STAGING_LIBDIR}"
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 EXTRANATIVEPATH += "chrpath-native"
 
@@ -70,7 +70,7 @@ do_install() {
         install -m 0644 ${S}/../../debug_scripts/cosalogs.sh ${D}${base_libdir}/rdk
 }
 
-do_install_append() {
+do_install:append() {
     # Config files and scripts
     install -d ${D}/usr/www
     install -d ${D}/usr/www/actionHandler
@@ -109,17 +109,17 @@ do_install_append() {
     chrpath --delete ${D}/fss/gw/usr/ccsp/cosa.so
 }
 
-do_install_append_mips () {
+do_install:append_mips () {
     install -d ${D}/usr/bin
     install -m 755 ${S}/../../scripts/confPhp ${D}/usr/bin/confPhp
 }
 
-do_install_append_puma7 () {
+do_install:append_puma7 () {
     install -d ${D}${exec_prefix}/ccsp
     install -m 755 ${S}/../../scripts/confPhp ${D}${exec_prefix}/ccsp/confPhp
 }
 
-do_install_append_bcm3390(){
+do_install:append_bcm3390(){
     install -d ${D}${exec_prefix}/ccsp
     install -m 755 ${S}/../../scripts/confPhp ${D}${exec_prefix}/ccsp/confPhp
 }

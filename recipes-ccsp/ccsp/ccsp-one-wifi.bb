@@ -1,5 +1,5 @@
-DEPENDS_append = " libunpriv "
-LDFLAGS_append = " \
+DEPENDS:append = " libunpriv "
+LDFLAGS:append = " \
                  -lprivilege \
                  "
 
@@ -9,27 +9,27 @@ HOMEPAGE = "http://github.com/belvedere-yocto/OneWifi"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=042d68aa6c083a648f58bb8d224a4d31"
 DEPENDS = "webconfig-framework telemetry libsyswrapper libev rbus libnl ccsp-one-wifi-libwebconfig trower-base64"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
-#DEPENDS_append = " hal-cm  hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi avro-c "
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+#DEPENDS:append = " hal-cm  hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi avro-c "
 
-CFLAGS_prepend += "-I${PKG_CONFIG_SYSROOT_DIR}/usr/include/libnl3 "
-CFLAGS_prepend += "-I${PKG_CONFIG_SYSROOT_DIR}/usr/include/ "
-CFLAGS_append = " \
+CFLAGS:prepend += "-I${PKG_CONFIG_SYSROOT_DIR}/usr/include/libnl3 "
+CFLAGS:prepend += "-I${PKG_CONFIG_SYSROOT_DIR}/usr/include/ "
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/trower-base64 \
     "
 
-DEPENDS_append += " libunpriv"
+DEPENDS:append += " libunpriv"
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-implicit-function-declaration -Wno-type-limits -Wno-unused-parameter "
 
-CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-compare -Wno-stringop-truncation -Wno-enum-conversion -fcommon -Wno-mismatched-dealloc"
+CFLAGS:append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-compare -Wno-stringop-truncation -Wno-enum-conversion -fcommon -Wno-mismatched-dealloc"
 
 # To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where
 # the changes are merged before creating a pull request to github.com/rdkcentral/OneWifi
 SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;name=OneWifi"
 
-SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
+SRC_URI:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
 SRCREV_OneWifi = "36496745f230a93ed6419ea7e6b5ced887ccbf33"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
@@ -41,37 +41,37 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 inherit autotools pkgconfig systemd ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)} breakpad-logmapper
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5 ', '', d)}"
-LDFLAGS_append_dunfell = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
-LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5 ', '', d)}"
+LDFLAGS:append_dunfell = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS:append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 LDFLAGS:append:scarthgap = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'ONEWIFI_CAC_APP_SUPPORT=true', 'ONEWIFI_CAC_APP_SUPPORT=false', d)}"
-EXTRA_OECONF_append = " --disable-libwebconfig"
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'disable_nl80211_acl', '', ' -DNL80211_ACL', d)}"
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'EasyConnect', '--enable-easyconnect', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'ONEWIFI_CAC_APP_SUPPORT=true', 'ONEWIFI_CAC_APP_SUPPORT=false', d)}"
+EXTRA_OECONF:append = " --disable-libwebconfig"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'disable_nl80211_acl', '', ' -DNL80211_ACL', d)}"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'EasyConnect', '--enable-easyconnect', '', d)}"
 ISSYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}"
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/ccsp \
     -I=${includedir}/rbus \
 "
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
-CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIFI_HAL_VERSION_3', '', d)}"
-CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '-DONEWIFI_CAC_APP_SUPPORT', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wps_support', '-DFEATURE_SUPPORT_WPS', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'always_enable_ax_2g', '-DALWAYS_ENABLE_AX_2G', '', d)}" 
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
+CFLAGS:append = " -DWIFI_CAPTIVE_PORTAL"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIFI_HAL_VERSION_3', '', d)}"
+CFLAGS:append = " -DWIFI_CAPTIVE_PORTAL"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '-DONEWIFI_CAC_APP_SUPPORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wps_support', '-DFEATURE_SUPPORT_WPS', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'always_enable_ax_2g', '-DALWAYS_ENABLE_AX_2G', '', d)}" 
 
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
 
 #!FIXME!
 #Ensure proper propagation of CFLAGS and LIBS through the build system.
@@ -81,17 +81,17 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC
 #Makefile.am:
 #target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
 #target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
-CFLAGS_append = " `pkg-config --exists libhostap && pkg-config --cflags libhostap`"
+CFLAGS:append = " `pkg-config --exists libhostap && pkg-config --cflags libhostap`"
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ltelemetry_msgsender \
     -lrbus \
     -lwifi_webconfig \
     -lm \
     -lcjson \
 "
-LDFLAGS_append += " -lprivilege"
-do_compile_prepend () {
+LDFLAGS:append += " -lprivilege"
+do_compile:prepend () {
     # Copy files specific to the cac cac distribution
     if ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'true', 'false', d)}; then
         mkdir -p ${S}/source/apps/cac/
@@ -99,7 +99,7 @@ do_compile_prepend () {
     fi
 }
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/wifi
     install -m 664 ${S}/scripts/process_monitor_atom.sh -t ${D}/usr/ccsp/wifi
@@ -145,17 +145,17 @@ do_install_append () {
     install -m 755 ${S}/scripts/get_vlan.sh -t ${D}/usr/sbin
 }
 
-do_install_append_mips (){
+do_install:append_mips (){
     install -d ${D}/usr/ccsp/wifi
     install -m 775 ${S}/config/CcspWifi.cfg -t ${D}/usr/ccsp/wifi
     install -m 775 ${S}/config/CcspDmLib.cfg -t ${D}/usr/ccsp/wifi
 }
 
-do_install_append_puma7 () {
+do_install:append_puma7 () {
     rm ${D}/usr/ccsp/wifi/br0_ip.sh
 }
 
-do_install_append_bcm3390() {
+do_install:append_bcm3390() {
     rm ${D}/usr/ccsp/wifi/br0_ip.sh
 }
 
@@ -201,11 +201,11 @@ FILES_${PN}-dbg = " \
 SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry.target', '', d)}"
 SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry-cron.service', '', d)}"
 
-FILES_${PN}_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${exec_prefix}/ccsp/wifi/wifiTelemetrySetup.sh', '', d)}"
-FILES_${PN}_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry.target', '', d)}"
-FILES_${PN}_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry-cron.service', '', d)}"
+FILES_${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${exec_prefix}/ccsp/wifi/wifiTelemetrySetup.sh', '', d)}"
+FILES_${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry.target', '', d)}"
+FILES_${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry-cron.service', '', d)}"
 
-ERROR_QA_remove_morty = "la"
+ERROR_QA:remove_morty = "la"
 
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "OneWifi,log_agent"

@@ -1,6 +1,6 @@
 DEPENDS = "ccsp-common-library rdk-logger avro-c trower-base64 hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi msgpackc dbus util-linux utopia wrp-c nanomsg libparodus "
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
-DEPENDS_append = "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " rbus cjson ", " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " rbus cjson ", " ", d)}"
 require recipes-ccsp/ccsp/ccsp_common.inc
 
 RDEPENDS_${PN} += "avro-c trower-base64 rdk-logger msgpackc util-linux utopia "
@@ -17,7 +17,7 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 CFLAGS += " -Wall -Werror -Wextra -Wno-unused-parameter -Wno-pointer-sign -Wno-sign-compare "
 
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
@@ -34,9 +34,9 @@ inherit autotools breakpad-logmapper
 # generating minidumps symbols
 inherit breakpad-wrapper
 DEPENDS += "breakpad breakpad-wrapper"
-BREAKPAD_BIN_append = " harvester"
+BREAKPAD_BIN:append = " harvester"
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lrdkloggers \
     -llog4c \
@@ -49,37 +49,37 @@ LDFLAGS_append = " \
     -lwrp-c \
     -llibparodus \
     "
-DEPENDS_append = "${@bb.utils.contains("DISTRO_FEATURES", "seshat", " libseshat ", " ", d)}"
-CFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "seshat", " -DENABLE_SESHAT ", " ", d)}"
-LDFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "seshat", " -llibseshat ", " ", d)}"
+DEPENDS:append = "${@bb.utils.contains("DISTRO_FEATURES", "seshat", " libseshat ", " ", d)}"
+CFLAGS:append = "${@bb.utils.contains("DISTRO_FEATURES", "seshat", " -DENABLE_SESHAT ", " ", d)}"
+LDFLAGS:append = "${@bb.utils.contains("DISTRO_FEATURES", "seshat", " -llibseshat ", " ", d)}"
 
 LDFLAGS += "-lbreakpadwrapper -lpthread -lstdc++"
 
-CFLAGS_append = "\
+CFLAGS:append = "\
     ${@bb.utils.contains("DISTRO_FEATURES", "seshat", "-I${STAGING_INCDIR}/libseshat ", " ", d)} \
 "
 
 inherit ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)}
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-LDFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " -lrbus -lrbuscore -lrtMessage -lcjson", " ", d)}"
-CFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " -I${STAGING_INCDIR}/rbus -I${STAGING_INCDIR}/rtmessage -I${STAGING_INCDIR}/cjson ", " ", d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '-DRDK_ONEWIFI', '', d)}"
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+LDFLAGS:append = "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " -lrbus -lrbuscore -lrtMessage -lcjson", " ", d)}"
+CFLAGS:append = "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " -I${STAGING_INCDIR}/rbus -I${STAGING_INCDIR}/rtmessage -I${STAGING_INCDIR}/cjson ", " ", d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '-DRDK_ONEWIFI', '', d)}"
 
 EXTRA_OECONF += "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " --enable-rdkOneWifi=yes ", " ", d)}"
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
-CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"
-EXTRA_OECONF_append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+CFLAGS:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"
+EXTRA_OECONF:append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "
 
-do_compile_prepend(){
+do_compile:prepend(){
 	(${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config-atom/Harvester.XML ${S}/source/HarvesterSsp/dm_pack_datamodel.c)
 }
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/harvester
     install -m 664 ${S}/config-atom/InterfaceDevicesWifi.avsc -t ${D}/usr/ccsp/harvester
@@ -94,10 +94,10 @@ FILES_${PN} += " \
     ${libdir}/libwifi.so* \
 "
 
-ERROR_QA_remove_morty = "la"
+ERROR_QA:remove_morty = "la"
 
 # generating minidumps
-PACKAGECONFIG_append = " breakpad"
+PACKAGECONFIG:append = " breakpad"
 
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "harvester"

@@ -15,13 +15,13 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF_append  = " ${@bb.utils.contains_any('DISTRO_FEATURES','kirkstone scarthgap','','--with-ccsp-platform=bcm --with-ccsp-arch=arm',d)} "
+EXTRA_OECONF:append  = " ${@bb.utils.contains_any('DISTRO_FEATURES','kirkstone scarthgap','','--with-ccsp-platform=bcm --with-ccsp-arch=arm',d)} "
 
 inherit autotools pkgconfig
 
 export ISRDKB_VOICE_DM_TR104_V2 = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_voice_manager_dmltr104_v2','true','false', d)}"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -38,17 +38,17 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/libparodus \
     "
 
-CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_voice_manager_dmltr104_v2','-DFEATURE_RDKB_VOICE_DM_TR104_V2=ON','', d)}"
-CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '-DRBUS_BUILD_FLAG_ENABLE', '', d)}"
-CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'telco_voice_feature_enable_persist', '-DTELCO_VOICE_FEATURE_ENABLE_PERSIST', '', d)}"
+CFLAGS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_voice_manager_dmltr104_v2','-DFEATURE_RDKB_VOICE_DM_TR104_V2=ON','', d)}"
+CFLAGS:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '-DRBUS_BUILD_FLAG_ENABLE', '', d)}"
+CFLAGS:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'telco_voice_feature_enable_persist', '-DTELCO_VOICE_FEATURE_ENABLE_PERSIST', '', d)}"
 
 DATAMODEL_XML = "config/${@bb.utils.contains('DISTRO_FEATURES','rdkb_voice_manager_dmltr104_v2','RdkTelcoVoiceManager_v2.xml','RdkTelcoVoiceManager_v1.xml',d)}"
 
-do_compile_prepend () {
+do_compile:prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/${DATAMODEL_XML} ${S}/source/TelcoVoiceManager/dm_pack_datamodel.c)
 }
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lutctx \
     -lutapi \
@@ -68,7 +68,7 @@ LDFLAGS_append = " \
     -lprivilege \
 "
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/rdk/voicemanager
     install -d ${D}${exec_prefix}/ccsp/harvester/

@@ -1,6 +1,6 @@
-EXTRA_OECONF_append = " --enable-journalctl"
+EXTRA_OECONF:append = " --enable-journalctl"
 
-CFLAGS_append = " -DONEWIFI_OVSDB_TABLE_SUPPORT   \
+CFLAGS:append = " -DONEWIFI_OVSDB_TABLE_SUPPORT   \
                   -DONEWIFI_CSI_APP_SUPPORT       \
                   -DONEWIFI_CAC_APP_SUPPORT \
                   -DONEWIFI_MOTION_APP_SUPPORT \
@@ -16,9 +16,9 @@ CFLAGS_append = " -DONEWIFI_OVSDB_TABLE_SUPPORT   \
                   "
 
 
-EXTRA_OECONF_append = "${@bb.utils.contains('DISTRO_FEATURES', 'sm_app', ' --enable-sm-app', '', d)}"
+EXTRA_OECONF:append = "${@bb.utils.contains('DISTRO_FEATURES', 'sm_app', ' --enable-sm-app', '', d)}"
 
-do_install_append() {
+do_install:append() {
     install -m 644 ${S}/source/platform/rdkb/bus.h ${D}/usr/include/ccsp
     install -m 644 ${S}/source/platform/common/bus_common.h ${D}/usr/include/ccsp
     install -m 644 ${S}/source/platform/rdkb/misc.h ${D}/usr/include/ccsp

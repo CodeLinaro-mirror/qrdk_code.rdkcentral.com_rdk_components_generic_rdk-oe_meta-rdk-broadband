@@ -19,7 +19,7 @@ SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=m
 
 # Configure options for OBUSPA
 EXTRA_OECONF += "--disable-websockets --enable-mqtt"
-EXTRA_OECONF_append_dunfell = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append_dunfell = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 # Configuration files for target
 SRC_URI += "file://conf/usp_factory_reset.conf"
@@ -43,7 +43,7 @@ CFLAGS += " \
 LDFLAGS += "-lrbus"
 
 # Specialize the OBUSPA release by copying across the RDK specific source files to the source directory
-do_configure_prepend() {
+do_configure:prepend() {
     cp ${WORKDIR}/usp-pa-vendor-rdk/src/vendor/* ${S}/src/vendor
 }
 

@@ -12,13 +12,13 @@ SRCREV_powermgr = "${AUTOREV}"
 SRCREV_FORMAT = "powermgr"
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
     "
     
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lrdkloggers \
 "
@@ -29,12 +29,12 @@ inherit autotools systemd breakpad-logmapper
 
 # generating minidumps symbols
 inherit breakpad-wrapper
-BREAKPAD_BIN_append = " rdkbPowerMgr"
+BREAKPAD_BIN:append = " rdkbPowerMgr"
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-unused-parameter -DINCLUDE_BREAKPAD "
 LDFLAGS += "-lbreakpadwrapper -lpthread -lstdc++"
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/pwrMgr
     install -m 755 ${S}/scripts/rdkb_power_manager.sh ${D}/usr/ccsp/pwrMgr/rdkb_power_manager.sh
@@ -63,7 +63,7 @@ FILES_${PN}-dbg = " \
 "
 
 # generating minidumps
-PACKAGECONFIG_append = " breakpad"
+PACKAGECONFIG:append = " breakpad"
 
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "rdkbPowerMgr"

@@ -9,7 +9,7 @@ SRCREV = "e907b9323408fd6a6596208e162f3033060579fb"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 
 do_install () {
    install -d ${D}/usr/include/ccsp

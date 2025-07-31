@@ -11,9 +11,9 @@ SRC_URI = "\
     ${CMF_GIT_ROOT}/rdkb/devices/rdkbemu/rdkbemu_xb3;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=xb3;name=xb3 \
     "
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/ccsp-webui-bci:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/ccsp-webui-bci:"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
                  file://cosalogs.service \
                  file://cosalogs.sh \
                  file://ajax_maintenance_window_conf.php \
@@ -36,7 +36,7 @@ LXC_NAME = "webui"
 LXC_LOG_PATH = "/rdklogs/logs"
 LXC_LOG_LEVEL = "8"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
@@ -46,12 +46,12 @@ CFLAGS_append = " \
 LDFLAGS += " \
      -ldbus-1 \
      "
-do_configure_prepend () {
+do_configure:prepend () {
 	(cd ${S} && ${STAGING_BINDIR_CROSS}/phpize && aclocal && libtoolize --force && autoreconf)
 }
 
 EXTRA_OECONF = "--enable-cosa CCSP_COMMON_LIB=${STAGING_LIBDIR}"
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 do_configure () {
 	oe_runconf
@@ -64,7 +64,7 @@ do_install() {
 	install -m 0644 ${WORKDIR}/cosalogs.sh ${D}${base_libdir}/rdk
 }
 
-do_install_append() {
+do_install:append() {
     # Config files and scripts
     install -d ${D}/usr/www
     install -d ${D}/usr/www/actionHandler
@@ -95,12 +95,12 @@ do_install_append() {
     install -m 0755 ${WORKDIR}/ajax_maintenance_window_conf.php ${D}/usr/www/actionHandler/
 }
 
-do_install_append_mips () {
+do_install:append_mips () {
     install -d ${D}/usr/bin
     install -m 755 ${S}/../../scripts/confPhp ${D}/usr/bin/confPhp
 }
 
-do_install_append_bcm3390(){
+do_install:append_bcm3390(){
     install -d ${D}${exec_prefix}/ccsp
     install -m 755 ${S}/../../scripts/confPhp ${D}${exec_prefix}/ccsp/confPhp
 }

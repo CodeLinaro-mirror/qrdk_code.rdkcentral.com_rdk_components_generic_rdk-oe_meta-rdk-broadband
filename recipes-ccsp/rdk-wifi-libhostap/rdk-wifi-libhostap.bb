@@ -3,7 +3,7 @@ SUMMARY = "This recipe compiles and installs the Opensource hostapd as a dynamic
 SECTION = "base"
 LICENSE = "BSD-3-Clause"
 
-FILESEXTRAPATHS_prepend:="${THISDIR}/files:"
+FILESEXTRAPATHS:prepend:="${THISDIR}/files:"
 PROVIDES = "rdk-wifi-libhostap"
 RPROVIDES_${PN} = "rdk-wifi-libhostap"
 DEPENDS += "libnl openssl"
@@ -41,14 +41,14 @@ LIC_FILES_CHKSUM_2.11 = "file://source/hostap-2.11/README;md5=6e4b25e7d74bfc44a3
 
 LIC_FILES_CHKSUM = "${@d.getVar('LIC_FILES_CHKSUM_' + d.getVar('HOSTAPD_PV', True), True)}"
 
-EXTRA_OEMAKE_append = " \
+EXTRA_OEMAKE:append = " \
     'BUILDDIR=${B}' \
     'PN=rdk-wifi-libhostap' \
     'MACHINE_IMAGE_NAME=${MACHINE_IMAGE_NAME}' \
     ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'ONE_WIFI=y', '', d)} \
     ${@bb.utils.contains('DISTRO_FEATURES', 'CONFIG_IEEE80211BE', 'CONFIG_IEEE80211BE=y', '', d)} \
 "
-CFLAGS_append = " \
+CFLAGS:append = " \
     -fcommon \
 "
 
@@ -88,13 +88,13 @@ SRC_URI += " \
 "
 
 ###########################PRIOR_BUILD#####################
-CFLAGS_prepend += " \
+CFLAGS:prepend += " \
     ${@bb.utils.contains('PRIOR_BUILD', 'true', ' \
         -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/libnl3 \
         -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/ \
     ','', d)} \
 "
-CFLAGS_append = "${@' \
+CFLAGS:append = "${@' \
         -DCONFIG_LIBNL32 \
         -DCONFIG_LIBNL20 \
         -DCONFIG_DRIVER_NL80211 \
@@ -110,8 +110,8 @@ CFLAGS_append = "${@' \
 "
 
 
-CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', ' -DCONFIG_SME', '', d)}"
-CFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', ' -DCONFIG_GAS', '', d)}"
+CFLAGS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', ' -DCONFIG_SME', '', d)}"
+CFLAGS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', ' -DCONFIG_GAS', '', d)}"
 
 #Lib hostap compilation changes for compiling libhostap.so
 #!!This has to be first patch!!
@@ -129,7 +129,7 @@ HOSTAPD_PATCH = "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'file:/
 SRC_URI += "${@'${HOSTAPD_PATCH}' if '${EMULATOR_FEATURE_ENABLED}' == '1' and d.getVar('PRIOR_BUILD', True) == 'true' else ''}"
 
 AP_FLAG = "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', ' -DCONFIG_AP', '', d)}"
-CFLAGS_append = " ${@'${AP_FLAG}' if '${EMULATOR_FEATURE_ENABLED}' == '1' else ''} "
+CFLAGS:append = " ${@'${AP_FLAG}' if '${EMULATOR_FEATURE_ENABLED}' == '1' else ''} "
 
 HOSTAPD_PATCH_2_11 = "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', 'file://2.11/nl80211_change.patch', '', d)}"
 SRC_URI += "${@'${HOSTAPD_PATCH_2_11}' if '${EMULATOR_FEATURE_ENABLED}' == '1' and d.getVar('PRIOR_BUILD', True) == 'false' else ''}"
@@ -161,7 +161,7 @@ do_hostapd_patch () {
 
 addtask hostapd_patch after do_patch before do_configure
 
-do_configure_append () {
+do_configure:append () {
     if ! ${PRIOR_BUILD}; then
         oe_runmake -C ${S}/source/hostap-${HOSTAPD_PV}/hostapd clean_libhostap
     fi
@@ -175,7 +175,7 @@ do_compile () {
     fi
 }
 
-do_configure_prepend () {
+do_configure:prepend () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'true', 'false', d)}; then
         if ${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'true', 'false', d)}; then
             mv ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm.c ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm_test.c
@@ -208,7 +208,7 @@ do_install () {
     fi
 }
 
-do_install_append () {
+do_install:append () {
     if ${PRIOR_BUILD}; then
         if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', 'true', 'false', d)}; then
             if ${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'true', 'false', d)}; then

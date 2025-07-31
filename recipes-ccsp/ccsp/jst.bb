@@ -14,13 +14,13 @@ inherit cmake
 
 EXTRA_OECMAKE += "-DBUILD_RDK=ON "
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'rbus', '-DBUILD_RBUS', '-I=${includedir}/dbus-1.0 -I=${libdir}/dbus-1.0/include', d)} \
     -I=${includedir}/ccsp \
     "
-LDFLAGS_append += "${@bb.utils.contains('DISTRO_FEATURES', 'rbus', '', '-ldbus-1', d)}"
+LDFLAGS:append += "${@bb.utils.contains('DISTRO_FEATURES', 'rbus', '', '-ldbus-1', d)}"
 
-do_install_append() {
+do_install:append() {
  install -d ${D}/usr/www2/
  install -d ${D}/usr/www2/includes
  install -d ${D}/usr/video_analytics

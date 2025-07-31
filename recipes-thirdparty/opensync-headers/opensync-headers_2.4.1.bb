@@ -2,7 +2,7 @@ SUMMARY = "OpenSync schema headers"
 LICENSE = "BSD-3-Clause"
 #LIC_FILES_CHKSUM = "file://LICENSE;md5=df3f42ef5870da613e959ac4ecaa1cb8"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
 inherit python3native
 OS_CORE_VERSION="${@bb.utils.contains('DISTRO_FEATURES','Opensync_4.4.0','4.4.0','2.4.2',d)}"

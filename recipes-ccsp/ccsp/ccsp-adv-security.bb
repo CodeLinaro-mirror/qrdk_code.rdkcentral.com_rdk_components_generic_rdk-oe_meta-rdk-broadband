@@ -2,15 +2,15 @@ SUMMARY = "Advanced Security Agent"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 DEPENDS = "ccsp-common-library webconfig-framework utopia dbus rdk-logger hal-platform hal-cm trower-base64 msgpack-c"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 require recipes-ccsp/ccsp/ccsp_common.inc
 SRC_URI = "${RDKB_CCSP_ROOT_GIT}/CcspAdvSecurity/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};name=ccsp-adv-security"
 SRCREV_ccsp-adv-security = "${AUTOREV}"
 PV = "${RDK_RELEASE}+git${SRCPV}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-CFLAGS_append = " \
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/libevent \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -18,26 +18,26 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/openssl/include \
     -I${STAGING_INCDIR}/trower-base64 \
     "
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lrdkloggers \
     -lcjson \
     -lbreakpadwrapper \
 "
-RDEPENDS_${PN}_append = " bash"
-RDEPENDS_${PN}_remove_morty = "bash"
+RDEPENDS_${PN}:append = " bash"
+RDEPENDS_${PN}:remove_morty = "bash"
 
 S = "${WORKDIR}/git"
 
 CFLAGS += " -Wall -Werror -Wextra "
 
-do_compile_prepend () {
+do_compile:prepend () {
        (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-AdvSecurity.xml ${S}/source/AdvSecuritySsp/dm_pack_datamodel.c)
 }
 
 inherit autotools coverity ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)} breakpad-logmapper
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/advsec
     install -d ${D}/usr/include/advsec
@@ -74,4 +74,4 @@ FILES_${PN}-dbg += " \
 BREAKPAD_LOGMAPPER_PROCLIST = "CcspAdvSecurity"
 BREAKPAD_LOGMAPPER_LOGLIST = "ADVSEClog.txt.0,agent.txt"
 
-EXTRA_OECONF_append  = " --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-arch=arm "

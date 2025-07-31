@@ -21,25 +21,25 @@ ONEWIFI_CFLAGS = " -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/rdk-wifi-libhostap/sr
                   -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/libnl3 \
                   -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/ \
                 "
-CFLAGS_prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CFLAGS}', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', '-DHOSTAPD_2_10', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', '-DCONFIG_WEP', '', d)}"
+CFLAGS:prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CFLAGS}', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', '-DHOSTAPD_2_10', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', '-DCONFIG_WEP', '', d)}"
 
 EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'ONE_WIFIBUILD=true', '', d)}"
-EXTRA_OECONF_append_tchxb7 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB7_PORT=true', '', d)}"
-EXTRA_OECONF_append_tchxb8 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB8_PORT=true', '', d)}"
-EXTRA_OECONF_append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'XB10_PORT=true', '', d)}"
+EXTRA_OECONF:append_tchxb7 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB7_PORT=true', '', d)}"
+EXTRA_OECONF:append_tchxb8 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB8_PORT=true', '', d)}"
+EXTRA_OECONF:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'XB10_PORT=true', '', d)}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git/src/"
 PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/git/util_crypto,${WORKDIR}/git/platform"
 
 
-CFLAGS_append = " -I=${includedir}/ccsp "
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'passpoint', '-DFEATURE_SUPPORT_PASSPOINT', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', '-DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
-CFLAGS_append = " -Wno-deprecated-declarations -Wno-enum-conversion -fcommon"
-CFLAGS_append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
+CFLAGS:append = " -I=${includedir}/ccsp "
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'passpoint', '-DFEATURE_SUPPORT_PASSPOINT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', '-DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
+CFLAGS:append = " -Wno-deprecated-declarations -Wno-enum-conversion -fcommon"
+CFLAGS:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
 
 ONEWIFI_CONFIG_FLAGS = " \
     -DCONFIG_WIFI_EMULATOR \
@@ -121,22 +121,22 @@ ONEWIFI_CONFIG_FLAGS = " \
     -DCONFIG_WNM \
 "
 
-do_configure_prepend () {
+do_configure:prepend () {
   export CFLAGS="${CFLAGS} ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '$(pkg-config --exists libhostap && pkg-config --cflags libhostap)', '', d)}"
 }
 
-CFLAGS_append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' `pkg-config --exists libhostap && pkg-config --cflags libhostap`', '', d)}"
+CFLAGS:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' `pkg-config --exists libhostap && pkg-config --cflags libhostap`', '', d)}"
 
-ONEWIFI_CONFIG_FLAGS_remove_tchxb8 = "-DTCXB7_PORT"
-ONEWIFI_CONFIG_FLAGS_append_tchxb8 = " -DTCXB8_PORT -DCONFIG_OWE"
-ONEWIFI_CONFIG_FLAGS_append_xb10 = " -DXB10_PORT -DCONFIG_OWE"
-ONEWIFI_CONFIG_FLAGS_remove_xb10 = "-DTCXB7_PORT"
+ONEWIFI_CONFIG_FLAGS:remove_tchxb8 = "-DTCXB7_PORT"
+ONEWIFI_CONFIG_FLAGS:append_tchxb8 = " -DTCXB8_PORT -DCONFIG_OWE"
+ONEWIFI_CONFIG_FLAGS:append_xb10 = " -DXB10_PORT -DCONFIG_OWE"
+ONEWIFI_CONFIG_FLAGS:remove_xb10 = "-DTCXB7_PORT"
 
-ONEWIFI_CONFIG_FLAGS_append_xb10 = " \
+ONEWIFI_CONFIG_FLAGS:append_xb10 = " \
     -DCONFIG_HW_CAPABILITIES \
     -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/wifi \
 "
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CONFIG_FLAGS}', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CONFIG_FLAGS}', '', d)}"
 
 EXTRA_OECONF += "WIFI_EMULATOR=true"
 

@@ -14,7 +14,7 @@ S = "${WORKDIR}/git"
 
 DEPENDS += "glib-2.0"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
       -I${STAGING_INCDIR} \
       -I${STAGING_INCDIR}/ccsp \
       -I${STAGING_INCDIR}/rbus \
@@ -22,7 +22,7 @@ CFLAGS_append = " \
       -I ${STAGING_INCDIR}/syscfg \
       "
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lrdkloggers \
     -lrbus \
@@ -30,7 +30,7 @@ LDFLAGS_append = " \
 
 # generating minidumps symbols
 inherit breakpad-wrapper
-BREAKPAD_BIN_append = " batterymgr"
+BREAKPAD_BIN:append = " batterymgr"
 
 LDFLAGS += "-lbreakpadwrapper -lpthread"
 

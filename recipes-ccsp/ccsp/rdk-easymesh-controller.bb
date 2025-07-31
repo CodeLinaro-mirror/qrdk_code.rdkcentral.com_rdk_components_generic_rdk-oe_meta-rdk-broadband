@@ -26,9 +26,9 @@ S = "${WORKDIR}/git"
 # inherit cmake pkgconfig
 inherit autotools pkgconfig systemd
 
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -36,7 +36,7 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/libubox \
 "
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lrdkloggers \
     -ljson-c \
@@ -47,7 +47,7 @@ LDFLAGS_append = " \
 "
 ISSYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}"
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/ccsp/easymesh
     ln -sf ${bindir}/em-ctl ${D}${exec_prefix}/ccsp/easymesh/em-ctl
@@ -71,5 +71,5 @@ FILES_${PN} += " \
     ${bindir}/* \
 "
 
-FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.service', '', d)}"
-FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.path', '', d)}"
+FILES_${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.service', '', d)}"
+FILES_${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.path', '', d)}"

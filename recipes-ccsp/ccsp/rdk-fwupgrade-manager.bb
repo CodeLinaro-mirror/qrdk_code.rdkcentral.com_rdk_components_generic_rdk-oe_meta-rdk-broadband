@@ -15,15 +15,15 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF_append  = " ${@bb.utils.contains_any('DISTRO_FEATURES','kirkstone scarthgap','','--with-ccsp-platform=bcm --with-ccsp-arch=arm',d)} "
+EXTRA_OECONF:append  = " ${@bb.utils.contains_any('DISTRO_FEATURES','kirkstone scarthgap','','--with-ccsp-platform=bcm --with-ccsp-arch=arm',d)} "
 
 inherit autotools pkgconfig
 
-do_compile_prepend () {
+do_compile:prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/RdkFwUpgradeManager.xml ${S}/source/FwUpgradeManager/dm_pack_datamodel.c)
 }
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -34,15 +34,15 @@ CFLAGS_append = " \
 
 LDFLAGS += " -lprivilege"
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -fPIC -I${STAGING_INCDIR}/libsafec', '-fPIC', d)}"
-CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '-DFEATURE_RDKB_WAN_MANAGER', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -fPIC -I${STAGING_INCDIR}/libsafec', '-fPIC', d)}"
+CFLAGS:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '-DFEATURE_RDKB_WAN_MANAGER', '', d)}"
 
-LDFLAGS_append = " -ldbus-1"
-LDFLAGS_remove_morty = " -ldbus-1"
+LDFLAGS:append = " -ldbus-1"
+LDFLAGS:remove_morty = " -ldbus-1"
 
 do_configure[depends] += "ccsp-common-library:do_install"
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/rdk/fwupgrademanager
     ln -sf ${bindir}/fwupgrademanager ${D}${exec_prefix}/rdk/fwupgrademanager/fwupgrademanager

@@ -7,14 +7,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=baa21dec03307f641a150889224a157f"
 export PARTNER_DEFAULT_EXT="${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','yes', 'no', d)}"
 
 DEPENDS = "ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi zlib dbus libnetfilter-queue libupnp cjson halinterface libevent libsyswrapper"
-DEPENDS_append_libc-musl = " libtirpc"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' nanomsg ', ' ', d)}"
+DEPENDS:append_libc-musl = " libtirpc"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' nanomsg ', ' ', d)}"
 
-DEPENDS_append = " libtirpc"
-DEPENDS_remove_morty = " libtirpc"
+DEPENDS:append = " libtirpc"
+DEPENDS:remove_morty = " libtirpc"
 
-RDEPENDS_${PN}_append = " bash"
-RDEPENDS_${PN}_remove_morty = " bash"
+RDEPENDS_${PN}:append = " bash"
+RDEPENDS_${PN}:remove_morty = " bash"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/Utopia;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=Utopia"
@@ -27,53 +27,53 @@ PV = "${RDK_RELEASE}"
 
 S = "${WORKDIR}/git"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
-SRC_URI_append = " \
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
+SRC_URI:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','file://ApplySystemDefaults.service','',d)} \
 "
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'pm_lan_mgr', '--enable-lanmgr_enabled', '', d)}"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'pm_lan_mgr', '--enable-lanmgr_enabled', '', d)}"
 
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', '--enable-no_moca_support', '', d)}"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', '--enable-no_moca_support', '', d)}"
 
 #This configuration is commented in utopia configure.ac file. As long as this is not enabled in configure file, passing the OE configuration is giving error in kirkstone.
-#EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '--enable-wanfailover', '', d)}"
+#EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '--enable-wanfailover', '', d)}"
 
 inherit autotools useradd update-alternatives pkgconfig
 
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-DEPENDS_remove_class-native = " safec-native"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+DEPENDS:remove_class-native = " safec-native"
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-deprecated-declarations -Wno-type-limits -Wno-unused-parameter -Wno-return-local-addr "
-CFLAGS_append = " -Wno-format-overflow -Wno-misleading-indentation -Wno-enum-conversion "
+CFLAGS:append = " -Wno-format-overflow -Wno-misleading-indentation -Wno-enum-conversion "
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/ccsp \
     -DCONFIG_BUILD_TRIGGER \
     "
 
-CFLAGS_append = " -I${STAGING_INCDIR}/tirpc "
-CFLAGS_remove_morty = " -I${STAGING_INCDIR}/tirpc "
+CFLAGS:append = " -I${STAGING_INCDIR}/tirpc "
+CFLAGS:remove_morty = " -I${STAGING_INCDIR}/tirpc "
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION', '', d)}"
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'dslite', '-DDSLITE_FEATURE_SUPPORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'dslite', '-DDSLITE_FEATURE_SUPPORT', '', d)}"
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wifimotion', '-DFEATURE_COGNITIVE_WIFIMOTION', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wifimotion', '-DFEATURE_COGNITIVE_WIFIMOTION', '', d)}"
 
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '-lnanomsg', '', d)}"
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '-lnanomsg', '', d)}"
 
-CFLAGS_append_libc-musl = " -I${STAGING_INCDIR}/tirpc"
-LDFLAGS_append_libc-musl = " -ltirpc"
+CFLAGS:append_libc-musl = " -I${STAGING_INCDIR}/tirpc"
+LDFLAGS:append_libc-musl = " -ltirpc"
 
-LDFLAGS_append = " -ltirpc -lrt"
-LDFLAGS_remove_morty = " -ltirpc -lrt"
+LDFLAGS:append = " -ltirpc -lrt"
+LDFLAGS:remove_morty = " -ltirpc -lrt"
 
-do_install_append () {
+do_install:append () {
 #    install -D -m 0644 ${S}/source/include/autoconf.h ${D}${includedir}/utctx/autoconf.h
     install -D -m 0644 ${S}/source/ulog/ulog.h ${D}${includedir}/ulog/ulog.h
     install -D -m 0644 ${S}/source/utapi/lib/utapi.h ${D}${includedir}/utapi/utapi.h
@@ -129,8 +129,8 @@ do_install_append () {
 }
 
 USERADD_PACKAGES = "${PN}"
-GROUPADD_PARAM_${PN} = "--system firewall"
-USERADD_PARAM_${PN} += "--system --home ${localstatedir}/run/firewall/ -M -g firewall --shell /bin/false firewall"
+GROUPADD_PARAM:${PN} = "--system firewall"
+USERADD_PARAM:${PN} += "--system --home ${localstatedir}/run/firewall/ -M -g firewall --shell /bin/false firewall"
 
 FILES_${PN} += "${sysconfdir}/utopia/"
 FILES_${PN} += "${sysconfdir}/dhcp_static_hosts"
@@ -161,14 +161,14 @@ ALTERNATIVE_LINK_NAME[syslog-conf] = "${sysconfdir}/syslog.conf"
 ALTERNATIVE_TARGET[syslog-conf] = "/fss/gw/etc/syslog.conf.${BPN}"
 CONFFILES_${PN} = "/fss/gw/${sysconfdir}/syslog.conf.${BPN}"
 
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'telemetry2_0', ' telemetry', '', d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'telemetry2_0', ' telemetry', '', d)}"
 
-FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','${systemd_unitdir}/system/ApplySystemDefaults.service','',d)}"
+FILES_${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','${systemd_unitdir}/system/ApplySystemDefaults.service','',d)}"
 SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','ApplySystemDefaults.service','',d)}"
 
-RDEPENDS_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
-RDEPENDS_${PN}_remove_morty = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
-CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"
-EXTRA_OECONF_append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm "
+RDEPENDS_${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+RDEPENDS_${PN}:remove_morty = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+CFLAGS:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"
+EXTRA_OECONF:append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm "

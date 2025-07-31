@@ -4,18 +4,18 @@ DESCRIPTION = "C client library for parodus2ccsp"
 HOMEPAGE = "https://github.com/Comcast/parodus2ccsp"
 
 DEPENDS = "cjson msgpack-c rdk-logger dbus ccsp-common-library trower-base64 cimplog wdmp-c nanomsg wrp-c libparodus breakpad breakpad-wrapper utopia libunpriv rbus"
-DEPENDS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " curl webcfg ", " ", d)}"
-DEPENDS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " curl ", " ", d)}"
+DEPENDS:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " curl webcfg ", " ", d)}"
+DEPENDS:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " curl ", " ", d)}"
 RDEPENDS_${PN} = "cjson msgpack-c rdk-logger trower-base64 cimplog wdmp-c nanomsg wrp-c libparodus utopia bash"
-RDEPENDS_${PN}_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " curl webcfg ", " ", d)}"
-RDEPENDS_${PN}_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " curl ", " ", d)}"
+RDEPENDS_${PN}:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " curl webcfg ", " ", d)}"
+RDEPENDS_${PN}:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " curl ", " ", d)}"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e"
 
 SRCREV = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "d26d16eb4a85348404259178a48bfcdc49830463", "1b4abb76fff13c8c653363d0fc12069050eb89dc" , d)}"
 
-do_configure_prepend () {
+do_configure:prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/source/arch/intel_usg/boards/rdkb_atom/config/comcast/WebpaAgent.xml ${S}/source/broadband/dm_pack_datamodel.c)
 }
 
@@ -31,14 +31,14 @@ require ccsp_common.inc
 
 # generating minidumps symbols
 inherit breakpad-wrapper ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)} breakpad-logmapper
-BREAKPAD_BIN_append = " webpa"
+BREAKPAD_BIN:append = " webpa"
 
 LDFLAGS += "-lpthread -lcjson -lmsgpackc -ltrower-base64 -lnanomsg -lcimplog -lwdmp-c -lwrp-c -llibparodus -lm -luuid -lstdc++ -lbreakpadwrapper -lsysevent -lutapi -lutctx -lsyscfg -lprivilege -lrbus -lrtMessage"
-LDFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " -lcurl -lwebcfg ", " ", d)}"
-LDFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " -lcurl ", " ", d)}"
+LDFLAGS:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " -lcurl -lwebcfg ", " ", d)}"
+LDFLAGS:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " -lcurl ", " ", d)}"
 
 ASNEEDED = ""
-CFLAGS_append = " \
+CFLAGS:append = " \
 	-D_YOCTO_ \
 	-DPLATFORM_RDKB \
 	-DRDKB_BUILD \
@@ -54,12 +54,12 @@ CFLAGS_append = " \
         -I${STAGING_INCDIR}/trower-base64 \
 	"
 
-CFLAGS_append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", "-I${STAGING_INCDIR}/webcfg ", " ", d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', '-DWEBCONFIG_BIN_SUPPORT', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '-DFEATURE_SUPPORT_ONEWIFI', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Support_6G_Radio', '-DFEATURE_SUPPORT_6G_RADIO', '', d)}"
+CFLAGS:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", "-I${STAGING_INCDIR}/webcfg ", " ", d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', '-DWEBCONFIG_BIN_SUPPORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '-DFEATURE_SUPPORT_ONEWIFI', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Support_6G_Radio', '-DFEATURE_SUPPORT_6G_RADIO', '', d)}"
 
-CFLAGS_remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', ' -DFEATURE_SUPPORT_WEBCONFIG ', '', d)}"
+CFLAGS:remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', ' -DFEATURE_SUPPORT_WEBCONFIG ', '', d)}"
 
 inherit pkgconfig cmake
 EXTRA_OECMAKE = "-DBUILD_TESTING=OFF -DBUILD_YOCTO=true"
@@ -67,17 +67,17 @@ EXTRA_OECMAKE = "-DBUILD_TESTING=OFF -DBUILD_YOCTO=true"
 EXTRA_OECMAKE += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', ' -DFEATURE_SUPPORT_WEBCONFIG=true ', '', d)}"
 EXTRA_OECMAKE += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_phase1', ' -DFEATURE_SUPPORT_WEBCONFIG=true ', '', d)}"
 
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
-SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file://Web_config_XML.patch', '', d)}"
-SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_phase1', 'file://Web_config_Phase1_XML.patch', '', d)}"
-SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', 'file://Webpa_Connected_Client_Notify_XML.patch', '', d)}"
-SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file://webconfig_metadata.json', ' ', d)}"
-SRC_URI_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file://metadata_parser.py ', ' ', d)}"
+SRC_URI:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file://Web_config_XML.patch', '', d)}"
+SRC_URI:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_phase1', 'file://Web_config_Phase1_XML.patch', '', d)}"
+SRC_URI:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig_bin', 'file://Webpa_Connected_Client_Notify_XML.patch', '', d)}"
+SRC_URI:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file://webconfig_metadata.json', ' ', d)}"
+SRC_URI:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file://metadata_parser.py ', ' ', d)}"
 
 # generating minidumps
-PACKAGECONFIG_append = " breakpad"
-do_install_append() {
+PACKAGECONFIG:append = " breakpad"
+do_install:append() {
     install -d ${D}/usr/ccsp/webpa
 
     install -d ${D}/etc

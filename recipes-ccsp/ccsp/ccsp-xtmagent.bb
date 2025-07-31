@@ -20,11 +20,11 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 inherit autotools pkgconfig
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \

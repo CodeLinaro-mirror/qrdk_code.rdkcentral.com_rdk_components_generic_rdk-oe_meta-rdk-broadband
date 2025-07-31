@@ -4,7 +4,7 @@ CFLAGS += " -DCCSP_SUPPORT_ENABLED -DWBCFG_MULTI_COMP_SUPPORT"
                    
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-do_install_append () {
+do_install:append () {
     install -d ${D}/usr/include/ccsp
     install -m 644 ${S}/include/*.h ${D}/usr/include/ccsp/
 }

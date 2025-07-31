@@ -18,23 +18,23 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)}
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
     "
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lsyscfg \
     "
 CFLAGS += " -Wall -Werror -Wextra "
 
-do_compile_prepend () {
+do_compile:prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-EPON.XML ${S}/source/EPONAgentSsp/dm_pack_datamodel.c)
 }
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/epon
     ln -sf /usr/bin/CcspEPONAgentSsp ${D}/usr/ccsp/epon/CcspEPONAgentSsp

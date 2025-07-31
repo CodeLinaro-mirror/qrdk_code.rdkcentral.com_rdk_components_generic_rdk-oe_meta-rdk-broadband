@@ -21,7 +21,7 @@ SECTION = "console/utils"
 LICENSE = "CLOSED"
 
 DEPENDS = "ccsp-common-library dbus rdk-logger hal-platform util-linux utopia libunpriv jansson rbus webconfig-framework curl trower-base64 msgpack-c telemetry"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
@@ -34,29 +34,29 @@ S = "${WORKDIR}/git"
 
 inherit autotools systemd breakpad-logmapper
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
-CFLAGS_append = " -Wno-restrict -Wno-format-overflow -Wno-deprecated-declarations -Wno-cast-function-type "
-CFLAGS_append_kirkstone = " -fcommon"
+CFLAGS:append = " -Wno-restrict -Wno-format-overflow -Wno-deprecated-declarations -Wno-cast-function-type "
+CFLAGS:append_kirkstone = " -fcommon"
 CFLAGS:append:scarthgap = " -fcommon"
 
 
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
-LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
-LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS:append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS:append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 LDFLAGS:append:scarthgap = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-CFLAGS_append =  "${@bb.utils.contains('DISTRO_FEATURES', 'local_restore_support', ' -DENABLE_LOCAL_RESTORE ', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+CFLAGS:append =  "${@bb.utils.contains('DISTRO_FEATURES', 'local_restore_support', ' -DENABLE_LOCAL_RESTORE ', '', d)}"
 
-EXTRA_OECONF_append = " --enable-rbus_only_gwmgr"
+EXTRA_OECONF:append = " --enable-rbus_only_gwmgr"
 
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "gateway_manager"
 BREAKPAD_LOGMAPPER_LOGLIST = "GatewayManagerLog.txt.0"
 
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I=${includedir}/dbus-1.0 \
     -I=${libdir}/dbus-1.0/include \
     -I=${includedir}/ccsp \
@@ -67,7 +67,7 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/trower-base64 \
     -I${STAGING_INCDIR}/msgpackc \
     "
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lccsp_common \
     -lsyscfg \
@@ -78,7 +78,7 @@ LDFLAGS_append = " \
     -lbreakpadwrapper \
     -ltelemetry_msgsender \
     "
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/ccsp/gatewaymanager
     install -m 644 ${S}/config/GatewayManager.xml ${D}${exec_prefix}/ccsp/gatewaymanager/GatewayManager.xml

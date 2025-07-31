@@ -9,11 +9,11 @@ RPROVIDES_${PN} = "rdk-wifi-hal"
 
 DEPENDS += " openssl halinterface rdk-wifi-util cjson libpcap pkgconfig-native hal-platform mountutils"
 DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' rdk-wifi-libhostap libnl ', '', d)} "
-DEPENDS_append_tchxb7 += "broadcom-wifi"
-DEPENDS_append_tchxb8 += "broadcom-wifi"
-DEPENDS_append_xb10 += "broadcom-wifi"
-DEPENDS_remove_tchxb7 += "hal-platform"
-DEPENDS_remove_tchxb8 += "hal-platform"
+DEPENDS:append_tchxb7 += "broadcom-wifi"
+DEPENDS:append_tchxb8 += "broadcom-wifi"
+DEPENDS:append_xb10 += "broadcom-wifi"
+DEPENDS:remove_tchxb7 += "hal-platform"
+DEPENDS:remove_tchxb8 += "hal-platform"
 
 # To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where
 # the changes are merged before creating a pull request to github.com/rdkcentral/rdk-wifi-hal
@@ -25,35 +25,35 @@ ONEWIFI_CFLAGS = " -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/rdk-wifi-libhostap/sr
                   -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/ \
                 "
 
-CFLAGS_prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CFLAGS}', '', d)}"
+CFLAGS:prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CFLAGS}', '', d)}"
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', '-DHOSTAPD_2_10', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', '-DCONFIG_WEP', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'disable_nl80211_acl', '', ' -DNL80211_ACL', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', '-DHOSTAPD_2_10', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', '-DCONFIG_WEP', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'disable_nl80211_acl', '', ' -DNL80211_ACL', d)}"
 
-LDFLAGS_append = " -lhal_platform "
-LDFLAGS_remove_tchxb7 = " -lhal_platform "
-LDFLAGS_remove_tchxb8 = " -lhal_platform "
+LDFLAGS:append = " -lhal_platform "
+LDFLAGS:remove_tchxb7 = " -lhal_platform "
+LDFLAGS:remove_tchxb8 = " -lhal_platform "
 
 EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'ONE_WIFIBUILD=true', '', d)}"
 EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
-EXTRA_OECONF_append_tchxb7 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB7_PORT=true', '', d)}"
-EXTRA_OECONF_append_tchxb8 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB8_PORT=true', '', d)}"
-EXTRA_OECONF_append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'XB10_PORT=true', '', d)}"
+EXTRA_OECONF:append_tchxb7 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB7_PORT=true', '', d)}"
+EXTRA_OECONF:append_tchxb8 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB8_PORT=true', '', d)}"
+EXTRA_OECONF:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'XB10_PORT=true', '', d)}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git/src"
 PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/git/util_crypto,${WORKDIR}/git/platform"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'passpoint', '-DFEATURE_SUPPORT_PASSPOINT', '', d)}"
-CFLAGS_append_kirkstone = " -Wno-deprecated-declarations -Wno-enum-conversion -fcommon"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', '-DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', '-DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
-CFLAGS_append_kirkstone = " -Wno-deprecated-declarations "
-CFLAGS_append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostap_mgmt_frame_control', '-DFEATURE_HOSTAP_MGMT_FRAME_CTRL', '', d)}"
+CFLAGS:append = " -I=${includedir}/ccsp "
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'passpoint', '-DFEATURE_SUPPORT_PASSPOINT', '', d)}"
+CFLAGS:append_kirkstone = " -Wno-deprecated-declarations -Wno-enum-conversion -fcommon"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', '-DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', '-DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
+CFLAGS:append_kirkstone = " -Wno-deprecated-declarations "
+CFLAGS:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostap_mgmt_frame_control', '-DFEATURE_HOSTAP_MGMT_FRAME_CTRL', '', d)}"
 ###########################LEGACY#####################
 #This should be removed after you implement the propagation of additional definitions via pkg-config
 #for the ALL transitive targets for the ALL platform
@@ -137,17 +137,17 @@ ONEWIFI_CONFIG_FLAGS = " \
 #Makefile.am:
 #target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
 #target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' `pkg-config --exists libhostap && pkg-config --cflags libhostap`', '', d)}"
-ONEWIFI_CONFIG_FLAGS_append_tchxb7 = "-DTCXB7_PORT -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
-ONEWIFI_CONFIG_FLAGS_remove_tchxb8 = "-DTCXB7_PORT -DCONFIG_WMM"
-ONEWIFI_CONFIG_FLAGS_remove_tchxb7 = "-DCONFIG_WMM"
-ONEWIFI_CONFIG_FLAGS_append_tchxb8 = " -DTCXB8_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
-ONEWIFI_CONFIG_FLAGS_remove_xb10 = "-DTCXB7_PORT"
-ONEWIFI_CONFIG_FLAGS_append_xb10 = " -DXB10_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
-ONEWIFI_CONFIG_FLAGS_append_xb10 = " \
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' `pkg-config --exists libhostap && pkg-config --cflags libhostap`', '', d)}"
+ONEWIFI_CONFIG_FLAGS:append_tchxb7 = "-DTCXB7_PORT -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
+ONEWIFI_CONFIG_FLAGS:remove_tchxb8 = "-DTCXB7_PORT -DCONFIG_WMM"
+ONEWIFI_CONFIG_FLAGS:remove_tchxb7 = "-DCONFIG_WMM"
+ONEWIFI_CONFIG_FLAGS:append_tchxb8 = " -DTCXB8_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
+ONEWIFI_CONFIG_FLAGS:remove_xb10 = "-DTCXB7_PORT"
+ONEWIFI_CONFIG_FLAGS:append_xb10 = " -DXB10_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
+ONEWIFI_CONFIG_FLAGS:append_xb10 = " \
     -DCONFIG_HW_CAPABILITIES \
     -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/wifi \
 "
-CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CONFIG_FLAGS}', '', d)}"
+CFLAGS:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CONFIG_FLAGS}', '', d)}"
 inherit autotools
 
