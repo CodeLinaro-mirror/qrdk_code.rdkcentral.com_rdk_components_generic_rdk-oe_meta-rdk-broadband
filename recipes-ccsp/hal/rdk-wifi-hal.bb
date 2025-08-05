@@ -12,6 +12,7 @@ DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' rdk-wifi-libho
 DEPENDS_append_tchxb7 += "broadcom-wifi"
 DEPENDS_append_tchxb8 += "broadcom-wifi"
 DEPENDS_append_xb10 += "broadcom-wifi"
+DEPENDS_append_vbvxb9 += "broadcom-wifi"
 DEPENDS_remove_tchxb7 += "hal-platform"
 DEPENDS_remove_tchxb8 += "hal-platform"
 
@@ -41,6 +42,7 @@ EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=tr
 EXTRA_OECONF_append_tchxb7 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB7_PORT=true', '', d)}"
 EXTRA_OECONF_append_tchxb8 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'TCXB8_PORT=true', '', d)}"
 EXTRA_OECONF_append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'XB10_PORT=true', '', d)}"
+EXTRA_OECONF_append_vbvxb9 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'XB10_PORT=true', '', d)}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git/src"
@@ -53,6 +55,7 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator',
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', '-DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
 CFLAGS_append_kirkstone = " -Wno-deprecated-declarations "
 CFLAGS_append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
+CFLAGS_append_vbvxb9 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostap_mgmt_frame_control', '-DFEATURE_HOSTAP_MGMT_FRAME_CTRL', '', d)}"
 ###########################LEGACY#####################
 #This should be removed after you implement the propagation of additional definitions via pkg-config
@@ -145,6 +148,12 @@ ONEWIFI_CONFIG_FLAGS_append_tchxb8 = " -DTCXB8_PORT -DCONFIG_OWE -DCONFIG_DRIVER
 ONEWIFI_CONFIG_FLAGS_remove_xb10 = "-DTCXB7_PORT"
 ONEWIFI_CONFIG_FLAGS_append_xb10 = " -DXB10_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
 ONEWIFI_CONFIG_FLAGS_append_xb10 = " \
+    -DCONFIG_HW_CAPABILITIES \
+    -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/wifi \
+"
+ONEWIFI_CONFIG_FLAGS_remove_vbvxb9 = "-DTCXB7_PORT"
+ONEWIFI_CONFIG_FLAGS_append_vbvxb9 = " -DXB10_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
+ONEWIFI_CONFIG_FLAGS_append_vbvxb9 = " \
     -DCONFIG_HW_CAPABILITIES \
     -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/wifi \
 "

@@ -120,6 +120,9 @@ do_compile_prepend () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', 'true', 'false', d)}; then
     sed -i '2i <?define NO_MOCA_FEATURE_SUPPORT=True?>' ${S}/config-arm/TR181-USGv2.XML
     fi
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'true', 'false', d)}; then
+    sed -i '2i <?define NO_MTA_FEATURE_SUPPORT=True?>' ${S}/config-arm/TR181-USGv2.XML
+    fi
     if ${@bb.utils.contains('DISTRO_FEATURES', 'interworking', 'true', 'false', d)}; then
     sed -i '2i <?define FEATURE_SUPPORT_INTERWORKING=True?>' ${S}/config-arm/TR181-USGv2.XML
     fi

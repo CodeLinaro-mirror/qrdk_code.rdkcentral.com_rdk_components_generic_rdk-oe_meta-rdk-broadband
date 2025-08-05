@@ -103,11 +103,13 @@ do_install_class-native () {
     install -m 644 ${S}/source/dm_pack/dm_pack_code_gen.py ${D}${bindir}
 }
 do_install_append_broadband() {
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'false', 'true', d)}; then
         install -d ${D}${systemd_unitdir}/system/CcspMtaAgentSsp.service.d
         install -D -m 644 ${S}/systemd_units/CcspMtaAgentSsp.conf ${D}${systemd_unitdir}/system/CcspMtaAgentSsp.service.d/CcspMtaAgentSsp.conf
+        fi
 }
 
-FILES_${PN}_append += "${systemd_unitdir}/system/CcspMtaAgentSsp.service.d/CcspMtaAgentSsp.conf"
+FILES_${PN}_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', '','${systemd_unitdir}/system/CcspMtaAgentSsp.service.d/CcspMtaAgentSsp.conf',d)}"
 
 PACKAGES =+ "ccsp-common-startup"
 
