@@ -1,0 +1,210 @@
+##########################################
+From: Stanislav_Kuchar@comcast.com
+Date: Aug 8, 2025 1:00 AM
+Subject: BCOMB-3033 MLO: Extracts the rx_link_id(from VENDOR_MLO_OUI_TYPE) which shall be used
+         instead of mld_assoc_link_id to populate the wpa_auth setting during the EAPOLs.
+Source: Comcast
+##########################################
+diff --git a/source/hostap-2.11/src/ap/drv_callbacks.c b/source/hostap-2.11/src/ap/drv_callbacks.c
+index 8b49b53..aac927e 100644
+--- a/source/hostap-2.11/src/ap/drv_callbacks.c
++++ b/source/hostap-2.11/src/ap/drv_callbacks.c
+@@ -515,10 +515,15 @@ int hostapd_notif_assoc(struct hostapd_data *hapd, const u8 *addr,
+ 		}
+ #ifdef CONFIG_IEEE80211BE
+ 		if (ap_sta_is_mld(hapd, sta)) {
++			u8 assoc_link_id = sta->mld_assoc_link_id;
++
++#if defined(CONFIG_DRIVER_BRCM)
++			assoc_link_id = sta->rx_link_id;
++#endif /* CONFIG_DRIVER_BRCM */
+ 			wpa_printf(MSG_DEBUG,
+ 				   "MLD: Set ML info in RSN Authenticator");
+ 			wpa_auth_set_ml_info(sta->wpa_sm,
+-					     sta->mld_assoc_link_id,
++					     assoc_link_id,
+ 					     &sta->mld_info);
+ 		}
+ #endif /* CONFIG_IEEE80211BE */
+diff --git a/source/hostap-2.11/src/ap/ieee802_11.c b/source/hostap-2.11/src/ap/ieee802_11.c
+index 6c516bc..fcf0ba8 100644
+--- a/source/hostap-2.11/src/ap/ieee802_11.c
++++ b/source/hostap-2.11/src/ap/ieee802_11.c
+@@ -3828,9 +3828,15 @@ u16 owe_process_rsn_ie(struct hostapd_data *hapd,
+ 		goto end;
+ 	}
+ #ifdef CONFIG_IEEE80211BE
+-	if (ap_sta_is_mld(hapd, sta))
++	if (ap_sta_is_mld(hapd, sta)) {
++		u8 assoc_link_id = sta->mld_assoc_link_id;
++
++#if defined(CONFIG_DRIVER_BRCM)
++		assoc_link_id = sta->rx_link_id;
++#endif /* CONFIG_DRIVER_BRCM */
+ 		wpa_auth_set_ml_info(sta->wpa_sm,
+-				     sta->mld_assoc_link_id, &sta->mld_info);
++				     assoc_link_id, &sta->mld_info);
++	}
+ #endif /* CONFIG_IEEE80211BE */
+ 	rsn_ie -= 2;
+ 	rsn_ie_len += 2;
+@@ -4118,11 +4124,16 @@ static int __check_assoc_ies(struct hostapd_data *hapd, struct sta_info *sta,
+ 
+ #ifdef CONFIG_IEEE80211BE
+ 		if (ap_sta_is_mld(hapd, sta)) {
++			u8 assoc_link_id = sta->mld_assoc_link_id;
++
++#if defined(CONFIG_DRIVER_BRCM)
++			assoc_link_id = sta->rx_link_id;
++#endif /* CONFIG_DRIVER_BRCM */
+ 			wpa_printf(MSG_DEBUG,
+ 				   "MLD: %s ML info in RSN Authenticator",
+ 				   init ? "Set" : "Reset");
+ 			wpa_auth_set_ml_info(sta->wpa_sm,
+-					     sta->mld_assoc_link_id,
++					     assoc_link_id,
+ 					     info);
+ 		}
+ #endif /* CONFIG_IEEE80211BE */
+@@ -4538,6 +4549,7 @@ static int ieee80211_ml_process_link(struct hostapd_data *hapd,
+ 	if (!mlbuf)
+ 		goto out;
+ 
++#if !defined(CONFIG_DRIVER_BRCM)
+ 	if (ieee802_11_parse_link_assoc_req(ies, ies_len, &elems, mlbuf,
+ 					    hapd->mld_link_id, true) ==
+ 	    ParseFailed) {
+@@ -4546,6 +4558,7 @@ static int ieee80211_ml_process_link(struct hostapd_data *hapd,
+ 		status = WLAN_STATUS_UNSPECIFIED_FAILURE;
+ 		goto out;
+ 	}
++#endif /* !CONFIG_DRIVER_BRCM*/
+ 
+ 	sta->flags |= origin_sta->flags | WLAN_STA_ASSOC_REQ_OK;
+ 	sta->mld_assoc_link_id = origin_sta->mld_assoc_link_id;
+@@ -5416,6 +5429,43 @@ static void handle_assoc(struct hostapd_data *hapd,
+ 			mld_addrs_not_translated = true;
+ 		}
+ 	}
++
++#if defined(CONFIG_DRIVER_BRCM)
++	if (sta && ap_sta_is_mld(hapd, sta)) {
++		u8 i, link_map = 0, rx_link_id = 0xff, link_addr[ETH_ALEN];
++		struct ieee802_11_elems elems;
++
++		if (ieee802_11_parse_elems(pos, left, &elems, 1) != ParseFailed &&
++		    elems.vendor_mlo && elems.vendor_mlo_len) {
++			link_map = elems.vendor_mlo[BMP_OFFSET];
++			rx_link_id = elems.vendor_mlo[ASSOC_LINK_ID_OFFSET];
++			os_memcpy(link_addr, &elems.vendor_mlo[ASSOC_LINK_ADDR_OFFSET], sizeof(link_addr));
++
++			wpa_printf(MSG_ERROR, "### %s: rx_link_id=%u link_addr="MACSTR" ###", __func__,
++				rx_link_id, MAC2STR(link_addr));
++			if (rx_link_id < MAX_NUM_LINKS) {
++				sta->rx_link_id = rx_link_id;
++				os_memcpy(sta->link_addr, link_addr, ETH_ALEN);
++				os_memcpy(sta->mld_info.links[rx_link_id].peer_addr, link_addr, ETH_ALEN);
++				sta->mld_info.links[rx_link_id].valid = 1;
++				wpa_printf(MSG_ERROR, "### %s: sta link%d="MACSTR" valid=%d ###", __func__,
++					rx_link_id, MAC2STR(sta->mld_info.links[rx_link_id].peer_addr), sta->mld_info.links[rx_link_id].valid);
++			}
++			for (i = 0; i < MAX_NUM_LINKS; i++) {
++				if ((link_map & (1 << i)) == 0 || i == rx_link_id)
++					continue;
++				if (elems.vendor_mlo_len >= (LINK_ADDR_OFFSET + (i * ETH_ALEN))) {
++					os_memcpy(sta->mld_info.links[i].peer_addr, &elems.vendor_mlo[LINK_ADDR_OFFSET + i * ETH_ALEN], ETH_ALEN);
++					sta->mld_info.links[i].valid = 1;
++				}
++				wpa_printf(MSG_ERROR, "### %s: sta link%d="MACSTR" valid=%d ###", __func__,
++					i, MAC2STR(sta->mld_info.links[i].peer_addr), sta->mld_info.links[i].valid);
++			}
++		}
++		else
++			wpa_printf(MSG_ERROR, "### %s: ieee802_11_parse_elems fails ###", __func__);
++	}
++#endif /* CONFIG_DRIVER_BRCM */
+ #endif /* CONFIG_IEEE80211BE */
+ 
+ #ifdef CONFIG_IEEE80211R_AP
+diff --git a/source/hostap-2.11/src/ap/sta_info.h b/source/hostap-2.11/src/ap/sta_info.h
+index 8462935..5e51a57 100644
+--- a/source/hostap-2.11/src/ap/sta_info.h
++++ b/source/hostap-2.11/src/ap/sta_info.h
+@@ -331,6 +331,10 @@ struct sta_info {
+ #ifdef CONFIG_IEEE80211BE
+ 	struct mld_info mld_info;
+ 	u8 mld_assoc_link_id;
++#ifdef CONFIG_DRIVER_BRCM
++	u8 rx_link_id;
++	u8 link_addr[ETH_ALEN];
++#endif /* CONFIG_DRIVER_BRCM */
+ #endif /* CONFIG_IEEE80211BE */
+ 
+ 	u16 max_idle_period; /* if nonzero, the granted BSS max idle period in
+diff --git a/source/hostap-2.11/src/ap/wpa_auth.h b/source/hostap-2.11/src/ap/wpa_auth.h
+index b588f9f..e816347 100644
+--- a/source/hostap-2.11/src/ap/wpa_auth.h
++++ b/source/hostap-2.11/src/ap/wpa_auth.h
+@@ -649,6 +649,14 @@ void wpa_auth_ml_get_key_info(struct wpa_authenticator *a,
+ void wpa_release_link_auth_ref(struct wpa_state_machine *sm,
+ 			       int release_link_id);
+ 
++#if defined(CONFIG_IEEE80211BE) && defined(CONFIG_DRIVER_BRCM)
++#define MAX_NUM_LINKS 			4
++#define BMP_OFFSET			5
++#define ASSOC_LINK_ID_OFFSET		6
++#define ASSOC_LINK_ADDR_OFFSET		7
++#define LINK_ADDR_OFFSET		13
++#endif /* CONFIG_IEEE80211BE && CONFIG_DRIVER_BRCM*/
++
+ #define for_each_sm_auth(sm, link_id) \
+ 	for (link_id = 0; link_id < MAX_NUM_MLD_LINKS; link_id++)	\
+ 		if (sm->mld_links[link_id].valid &&			\
+diff --git a/source/hostap-2.11/src/common/ieee802_11_common.c b/source/hostap-2.11/src/common/ieee802_11_common.c
+index 45caf4c..f8ad935 100644
+--- a/source/hostap-2.11/src/common/ieee802_11_common.c
++++ b/source/hostap-2.11/src/common/ieee802_11_common.c
+@@ -164,6 +164,16 @@ static int ieee802_11_parse_vendor_specific(const u8 *pos, size_t elen,
+ 			} else
+ 				return -1;
+ 			break;
++#if defined(CONFIG_IEEE80211BE) && defined(CONFIG_DRIVER_BRCM)
++		case VENDOR_MLO_OUI_TYPE:
++			if (elen > 4) {
++				wpa_printf(MSG_ERROR, "RX link_bmp:%d elen:%ld", pos[5], elen);
++				wpa_hexdump(MSG_MSGDUMP, "LINK_BMP IE", pos, elen);
++				elems->vendor_mlo = pos;
++				elems->vendor_mlo_len = elen;
++			}
++			break;
++#endif /* CONFIG_IEEE80211BE && CONFIG_DRIVER_BRCM*/
+ 		default:
+ 			wpa_printf(MSG_EXCESSIVE, "Unknown Broadcom "
+ 				   "information element ignored "
+diff --git a/source/hostap-2.11/src/common/ieee802_11_common.h b/source/hostap-2.11/src/common/ieee802_11_common.h
+index 9e9684c..6a50177 100644
+--- a/source/hostap-2.11/src/common/ieee802_11_common.h
++++ b/source/hostap-2.11/src/common/ieee802_11_common.h
+@@ -189,6 +189,10 @@ struct ieee802_11_elems {
+ 	 * fragmented element.
+ 	 */
+ 	unsigned int num_frag_elems;
++#if defined(CONFIG_IEEE80211BE) && defined(CONFIG_DRIVER_BRCM)
++	const u8 *vendor_mlo;
++	u8 vendor_mlo_len;
++#endif /* CONFIG_IEEE80211BE && CONFIG_DRIVER_BRCM */
+ };
+ 
+ typedef enum { ParseOK = 0, ParseUnknown = 1, ParseFailed = -1 } ParseRes;
+diff --git a/source/hostap-2.11/src/common/ieee802_11_defs.h b/source/hostap-2.11/src/common/ieee802_11_defs.h
+index 0fe6310..db012c2 100644
+--- a/source/hostap-2.11/src/common/ieee802_11_defs.h
++++ b/source/hostap-2.11/src/common/ieee802_11_defs.h
+@@ -1888,6 +1888,7 @@ enum plink_action_field {
+ #define VENDOR_VHT_SUBTYPE2	0x00
+ 
+ #define VENDOR_HT_CAPAB_OUI_TYPE 0x33 /* 00-90-4c:0x33 */
++#define VENDOR_MLO_OUI_TYPE      0x9d /* 00-90-4c:0x9d */
+ 
+ 
+ /* IEEE 802.11v - WNM Action field values */

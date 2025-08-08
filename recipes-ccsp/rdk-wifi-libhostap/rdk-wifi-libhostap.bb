@@ -87,6 +87,9 @@ SRC_URI += " \
 	file://${HOSTAPD_PV}/open_auth_workaround.patch \
         file://${HOSTAPD_PV}/XB10-1843_CAC.patch \
         file://${HOSTAPD_PV}/mdu_radius_psk_auth_2_11.patch \
+        file://${HOSTAPD_PV}/mlo_configuration_2_11.patch \
+        file://${HOSTAPD_PV}/VENDOR_MLO_OUI_TYPE_2_11.patch \
+        file://${HOSTAPD_PV}/mlo_workaround_wpa_auth_2_11.patch \
     ','', d)} \
 "
 

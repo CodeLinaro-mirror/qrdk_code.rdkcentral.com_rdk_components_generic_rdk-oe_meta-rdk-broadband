@@ -1,0 +1,21 @@
+##########################################
+From: Stanislav_Kuchar@comcast.com
+Date: Sep 26, 2025 1:00 AM
+Subject: BCOMB-3033 WORKAROUND for S24 when wl_mlo_config="2 0 1 -1"
+Source: Comcast
+##########################################
+diff --git a/source/hostap-2.11/src/ap/wpa_auth.c b/source/hostap-2.11/src/ap/wpa_auth.c
+index 4889e8077..58b4411fe 100644
+--- a/source/hostap-2.11/src/ap/wpa_auth.c
++++ b/source/hostap-2.11/src/ap/wpa_auth.c
+@@ -3654,7 +3654,10 @@ static int wpa_auth_validate_ml_kdes_m2(struct wpa_state_machine *sm,
+ 		wpa_printf(MSG_DEBUG,
+ 			   "RSN: MLD: Expecting %u MLD links in msg 2, but got %u",
+ 			   sm->n_mld_affiliated_links, n_links);
++/* WORKAROUND for S24 when wl_mlo_config="2 0 1 -1" */
++#ifndef CONFIG_DRIVER_BRCM
+ 		return -1;
++#endif /* CONFIG_DRIVER_BRCM */
+ 	}
+ #endif /* CONFIG_IEEE80211BE */
+ 
