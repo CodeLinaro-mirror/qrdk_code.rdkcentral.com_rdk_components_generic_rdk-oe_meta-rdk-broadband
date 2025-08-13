@@ -6,12 +6,11 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 DEPENDS = "ccsp-common-library dbus rdk-logger utopia libparodus wrp-c trower-base64 nanomsg libunpriv avro-c"
 require ccsp_common.inc
 
-SRC_URI ="${RDKB_CCSP_ROOT_GIT}/RdkTelcoVoiceManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};name=TelcoVOICEManager"
+GIT_TAG = "v2.0.0"
+SRC_URI := "git://github.com/rdkcentral/telco-voice-manager.git;branch=main;protocol=https;name=TelcoVOICEManager;tag=${GIT_TAG}"
+PV = "${GIT_TAG}+git${SRCPV}"
 
-SRCREV_TelcoVOICEManager = "${AUTOREV}"
 SRCREV_FORMAT = "TelcoVOICEManager"
-
-PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
