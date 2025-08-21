@@ -128,6 +128,7 @@ CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'vendor_class_id_fea
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'WanManagerUnificationEnable', '-DWAN_MANAGER_UNIFICATION_ENABLED', '', d)}"
 # Add flags to support MAP-T NAT46 Unification Feature
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'unified_mapt', '-DMAPT_UNIFICATION_ENABLED', '', d)}"
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'feature_mape', '-DFEATURE_MAPE', '', d)}"
 
 # Adding flag for MAP-T support
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'feature_mapt', '-DFEATURE_MAPT -DFEATURE_MAPT_DEBUG', '', d)}"

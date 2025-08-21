@@ -27,6 +27,7 @@ EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 #PACKAGECONFIG[dropearly] = "--enable-dropearly,--disable-dropearly"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION -D_BCI_FEATURE_REQ', '', d)}"
+CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'feature_mape', '-DFEATURE_MAPE', '', d)}"
 
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"

@@ -71,6 +71,7 @@ do_install_append () {
     ln -sf /usr/bin/psmcli ${D}/usr/ccsp/psmcli
     install -d ${D}${includedir}/ccsp
     install -m 644 ${S}/source/TimeConv/time_conversion.h ${D}${includedir}/ccsp
+    install -m 644 ${S}/source/FwDownloadChk/fw_download_check.h ${D}${includedir}/ccsp
     install -m 644 ${S}/source/dhcp_client_utils/dhcp_client_utils.h ${D}${includedir}/ccsp
     install -m 755 ${S}/source/bridge_utils/scripts/migration_to_psm.sh ${D}/etc/
 }
