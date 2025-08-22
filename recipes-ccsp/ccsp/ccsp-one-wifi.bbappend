@@ -16,6 +16,7 @@ EXTRA_OECONF_append = " ONEWIFI_LEVL_APP_SUPPORT=true"
 EXTRA_OECONF_append = " ONEWIFI_WHIX_APP_SUPPORT=true"
 EXTRA_OECONF_append = " ONEWIFI_BLASTER_APP_SUPPORT=true"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'offchannel_scan_5g', ' FEATURE_OFF_CHANNEL_SCAN_5G=true ', '', d)}"
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', ' ONEWIFI_MEMWRAPTOOL_APP_SUPPORT=true ', '', d)}"
 
 CFLAGS_append = " -I${STAGING_INCDIR}/dbus-1.0"
 CFLAGS_append = " -I${STAGING_LIBDIR}/dbus-1.0/include"
@@ -34,6 +35,7 @@ CFLAGS_append = " -DONEWIFI_CSI_APP_SUPPORT  \
            -DONEWIFI_DML_SUPPORT \
            -DONEWIFI_RDKB_CCSP_SUPPORT \
            "
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', '-DONEWIFI_MEMWRAPTOOL_APP_SUPPORT', '', d)}"
 
 LDFLAGS_append = " -ldbus-1"
 LDFLAGS_append = " -llibparodus"

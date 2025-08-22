@@ -31,7 +31,7 @@ SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;na
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_OneWifi = "e2c49d52dd272f0912fbfa9b32d317e7960ea71b"
+SRCREV_OneWifi = "cba960b1129268b19b9068455535948a5de66542"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"
 
@@ -100,6 +100,10 @@ do_compile_prepend () {
     fi
 }
 
+DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', 'libmemfnswrap', '', d)}"
+RDEPENDS_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', 'libmemfnswrap', '', d)}"
+LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', ' -lmemfnswrap', '', d)}"
+
 do_install_append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/wifi
@@ -121,6 +125,11 @@ do_install_append () {
         install -m 755 ${S}/scripts/meshapcfg.sh -t ${D}/usr/ccsp/wifi
         install -m 755 ${S}/scripts/handle_mesh -t ${D}/usr/ccsp/wifi
         install -m 755 ${S}/scripts/mesh_status.sh -t ${D}/usr/ccsp/wifi
+    fi
+
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', 'true', 'false', d)}; then
+	install -m 755 ${S}/scripts/Heapwalkcheckrss.sh -t ${D}/usr/ccsp/wifi
+	install -m 755 ${S}/scripts/HeapwalkField.sh -t ${D}/usr/ccsp/wifi
     fi
 
     install -m 775 ${S}/config/CcspWifi.cfg -t ${D}/usr/ccsp/wifi
@@ -191,6 +200,8 @@ FILES_${PN} = "\
     ${prefix}/ccsp/wifi/wifi_db_ovsh \
     ${sbindir}/get_vlan.sh \
 "
+FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', '${prefix}/ccsp/wifi/Heapwalkcheckrss.sh', '', d)}"
+FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', '${prefix}/ccsp/wifi/HeapwalkField.sh', '', d)}"
 
 FILES_${PN}-dbg = " \
     ${prefix}/ccsp/wifi/.debug \
