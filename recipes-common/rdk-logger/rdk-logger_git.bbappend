@@ -1,14 +1,18 @@
-CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '', '-DFEATURE_SUPPORT_ONBOARD_LOGGING',d)}"
-EXTRA_OECONF  += " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '', ' --enable-onboardlog',d)}"
+FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-HASBCI = "${@bb.utils.contains('DISTRO_FEATURES', 'bci', 'true', 'false',d)}"
-do_install_append() {
-   if [ ${HASBCI} = "false" ]; then
-    install -d ${D}/etc
-       touch ${D}/etc/ONBOARD_LOGGING_ENABLE
-   fi
+SRC_URI += " file://rdkb_log4crc "
+
+do_configure_append () {
+    install -m 644 ${WORKDIR}/rdkb_log4crc ${S}/log4crc
 }
 
-FILES_${PN} += " \
-       ${@bb.utils.contains("DISTRO_FEATURES", "bci", " ", "/etc/* ", d)} \
-"
+do_install_append () {
+        install -d ${D}/rdklogger
+        install -d ${D}/fss/gw/rdklogger
+        ln -sf /etc/log4crc ${D}/rdklogger/log4crc
+        ln -sf /etc/log4crc ${D}/fss/gw/rdklogger/log4crc
+}
+
+FILES_${PN} += " /rdklogger/ \
+                 /fss/gw/rdklogger/ \
+               "
