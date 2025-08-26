@@ -35,6 +35,9 @@ SRCREV_OneWifi = "1eda0b93030f6d63a5940cb3c91c47a55896a169"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"
 
+SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'sta_manager', '${RDKB_CCSP_ROOT_GIT}/WiFiStaManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiStaManager;name=WiFiStaManager', " ", d)}"
+SRCREV_WiFiStaManager = "${AUTOREV}"
+
 S = "${WORKDIR}/git"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
@@ -53,6 +56,7 @@ EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'dbus_support', 
 EXTRA_OECONF_append = " --disable-libwebconfig"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'sta_manager', 'ONEWIFI_STA_MGR_APP_SUPPORT=true', 'ONEWIFI_STA_MGR_APP_SUPPORT=false', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'disable_nl80211_acl', '', ' -DNL80211_ACL', d)}"
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'EasyConnect', '--enable-easyconnect', '', d)}"
 ISSYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}"
@@ -97,6 +101,9 @@ do_compile_prepend () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'cac', 'true', 'false', d)}; then
         mkdir -p ${S}/source/apps/cac/
         cp -rf ${S}/../WiFiCnxCtrl/source/apps/cac/* ${S}/source/apps/cac/
+    fi
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'sta_manager', 'true', 'false', d)}; then
+        cp -rf ${S}/../WiFiStaManager/* ${S}/source/apps/sta_mgr/
     fi
 }
 
