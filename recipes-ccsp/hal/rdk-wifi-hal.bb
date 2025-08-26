@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://../LICENSE;md5=5d50b1d1fb741ca457897f9e370bc747"
 PROVIDES = "rdk-wifi-hal"
 RPROVIDES_${PN} = "rdk-wifi-hal"
 
-DEPENDS += " openssl halinterface rdk-wifi-util cjson libpcap pkgconfig-native hal-platform mountutils"
+DEPENDS += " openssl rdk-wifi-halif rdk-wifi-util cjson libpcap pkgconfig-native hal-platform mountutils"
 DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' rdk-wifi-libhostap libnl ', '', d)} "
 DEPENDS_append_tchxb7 += "broadcom-wifi"
 DEPENDS_append_tchxb8 += "broadcom-wifi"

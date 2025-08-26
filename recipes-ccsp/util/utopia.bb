@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=baa21dec03307f641a150889224a157f"
 
 export PARTNER_DEFAULT_EXT="${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','yes', 'no', d)}"
 
-DEPENDS = "ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi zlib dbus libnetfilter-queue libupnp cjson halinterface libevent libsyswrapper"
+DEPENDS = "ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi zlib dbus libnetfilter-queue libupnp cjson rdk-wifi-halif libevent libsyswrapper"
 DEPENDS_append_libc-musl = " libtirpc"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', ' nanomsg ', ' ', d)}"
 
