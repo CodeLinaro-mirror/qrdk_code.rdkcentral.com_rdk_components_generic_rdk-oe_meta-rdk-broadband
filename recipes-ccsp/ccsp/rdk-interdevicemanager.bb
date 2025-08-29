@@ -7,14 +7,14 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 DEPENDS = "ccsp-common-library rdk-logger utopia libunpriv"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-SRC_URI ="${RDKB_CCSP_ROOT_GIT}/RdkInterDeviceManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};name=InterDeviceManager"
+SRC_URI = "git://github.com/rdkcentral/RdkInterDeviceManager.git;protocol=https;branch=main;name=InterDeviceManager"
 
 SRC_URI += " \
     file://RdkInterDeviceManager.conf \
     file://idm_recovery.sh \
 "
 
-SRCREV_InterDeviceManager = "${AUTOREV}"
+SRCREV_InterDeviceManager = "v2.0.0"
 SRCREV_FORMAT = "InterDeviceManager"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
