@@ -1,5 +1,4 @@
-
-PV_pn-ccsp-adv-security = "1.0.0"
+PV_pn-ccsp-adv-security = "1.0.1"
 PR_pn-ccsp-adv-security = "r0"
 
 PV_pn-ccsp-cm-agent = "1.0.0"
@@ -47,7 +46,7 @@ PR_pn-ccsp-moca = "r0"
 PV_pn-ccsp-mta-agent = "1.0.0"
 PR_pn-ccsp-mta-agent = "r0"
 
-PV_pn-ccsp-psm = "1.0.0"
+PV_pn-ccsp-psm = "1.0.1"
 PR_pn-ccsp-psm = "r0"
 
 PV_pn-ccsp-snmp-pa = "1.0.0"
@@ -56,16 +55,16 @@ PR_pn-ccsp-snmp-pa = "r0"
 PV_pn-ccsp-tr069-pa = "1.0.0"
 PR_pn-ccsp-tr069-pa = "r0"
 
-PV_pn-ccsp-webui-bci-jst = "1.0.0"
+PV_pn-ccsp-webui-bci-jst = "1.0.1"
 PR_pn-ccsp-webui-bci-jst = "r0"
 
-PV_pn-ccsp-webui-bci-php = "1.0.0"
+PV_pn-ccsp-webui-bci-php = "1.0.1"
 PR_pn-ccsp-webui-bci-php = "r0"
 
-PV_pn-ccsp-webui-jst = "1.0.0"
+PV_pn-ccsp-webui-jst = "1.0.1"
 PR_pn-ccsp-webui-jst = "r0"
 
-PV_pn-ccsp-webui-php = "1.0.0"
+PV_pn-ccsp-webui-php = "1.0.1"
 PR_pn-ccsp-webui-php = "r0"
 
 PV_pn-ccsp-xconf = "1.0.0"
@@ -101,7 +100,7 @@ PR_pn-rdk-cellularmanager = "r0"
 PV_pn-start-parodus = "1.0.0"
 PR_pn-start-parodus = "r0"
 
-PV_pn-test-and-diagnostic = "1.0.0"
+PV_pn-test-and-diagnostic = "1.0.1"
 PR_pn-test-and-diagnostic = "r0"
 
 PV_pn-utopia = "1.1.0"
