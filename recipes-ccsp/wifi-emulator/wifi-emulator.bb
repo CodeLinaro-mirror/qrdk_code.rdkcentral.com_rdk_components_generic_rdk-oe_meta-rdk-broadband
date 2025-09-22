@@ -2,7 +2,7 @@ DESCRIPTION = "Wifi Emulator Application"
 LICENSE = "CLOSED"
 
 
-DEPENDS = "rdk-wifi-emulator-hal rdk-wifi-libhostap ccsp-one-wifi halinterface linux-libc-headers libnl rbus libsyswrapper"
+DEPENDS = "rdk-wifi-emulator-hal rdk-wifi-libhostap ccsp-one-wifi rdk-wifi-halif linux-libc-headers libnl rbus libsyswrapper"
 
 DEPENDS_remove_bananapi4-rdk-broadband = "rdk-wifi-emulator-hal"
 DEPENDS_remove_raspberrypi4-64-rdk-broadband = "rdk-wifi-emulator-hal"
