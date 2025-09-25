@@ -1,5 +1,5 @@
 
-PV_pn-ccsp-adv-security = "1.1.0"
+PV_pn-ccsp-adv-security = "1.1.1"
 PR_pn-ccsp-adv-security = "r0"
 
 PV_pn-ccsp-cm-agent = "1.0.0"
@@ -29,13 +29,13 @@ PR_pn-ccsp-gwprovapp-ethwan = "r0"
 PV_pn-ccsp-home-security = "1.0.0"
 PR_pn-ccsp-home-security = "r0"
 
-PV_pn-ccsp-hotspot = "1.0.1"
+PV_pn-ccsp-hotspot = "1.1.0"
 PR_pn-ccsp-hotspot = "r0"
 
 PV_pn-ccsp-hotspot-kmod = "1.0.0"
 PR_pn-ccsp-hotspot-kmod = "r0"
 
-PV_pn-ccsp-lm-lite = "1.1.0"
+PV_pn-ccsp-lm-lite = "1.1.1"
 PR_pn-ccsp-lm-lite = "r0"
 
 PV_pn-ccsp-misc = "1.1.0"
@@ -47,7 +47,7 @@ PR_pn-ccsp-moca = "r0"
 PV_pn-ccsp-mta-agent = "1.1.0"
 PR_pn-ccsp-mta-agent = "r0"
 
-PV_pn-ccsp-p-and-m = "1.1.0"
+PV_pn-ccsp-p-and-m = "1.1.1"
 PR_pn-ccsp-p-and-m = "r0"
 
 PV_pn-ccsp-psm = "1.0.1"
@@ -59,16 +59,16 @@ PR_pn-ccsp-snmp-pa = "r0"
 PV_pn-ccsp-tr069-pa = "1.0.0"
 PR_pn-ccsp-tr069-pa = "r0"
 
-PV_pn-ccsp-webui-bci-jst = "1.0.1"
+PV_pn-ccsp-webui-bci-jst = "1.1.2"
 PR_pn-ccsp-webui-bci-jst = "r0"
 
-PV_pn-ccsp-webui-bci-php = "1.0.1"
+PV_pn-ccsp-webui-bci-php = "1.1.2"
 PR_pn-ccsp-webui-bci-php = "r0"
 
-PV_pn-ccsp-webui-jst = "1.0.2"
+PV_pn-ccsp-webui-jst = "1.1.2"
 PR_pn-ccsp-webui-jst = "r0"
 
-PV_pn-ccsp-webui-php = "1.0.2"
+PV_pn-ccsp-webui-php = "1.1.2"
 PR_pn-ccsp-webui-php = "r0"
 
 PV_pn-ccsp-xconf = "1.0.0"
@@ -119,13 +119,13 @@ PR_pn-hal-vlan-generic = "r0"
 PV_pn-hal-wifi-generic = "1.0.0"
 PR_pn-hal-wifi-generic = "r0"
 
-PV_pn-harvester = "1.0.0"
+PV_pn-harvester = "1.0.1"
 PR_pn-harvester = "r0"
 
 PV_pn-json-hal-lib = "2.0.0"
 PR_pn-json-hal-lib = "r0"
 
-PV_pn-jst = "1.0.0"
+PV_pn-jst = "1.0.1"
 PR_pn-jst = "r0"
 
 PV_pn-lanmanager = "1.0.0"
@@ -149,8 +149,8 @@ PR_pn-rdk-cellularmanager = "r0"
 PV_pn-start-parodus = "1.0.0"
 PR_pn-start-parodus = "r0"
 
-PV_pn-test-and-diagnostic = "1.1.0"
+PV_pn-test-and-diagnostic = "1.1.1"
 PR_pn-test-and-diagnostic = "r0"
 
-PV_pn-utopia = "1.1.2"
+PV_pn-utopia = "1.1.3"
 PR_pn-utopia = "r0"
