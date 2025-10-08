@@ -9,7 +9,7 @@ DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-RDEPENDS_${PN} = " trower-base64 "
+RDEPENDS:${PN} = " trower-base64 "
 DEPENDS += " trower-base64"
 
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/CcspXDNS;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=CcspXDNS"
@@ -68,13 +68,13 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${prefix}/ccsp/xdns \
     ${libdir}/libdmlxdns.so.* \
     ${bindir}/* \
 "
 
-FILES_${PN}-dbg += " \
+FILES:${PN}-dbg += " \
     ${prefix}/ccsp/xdns/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

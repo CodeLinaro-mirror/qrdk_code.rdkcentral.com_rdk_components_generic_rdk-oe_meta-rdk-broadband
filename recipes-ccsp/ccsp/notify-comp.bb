@@ -64,7 +64,7 @@ do_install:append_bcm3390(){
     install -m 644 ${S}/scripts/msg_daemon.cfg ${D}${exec_prefix}/ccsp/notify-comp/msg_daemon.cfg
 }
 
-FILES_${PN} += "${exec_prefix}/ccsp/notify-comp"
+FILES:${PN} += "${exec_prefix}/ccsp/notify-comp"
 
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "notify_comp"

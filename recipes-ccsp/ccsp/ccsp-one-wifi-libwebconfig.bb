@@ -72,7 +72,7 @@ do_install() {
     install -m 644 ${S}/source/utils/collection.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} += "${libdir}/*.so*"
+FILES:${PN} += "${libdir}/*.so.*"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"
 

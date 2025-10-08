@@ -41,12 +41,12 @@ do_install () {
     install -m 644 ${S}/config/XTMAgent.xml ${D}/usr/ccsp/xtmagent/
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${bindir}/xtmagent \
    ${prefix}/ccsp/xtmagent/XTMAgent.xml \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/xtmagent/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

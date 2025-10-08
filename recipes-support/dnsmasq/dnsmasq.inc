@@ -80,7 +80,7 @@ do_install () {
 
 CONFFILES_${PN} = "${sysconfdir}/dnsmasq.conf"
 
-RPROVIDES_${PN} += "${PN}-systemd"
+RPROVIDES:${PN} += "${PN}-systemd"
 RREPLACES_${PN} += "${PN}-systemd"
 RCONFLICTS_${PN} += "${PN}-systemd"
-SYSTEMD_SERVICE_${PN} = "dnsmasq.service"
+SYSTEMD_SERVICE:${PN} = "dnsmasq.service"

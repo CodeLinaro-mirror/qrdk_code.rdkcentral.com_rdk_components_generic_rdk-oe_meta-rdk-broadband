@@ -50,13 +50,13 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${prefix}/ccsp/CcspCrSsp \
     ${prefix}/ccsp/cr-deviceprofile.xml \
     ${prefix}/ccsp/cr-ethwan-deviceprofile.xml \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

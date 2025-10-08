@@ -57,7 +57,7 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${prefix}/ccsp/tr069pa/ccsp_tr069_pa_certificate_cfg.xml \
     ${prefix}/ccsp/tr069pa/ccsp_tr069_pa_cfg.xml \
     ${prefix}/ccsp/tr069pa/ccsp_tr069_pa_mapper.xml \
@@ -66,7 +66,7 @@ FILES_${PN}-ccsp = " \
     ${prefix}/ccsp/tr069pa/custom_mapper.xml \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/tr069pa/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

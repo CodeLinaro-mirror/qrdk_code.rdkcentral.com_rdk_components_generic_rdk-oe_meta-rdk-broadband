@@ -41,12 +41,12 @@ do_install:append () {
 }
 
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${exec_prefix}/rdk/rdkledmanager/rdkledmanager \
    ${bindir}/* \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${exec_prefix}/rdk/rdkledmanager/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

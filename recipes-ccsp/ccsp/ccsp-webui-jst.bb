@@ -77,13 +77,13 @@ do_install:append() {
     sed -i 's/usr\/www/usr\/www2/g' ${D}${sysconfdir}/webgui.sh
 }
 
-FILES_${PN} += "/fss/* /fss/gw/* /fss/gw/usr/*"
+FILES:${PN} += "/fss/* /fss/gw/* /fss/gw/usr/*"
 
-FILES_${PN} += "/usr/*"
-FILES_${PN} += "/usr/www2/actionHandler/*"
-FILES_${PN} += "/usr/www2/cgi-bin/*"
-FILES_${PN} += "/usr/www2/cmn/*"
-FILES_${PN} += "/usr/www2/CSRF-Protector-PHP/*"
-FILES_${PN} += "/usr/www2/includes/*"
-FILES_${PN} += "/usr/www2/includes/*"
+FILES:${PN} += "/usr/*"
+FILES:${PN} += "/usr/www2/actionHandler/*"
+FILES:${PN} += "/usr/www2/cgi-bin/*"
+FILES:${PN} += "/usr/www2/cmn/*"
+FILES:${PN} += "/usr/www2/CSRF-Protector-PHP/*"
+FILES:${PN} += "/usr/www2/includes/*"
+FILES:${PN} += "/usr/www2/includes/*"
 

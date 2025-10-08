@@ -90,13 +90,13 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${prefix}/ccsp/lm/CcspLMLite \
     ${prefix}/ccsp/lm/NetworkDevicesStatus.avsc  \
     ${prefix}/ccsp/lm/NetworkDevicesTraffic.avsc  \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/lm/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

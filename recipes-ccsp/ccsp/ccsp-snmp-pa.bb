@@ -59,7 +59,7 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "/etc/* ", " ", d)} \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "${prefix}/ccsp/snmp/snmpd.conf ", " ", d)} \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "${prefix}/ccsp/snmp/run_snmpd.sh ", " ", d)} \
@@ -69,8 +69,9 @@ FILES_${PN}-ccsp = " \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "${prefix}/ccsp/snmp/XOPS-DEVICE-MGMT-MIB.xml ", " ", d)} \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "${prefix}/ccsp/snmp/DEVICE-WEBPA-MIB.xml ", " ", d)} \
 "
+FILES:${PN}-dev += "${libdir}/*.so"
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "${prefix}/ccsp/snmp/.debug ", " ", d)} \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "${prefix}/src/debug ", " ", d)} \
 	${@bb.utils.contains("DISTRO_FEATURES", "snmppa", "${bindir}/.debug ", " ", d)} \

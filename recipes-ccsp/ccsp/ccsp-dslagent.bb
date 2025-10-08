@@ -52,13 +52,13 @@ do_install () {
 }
 
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${bindir}/dslagent \
    ${prefix}/ccsp/dslagent/DSLAgent.xml \
    ${exec_prefix}/ccsp/harvester/XdslReport.avsc \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/dslagent/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

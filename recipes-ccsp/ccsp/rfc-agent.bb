@@ -67,8 +67,8 @@ do_install:append () {
      install -d ${D}${systemd_unitdir}/system
     install -D -m 0644 ${S}/config/rfc_agent.service ${D}${systemd_unitdir}/system/rfc_agent.service
 }
-SYSTEMD_SERVICE_${PN} = "rfc_agent.service"
-FILES_${PN} = " \
+SYSTEMD_SERVICE:${PN} = "rfc_agent.service"
+FILES:${PN} = " \
     ${bindir}/rfc_agent \
     ${prefix}/ccsp/* \
      /usr/bin/* \

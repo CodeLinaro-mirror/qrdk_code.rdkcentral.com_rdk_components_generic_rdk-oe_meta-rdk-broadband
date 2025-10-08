@@ -78,7 +78,7 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp += " \
+FILES:${PN}-ccsp += " \
     ${prefix}/ccsp/moca/CcspMoCA.cfg  \
     ${prefix}/ccsp/moca/CcspMoCADM.cfg  \
     ${prefix}/ccsp/moca/MoCA_isolation.sh  \
@@ -87,7 +87,7 @@ FILES_${PN}-ccsp += " \
     ${prefix}/ccsp/moca/moca_mroute_ip.sh  \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/moca/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

@@ -42,14 +42,14 @@ do_install:append () {
     install -m 644 ${S}/config/CcspEPON.cfg ${D}/usr/ccsp/epon/CcspEPON.cfg
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     /usr/ccsp/epon/ \
     /usr/ccsp/epon/CcspEPONAgentSsp \
     /usr/ccsp/epon/CcspEPONDM.cfg \
     /usr/ccsp/epon/CcspEPON.cfg \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/epon/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

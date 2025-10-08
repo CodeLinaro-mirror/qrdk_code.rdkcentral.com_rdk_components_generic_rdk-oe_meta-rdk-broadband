@@ -18,7 +18,7 @@ DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 
 DEPENDS:append = " ${@bb.utils.contains("DISTRO_FEATURES", 'OneWifi', ' ccsp-one-wifi', ' ccsp-wifi-agent', d)}"
 
-RDEPENDS_${PN} = "jsoncpp jsonrpc ccsp-cm-agent bash trower-base64"
+RDEPENDS:${PN} = "jsoncpp jsonrpc ccsp-cm-agent bash trower-base64"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
@@ -91,22 +91,22 @@ do_install:append () {
 }
 
 #In both RDM and non RDM scenarios, below startup script and service files will be part of tdk package only
-SYSTEMD_SERVICE_${PN} = "tdk.service"
+SYSTEMD_SERVICE:${PN} = "tdk.service"
 
 #In both RDM and non RDM scenarios, below files will be part of tdk package only
-FILES_${PN} = " \
+FILES:${PN} = " \
     /TDK_version.txt \
     /etc/tdk_platform.properties \
     ${sbindir}/tdkb_launcher.sh \
 "
 
 #All artifacts will be part of tdk-b package when tdk_rdm distro is not present (in non rdm tdk-b builds)
-FILES_${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', ' ', ' ${bindir}/rdk_tdk_agent_process ${bindir}/tdk_cmd_utility ${libdir}/*.so* ${tdkdir}/* /etc/*', d)"
+FILES:${PN} += "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', ' ', ' ${bindir}/rdk_tdk_agent_process ${bindir}/tdk_cmd_utility ${libdir}/*.so* ${tdkdir}/* /etc/*', d)"
 
 #All artifacts will be packed in tdk-b-dl package when tdk_rdm distro is enabled
-FILES_${PN}-dl = "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', ' ${bindir}/rdk_tdk_agent_process ${bindir}/tdk_cmd_utility ${libdir}/*.so* ${tdkdir}/* /etc/* ', '', d)"
+FILES:${PN}-dl = "${@bb.utils.contains('DISTRO_FEATURES', 'tdk_rdm', ' ${bindir}/rdk_tdk_agent_process ${bindir}/tdk_cmd_utility ${libdir}/*.so* ${tdkdir}/* /etc/* ', '', d)"
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/src/debug \
     ${bindir}/.debug \
     ${libdir}/.debug \

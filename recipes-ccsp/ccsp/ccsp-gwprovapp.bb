@@ -48,7 +48,7 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " /usr/ccsp/"
+FILES:${PN}-ccsp = " /usr/ccsp/"
 
 #Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "gw_prov_utopia"

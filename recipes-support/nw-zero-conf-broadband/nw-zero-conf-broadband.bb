@@ -23,7 +23,7 @@ do_install:append() {
     install -m 0755 ${WORKDIR}/default-time-setter-broadband.sh ${D}${base_libdir}/rdk/
 }
 
-SYSTEMD_SERVICE_${PN} = "board-access-broadband.service iface-setup-broadband.service" 
+SYSTEMD_SERVICE:${PN} = "board-access-broadband.service iface-setup-broadband.service" 
 
-FILES_${PN} = " ${base_libdir}/rdk/default-time-setter-broadband.sh \
+FILES:${PN} = " ${base_libdir}/rdk/default-time-setter-broadband.sh \
                 ${base_libdir}/rdk/board_access-broadband.sh "

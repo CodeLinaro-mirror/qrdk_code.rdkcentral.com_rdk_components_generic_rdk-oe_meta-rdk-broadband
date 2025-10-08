@@ -5,11 +5,12 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=19774cd4dd519f099bc404798ceeab19"
 
 DEPENDS = "dbus openssl rbus trower-base64"
+#DEPENDS:append:class-target = " trower-base64"
 DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS_class-native = ""
 
-RDEPENDS_${PN}:append = " bash"
-RDEPENDS_${PN}:remove_morty = "bash"
+RDEPENDS:${PN}:append = " bash"
+RDEPENDS:${PN}:remove_morty = "bash"
 
 require ccsp_common.inc
 
@@ -44,7 +45,7 @@ CFLAGS:append = " \
 
 CFLAGS += " -Wall -Werror -Wextra "
 
-LDFLAGS += " \
+LDFLAGS += " -L${STAGING_LIBDIR} \
     -ldbus-1 \
     -lrbuscore \
     -lrtMessage \
@@ -60,7 +61,7 @@ do_compile_class-native () {
     echo "Compile is skipped"
 }
 
-do_install:append_class-target () {
+do_install:append:class-target () {
     install -d ${D}/usr/include/ccsp
     install -d ${D}/usr/include/ccsp/linux
     install -m 644 ${S}/source/debug_api/include/*.h ${D}/usr/include/ccsp
@@ -94,29 +95,33 @@ do_install:append_class-target () {
     install -D -m 755 ${S}/scripts/cosa ${D}${sysconfdir}/ccsp/cosa
 
     # RBUS related scripts
-    install -d ${D}/lib/rdk
-    install -m 777 ${S}/scripts/rbus_termination_handler.sh ${D}/lib/rdk/rbus_termination_handler.sh
+    install -d ${D}${libdir}/rdk
+    install -m 777 ${S}/scripts/rbus_termination_handler.sh ${D}${libdir}/rdk/rbus_termination_handler.sh
     install -m 777 ${S}/systemd_units/scripts/parodusStartCheck.sh ${D}/usr/ccsp/parodusStartCheck.sh
 
     # gw_prov app sync check
     install -m 777 ${S}/systemd_units/scripts/GwProvCheck.sh ${D}/usr/ccsp/pam/GwProvCheck.sh
 }
 
-do_install_class-native () {
+#do_install_class-native () {
+#    install -d ${D}${bindir}
+#    install -m 644 ${S}/source/dm_pack/dm_pack_code_gen.py ${D}${bindir}
+#}
+do_install () {
     install -d ${D}${bindir}
-    install -m 644 ${S}/source/dm_pack/dm_pack_code_gen.py ${D}${bindir}
+    install -m 755 ${S}/source/dm_pack/dm_pack_code_gen.py ${D}${bindir}
 }
 do_install:append_broadband() {
         install -d ${D}${systemd_unitdir}/system/CcspMtaAgentSsp.service.d
         install -D -m 644 ${S}/systemd_units/CcspMtaAgentSsp.conf ${D}${systemd_unitdir}/system/CcspMtaAgentSsp.service.d/CcspMtaAgentSsp.conf
 }
 
-FILES_${PN}:append += "${systemd_unitdir}/system/CcspMtaAgentSsp.service.d/CcspMtaAgentSsp.conf"
+FILES:${PN}:append += "${systemd_unitdir}/system/CcspMtaAgentSsp.service.d/CcspMtaAgentSsp.conf"
 
 PACKAGES =+ "ccsp-common-startup"
 
 
-FILES_ccsp-common-startup = " \
+FILES:ccsp-common-startup = " \
     ${exec_prefix}/ccsp/basic.conf \
     ${exec_prefix}/ccsp/cli_start.sh \
     ${exec_prefix}/ccsp/cosa_*.sh \
@@ -128,20 +133,21 @@ FILES_ccsp-common-startup = " \
     ${exec_prefix}/ccsp/tr069pa/ccsp_msg.cfg \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${exec_prefix}/ccsp/.debug \
     ${exec_prefix}/src/debug \
     ${bindir}/.debug \
     ${libdir}/.debug \
 "
 
-FILES_${PN}:append = " \
-                     /lib/rdk/rbus_termination_handler.sh \
+FILES:${PN}:append = " \
+                     ${libdir}/rdk/ \
+                     ${libdir}/rdk/rbus_termination_handler.sh \
 		     /usr/ccsp/parodusStartCheck.sh \
                      /usr/ccsp/pam/GwProvCheck.sh \
                       "
 
-FILES_${PN}-native = " ${bindir}/dm_pack_code_gen.py "
+FILES:${PN}-native = " ${bindir}/dm_pack_code_gen.py "
 
 BBCLASSEXTEND = "native"
 

@@ -57,4 +57,4 @@ do_install:append () {
     install -m 644 ${S}/scripts/msg_daemon.cfg ${D}${prefix}/ccsp/logagent/msg_daemon.cfg
 }
 
-FILES_${PN} += "${prefix}/ccsp/logagent"
+FILES:${PN} += "${prefix}/ccsp/logagent"

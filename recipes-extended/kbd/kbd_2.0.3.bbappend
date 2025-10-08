@@ -3,5 +3,5 @@ do_install:append() {
     rm -rf ${D}${bindir}
 }
 
-FILES_${PN}-consolefonts:remove = "${datadir}/consolefonts"
-FILES_${PN}-keymaps:remove = "${datadir}/keymaps"
+FILES:${PN}-consolefonts:remove = "${datadir}/consolefonts"
+FILES:${PN}-keymaps:remove = "${datadir}/keymaps"

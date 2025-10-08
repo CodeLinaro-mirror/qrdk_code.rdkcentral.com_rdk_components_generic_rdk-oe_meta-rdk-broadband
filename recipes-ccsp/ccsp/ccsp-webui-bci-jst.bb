@@ -87,13 +87,13 @@ do_install:append() {
 }
 
 
-FILES_${PN} += "/fss/* /fss/gw/* /fss/gw/usr/* /fss/gw/usr/ccsp/* /opt/www2/* ${base_libdir}/rdk/* ${libdir}"
+FILES:${PN} += "/fss/* /fss/gw/* /fss/gw/usr/* /fss/gw/usr/ccsp/* /opt/www2/* ${base_libdir}/rdk/* ${libdir}"
 
-FILES_${PN} += "/usr/www2/*"
-FILES_${PN} += "/usr/www2/actionHandler/*"
-FILES_${PN} += "/usr/www2/cmn/*"
-FILES_${PN} += "/usr/www2/includes/*"
-FILES_${PN}-dbg += "${libdir}/extensions/*/.debug/* \
+FILES:${PN} += "/usr/www2/*"
+FILES:${PN} += "/usr/www2/actionHandler/*"
+FILES:${PN} += "/usr/www2/cmn/*"
+FILES:${PN} += "/usr/www2/includes/*"
+FILES:${PN}-dbg += "${libdir}/extensions/*/.debug/* \
                     /fss/gw/usr/ccsp/.debug/*"
 
 

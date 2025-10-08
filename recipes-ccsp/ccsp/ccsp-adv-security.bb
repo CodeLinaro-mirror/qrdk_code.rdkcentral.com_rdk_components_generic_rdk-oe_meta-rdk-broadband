@@ -24,8 +24,8 @@ LDFLAGS:append = " \
     -lcjson \
     -lbreakpadwrapper \
 "
-RDEPENDS_${PN}:append = " bash"
-RDEPENDS_${PN}:remove_morty = "bash"
+RDEPENDS:${PN}:append = " bash"
+RDEPENDS:${PN}:remove_morty = "bash"
 
 S = "${WORKDIR}/git"
 
@@ -40,7 +40,7 @@ inherit autotools coverity ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkston
 do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/advsec
-    install -d ${D}/usr/include/advsec
+    install -d ${D}${includedir}/advsec
     install -d ${D}/var/empty
     # Binaries, Libraries, Include, Start_script
     install -m 0755 ${S}/scripts/start_adv_security.sh -t ${D}/usr/ccsp/advsec
@@ -51,9 +51,9 @@ do_install:append () {
 }
 
 PACKAGES += "${PN}-ccsp"
-INSANE_SKIP_${PN} += "ldflags libdir"
+INSANE_SKIP:${PN} += "ldflags libdir"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${bindir}/CcspAdvSecuritySsp \
     ${prefix}/ccsp/* \
     ${prefix}/ccsp/advsec/CcspAdvSecuritySsp \
@@ -62,8 +62,9 @@ FILES_${PN} += " \
     ${prefix}/ccsp/advsec/advsec_cpu_mem_recovery.sh \
     ${prefix}/ccsp/advsec/advsec.sh \
 "
+FILES:${PN}-dev += "${libdir}/libdmlasecurity.so"
 
-FILES_${PN}-dbg += " \
+FILES:${PN}-dbg += " \
     ${prefix}/ccsp/advsec/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

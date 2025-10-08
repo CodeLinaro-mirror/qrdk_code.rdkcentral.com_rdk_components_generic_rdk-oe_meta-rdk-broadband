@@ -87,7 +87,7 @@ do_install:append () {
     install -m 644 ${S}/config/TR181-EthAgent.xml ${D}${exec_prefix}/ccsp/ethagent/TR181-EthAgent.xml
 }
 
-FILES_${PN} += " ${exec_prefix}/ccsp/ethagent"
+FILES:${PN} += " ${exec_prefix}/ccsp/ethagent"
 
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "CcspEthAgent"

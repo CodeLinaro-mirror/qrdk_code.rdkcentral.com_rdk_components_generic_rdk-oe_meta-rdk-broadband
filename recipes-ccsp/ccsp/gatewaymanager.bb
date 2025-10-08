@@ -86,15 +86,15 @@ do_install:append () {
     install -d ${D}${systemd_unitdir}/system
     install -D -m 0644 ${S}/config/GatewayManager.service ${D}${systemd_unitdir}/system/GatewayManager.service
 }
-SYSTEMD_SERVICE_${PN} = "GatewayManager.service"
-FILES_${PN} += " \
+SYSTEMD_SERVICE:${PN} = "GatewayManager.service"
+FILES:${PN} += " \
     ${exec_prefix}/ccsp/gatewaymanager \
     /usr/bin/* \
         ${systemd_unitdir}/system/GatewayManager.service \
     ${exec_prefix}/bin/precheck.sh \
 "
 
-FILES_${PN}-diag = "\
+FILES:${PN}-diag = "\
 /${bindir}/gfo_diag \
 "
 

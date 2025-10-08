@@ -105,22 +105,22 @@ do_install:append_ciscoxb3atom () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     /fss/gw/usr/ccsp/* \
     ${prefix}/ccsp/* \
 "
 
-FILES_${PN}:append_arrisxb3atom = " \
+FILES:${PN}:append_arrisxb3atom = " \
     /usr/ccsp/* \
     ${prefix}/ccsp/* \
 "
 
-FILES_${PN}:append_ciscoxb3atom = " \
+FILES:${PN}:append_ciscoxb3atom = " \
     /usr/ccsp/* \
     ${prefix}/ccsp/* \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

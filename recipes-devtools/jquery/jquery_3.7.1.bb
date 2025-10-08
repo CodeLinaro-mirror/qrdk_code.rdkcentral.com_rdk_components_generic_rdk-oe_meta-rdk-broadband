@@ -3,6 +3,8 @@ HOMEPAGE = "https://jquery.com/"
 DESCRIPTION = "${SUMMARY}"
 LICENSE = "MIT"
 SECTION = "devel"
+
+PV = "3.7.1"
 LIC_FILES_CHKSUM = "file://${S}/${BP}.js;beginline=5;endline=7;md5=9c7c6e9ab275fc1e0d99cb7180ecd14c"
 
 # unpack items to ${S} so the archiver can see them
@@ -27,8 +29,8 @@ do_install() {
 }
 
 PACKAGES = "${PN}"
-FILES_${PN} = "${datadir}"
-FILES_${PN} += "/usr/www2/cmn/js/lib"
+FILES:${PN} = "${datadir}"
+FILES:${PN} += "/usr/www2/cmn/js/lib"
 
 BBCLASSEXTEND += "native nativesdk"
 

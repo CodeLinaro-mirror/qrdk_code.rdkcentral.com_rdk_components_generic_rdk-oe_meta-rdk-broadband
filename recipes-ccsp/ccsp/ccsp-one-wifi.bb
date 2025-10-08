@@ -159,12 +159,12 @@ do_install:append_bcm3390() {
     rm ${D}/usr/ccsp/wifi/br0_ip.sh
 }
 
-FILES_${PN} = "\
+FILES:${PN} = "\
     ${bindir}/OneWifi \
     ${bindir}/wifi_ctrl \
     ${bindir}/onewifi_component_test_app \
     ${bindir}/wifi_api2 \
-    ${libdir}/libwifi.so* \
+    ${libdir}/libwifi.so.* \
     ${prefix}/ccsp/wifi/process_monitor_atom.sh \
     ${prefix}/ccsp/wifi/br0_ip.sh \
     ${prefix}/ccsp/wifi/br106_addvlan.sh \
@@ -191,19 +191,19 @@ FILES_${PN} = "\
     ${sbindir}/get_vlan.sh \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/wifi/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \
     ${libdir}/.debug \
 "
 
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry.target', '', d)}"
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry-cron.service', '', d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry.target', '', d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry-cron.service', '', d)}"
 
-FILES_${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${exec_prefix}/ccsp/wifi/wifiTelemetrySetup.sh', '', d)}"
-FILES_${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry.target', '', d)}"
-FILES_${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry-cron.service', '', d)}"
+FILES:${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${exec_prefix}/ccsp/wifi/wifiTelemetrySetup.sh', '', d)}"
+FILES:${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry.target', '', d)}"
+FILES:${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry-cron.service', '', d)}"
 
 ERROR_QA:remove_morty = "la"
 

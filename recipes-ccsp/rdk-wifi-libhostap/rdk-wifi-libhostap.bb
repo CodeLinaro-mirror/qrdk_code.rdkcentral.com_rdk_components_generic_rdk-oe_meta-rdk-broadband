@@ -5,7 +5,7 @@ LICENSE = "BSD-3-Clause"
 
 FILESEXTRAPATHS:prepend:="${THISDIR}/files:"
 PROVIDES = "rdk-wifi-libhostap"
-RPROVIDES_${PN} = "rdk-wifi-libhostap"
+RPROVIDES:${PN} = "rdk-wifi-libhostap"
 DEPENDS += "libnl openssl"
 
 inherit autotools pkgconfig
@@ -148,7 +148,7 @@ SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', ' file://2.1
 
 S = "${WORKDIR}/git/"
 
-FILES_${PN} = " \
+FILES:${PN} = " \
         ${libdir}/libhostap.so* \
 "
 EXTRA_OEMAKE += "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'WIFI_EMULATOR=true', 'WIFI_EMULATOR=false', d)}"

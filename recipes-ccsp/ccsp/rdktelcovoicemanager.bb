@@ -98,7 +98,7 @@ fi
 }
 
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${exec_prefix}/rdk/voicemanager/telcovoice_manager \
    ${exec_prefix}/rdk/voicemanager/RdkTelcoVoiceManager.xml \
    ${exec_prefix}/ccsp/harvester/VoiceDiagnostics.avsc \
@@ -108,7 +108,7 @@ FILES_${PN} = " \
    ${bindir}/* \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${exec_prefix}/rdk/voicemanager/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

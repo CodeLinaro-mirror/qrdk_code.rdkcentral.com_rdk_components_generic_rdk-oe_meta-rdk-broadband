@@ -1,4 +1,4 @@
 DEPENDS:remove = "systemd"
-SYSTEMD_SERVICE_${PN}:remove = "stunnel.service"
-FILES_${PN}:remove = "/lib/systemd/system/stunnel.service"
+SYSTEMD_SERVICE:${PN}:remove = "stunnel.service"
+FILES:${PN}:remove = "/lib/systemd/system/stunnel.service"
 PACKAGECONFIG:remove = "systemd"

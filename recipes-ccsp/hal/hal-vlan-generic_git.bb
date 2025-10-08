@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../../LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 PROVIDES = "hal-vlan"
-RPROVIDES_${PN} = "hal-vlan"
+RPROVIDES:${PN} = "hal-vlan"
 
 DEPENDS += "rdkb-halif-vlan safec-common-wrapper"
 DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"

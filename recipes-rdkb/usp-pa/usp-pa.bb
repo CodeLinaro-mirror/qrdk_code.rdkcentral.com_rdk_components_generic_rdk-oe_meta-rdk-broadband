@@ -63,15 +63,15 @@ do_install() {
 }
 
 # Files in staging area to copy to system image
-FILES_${PN} += "${bindir}/UspPa"
-FILES_${PN} += "${systemd_unitdir}/system/usp-pa.service"
-FILES_${PN} += "${sysconfdir}/usp-pa/usp_factory_reset.conf"
-FILES_${PN} += "${sysconfdir}/usp-pa/usp_dm_objs.conf"
-FILES_${PN} += "${sysconfdir}/usp-pa/usp_dm_params.conf"
-FILES_${PN} += "${sysconfdir}/usp-pa/usp_truststore.pem"
+FILES:${PN} += "${bindir}/UspPa"
+FILES:${PN} += "${systemd_unitdir}/system/usp-pa.service"
+FILES:${PN} += "${sysconfdir}/usp-pa/usp_factory_reset.conf"
+FILES:${PN} += "${sysconfdir}/usp-pa/usp_dm_objs.conf"
+FILES:${PN} += "${sysconfdir}/usp-pa/usp_dm_params.conf"
+FILES:${PN} += "${sysconfdir}/usp-pa/usp_truststore.pem"
 
 # Signal that a system-d service must be provisioned
-SYSTEMD_SERVICE_${PN} = "usp-pa.service"
+SYSTEMD_SERVICE:${PN} = "usp-pa.service"
 
 ## Additional steps for DAC Distro Feature
 TARGET_CFLAGS  += "${@bb.utils.contains('DISTRO_FEATURES', 'dac', ' -DINCLUDE_LCM_DATAMODEL ', '', d)}"

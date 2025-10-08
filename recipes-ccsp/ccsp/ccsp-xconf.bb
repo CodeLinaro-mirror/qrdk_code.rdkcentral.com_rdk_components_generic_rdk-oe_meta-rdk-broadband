@@ -10,8 +10,8 @@ DEPENDS = "ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgm
 DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' hal-fwupgrade', '',d)}"
 DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-RDEPENDS_${PN}:append = " bash"
-RDEPENDS_${PN}:remove_morty = "bash"
+RDEPENDS:${PN}:append = " bash"
+RDEPENDS:${PN}:remove_morty = "bash"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
@@ -44,4 +44,4 @@ do_install:append () {
     install -m 755 ${S}/scripts/rdkfwupgrader_message.sh ${D}${sysconfdir}
 }
 
-FILES_${PN} += "${sysconfdir}"
+FILES:${PN} += "${sysconfdir}"

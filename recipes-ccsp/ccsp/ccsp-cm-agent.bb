@@ -96,13 +96,13 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${prefix}/ccsp/cm/CcspCMAgentSsp \
     ${prefix}/ccsp/cm/CcspCMDM.cfg \
     ${prefix}/ccsp/cm/CcspCM.cfg \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/cm/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

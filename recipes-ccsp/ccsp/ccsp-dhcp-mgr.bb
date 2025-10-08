@@ -109,13 +109,13 @@ do_install:append () {
         fi
     fi
 }
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${prefix}/ccsp/dhcpmgr/TR181-DHCPMgr.XML  \
     ${bindir}/* \
 "
 
 DEPENDS:append = " webconfig-framework trower-base64 msgpack-c "
-RDEPENDS_${PN}:append = " trower-base64 msgpack-c "
+RDEPENDS:${PN}:append = " trower-base64 msgpack-c "
 CFLAGS:append = " \
     -I${STAGING_INCDIR}/trower-base64 \
     -I${STAGING_INCDIR}/msgpackc \
@@ -124,5 +124,5 @@ LDFLAGS:append = " \
     -lmsgpackc \
     -ltrower-base64 \
 "
-FILES_${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager','${systemd_unitdir}/system/CcspDHCPMgr.service', '', d)}"
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager', 'CcspDHCPMgr.service', '', d)}"
+FILES:${PN}:append = "${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager','${systemd_unitdir}/system/CcspDHCPMgr.service', '', d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager', 'CcspDHCPMgr.service', '', d)}"

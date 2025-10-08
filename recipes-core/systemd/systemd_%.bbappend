@@ -11,5 +11,5 @@ do_install:append() {
         install -m 644 ${WORKDIR}/50-reservlocalport.conf ${D}${sysconfdir}/sysctl.d
 }
 
-FILES_${PN} += "${sysconfdir}/sysctl.d/50-reservlocalport.conf \
+FILES:${PN} += "${sysconfdir}/sysctl.d/50-reservlocalport.conf \
                "

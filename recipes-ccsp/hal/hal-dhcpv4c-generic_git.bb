@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../../LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 PROVIDES = "hal-dhcpv4c"
-RPROVIDES_${PN} = "hal-dhcpv4c"
+RPROVIDES:${PN} = "hal-dhcpv4c"
 
 DEPENDS += "rdkb-halif-dhcp safec-common-wrapper"
 DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"

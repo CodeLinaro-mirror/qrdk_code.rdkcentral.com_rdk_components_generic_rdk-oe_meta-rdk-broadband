@@ -44,8 +44,8 @@ do_install:append () {
     install -d ${D}${systemd_unitdir}/system
     install -D -m 0644 ${S}/config/PlatformManager.service ${D}${systemd_unitdir}/system/PlatformManager.service
 }
-SYSTEMD_SERVICE_${PN} = "PlatformManager.service"
-FILES_${PN} += " \
+SYSTEMD_SERVICE:${PN} = "PlatformManager.service"
+FILES:${PN} += " \
     ${exec_prefix}/ccsp/platformmanager \
     /usr/bin/* \
         ${systemd_unitdir}/system/PlatformManager.service \

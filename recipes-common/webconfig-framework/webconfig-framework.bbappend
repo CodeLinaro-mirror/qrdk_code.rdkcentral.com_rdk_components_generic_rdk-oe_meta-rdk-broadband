@@ -9,4 +9,7 @@ do_install:append () {
     install -m 644 ${S}/include/*.h ${D}/usr/include/ccsp/
 }
 
+CFLAGS += " -I${STAGING_INCDIR} "
+LDFLAGS += " -L${STAGING_LIBDIR} "
+
 EXTRA_OECONF += " --enable-ccspsupport"

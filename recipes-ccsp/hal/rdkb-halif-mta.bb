@@ -16,6 +16,6 @@ do_install () {
    install -m 0644 ${S}/include/mta_hal.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 /usr/include/ccsp \
 "

@@ -52,28 +52,29 @@ do_install:append () {
     # Config files and scripts
 	install -d ${D}/usr/ccsp
 	install -d ${D}/usr/ccsp/hotspot
-	install -d ${D}/usr/include/ccsp
+	install -d ${D}${includedir}/ccsp
 
-	install -m 777 ${D}/usr/bin/hotspot_arpd -t ${D}/usr/ccsp
-	install -m 644 ${S}/source/hotspotfd/include/dhcpsnooper.h ${D}/usr/include/ccsp
-	install -m 644 ${S}/source/hotspotfd/include/hotspotfd.h ${D}/usr/include/ccsp
-    	install -m 777 ${S}/source/HotspotApi/libHotspotApi.h ${D}/usr/include/ccsp
-    	ln -sf /usr/bin/CcspHotspot ${D}${prefix}/ccsp/hotspot/CcspHotspot
+	install -m 777 ${D}${bindir}/hotspot_arpd -t ${D}/usr/ccsp
+	install -m 644 ${S}/source/hotspotfd/include/dhcpsnooper.h ${D}${includedir}/ccsp
+	install -m 644 ${S}/source/hotspotfd/include/hotspotfd.h ${D}${includedir}/ccsp
+    	install -m 777 ${S}/source/HotspotApi/libHotspotApi.h ${D}${includedir}/ccsp
+    	ln -sf ${bindir}/CcspHotspot ${D}${prefix}/ccsp/hotspot/CcspHotspot
 }
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     /usr/ccsp/hotspot_arpd \
     /usr/ccsp/* \
     "
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${prefix}/ccsp/hotspot/CcspHotspot \
     ${prefix}/ccsp/hotspot/hotspot.XML  \
-    ${libdir}/libHotspotApi.so* \
+    ${libdir}/libHotspotApi.so.* \
 	"
+FILES:${PN}-dev += "${libdir}/libHotspotApi.so"
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
    ${prefix}/ccsp/.debug \
    ${prefix}/ccsp/hotspot/.debug \
    ${prefix}/src/debug \

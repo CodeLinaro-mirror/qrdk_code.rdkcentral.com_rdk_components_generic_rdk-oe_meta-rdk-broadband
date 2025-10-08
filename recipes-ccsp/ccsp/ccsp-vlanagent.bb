@@ -41,12 +41,12 @@ do_install () {
     install -m 644 ${S}/config/VLANAgent.xml ${D}/usr/ccsp/vlanagent/
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${bindir}/vlanagent \
    ${prefix}/ccsp/vlanagent/VLANAgent.xml \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/vlanagent/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

@@ -67,7 +67,7 @@ V_SERVICE_FILE = "RdkCellularManager"
 V_BINARY_FILE .= "${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', 'lite', '', d)}"
 V_SERVICE_FILE .= "${@bb.utils.contains('DISTRO_FEATURES', 'cellular_mgr_lite', 'Lite', '', d)}"
 
-SYSTEMD_SERVICE_${PN} = "${V_SERVICE_FILE}.service"
+SYSTEMD_SERVICE:${PN} = "${V_SERVICE_FILE}.service"
 
 do_install:append () {
     # Config files and scripts
@@ -81,14 +81,14 @@ do_install:append () {
     install -D -m 0644 ${S}/systemd_units/${V_SERVICE_FILE}.service ${D}${systemd_unitdir}/system/${V_SERVICE_FILE}.service
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${bindir}/* \
    ${libdir}/libcellularmanager_hal.so* \
    ${exec_prefix}/rdk/cellularmanager/* \
    ${systemd_unitdir}/system/${V_SERVICE_FILE}.service \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${exec_prefix}/rdk/rdkcellularmanager/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

@@ -1,7 +1,12 @@
-diff --color -Naur git.orig/source/hostap-2.11/src/crypto/random.c git/source/hostap-2.11/src/crypto/random.c
---- git.orig/source/hostap-2.11/src/crypto/random.c	2024-02-01 00:27:27.846712498 +0200
-+++ git/source/hostap-2.11/src/crypto/random.c	2024-02-01 00:31:51.669638225 +0200
-@@ -255,6 +255,17 @@
+#################################################################
+Upstream-Status: Pending
+#################################################################
+
+Index: git/source/hostap-2.11/src/crypto/random.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/crypto/random.c
++++ git/source/hostap-2.11/src/crypto/random.c
+@@ -255,6 +255,17 @@ int random_pool_ready(void)
  	res = -1;
  #endif /* CONFIG_GETRANDOM */
  	if (res < 0) {
@@ -19,7 +24,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/crypto/random.c git/source/ho
  		fd = open("/dev/random", O_RDONLY | O_NONBLOCK);
  		if (fd < 0) {
  			wpa_printf(MSG_ERROR,
-@@ -262,7 +273,7 @@
+@@ -262,7 +273,7 @@ int random_pool_ready(void)
  				   strerror(errno));
  			return -1;
  		}
@@ -28,7 +33,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/crypto/random.c git/source/ho
  		res = read(fd, stub_key + stub_key_avail,
  			   sizeof(stub_key) - stub_key_avail);
  		if (res < 0) {
-@@ -338,6 +349,20 @@
+@@ -338,6 +349,20 @@ static void random_read_fd(int sock, voi
  
  	res = read(sock, stub_key + stub_key_avail,
  		   sizeof(stub_key) - stub_key_avail);
@@ -49,7 +54,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/crypto/random.c git/source/ho
  	if (res < 0) {
  		wpa_printf(MSG_ERROR, "random: Cannot read from /dev/random: "
  			   "%s", strerror(errno));
-@@ -347,6 +372,7 @@
+@@ -347,6 +372,7 @@ static void random_read_fd(int sock, voi
  	wpa_printf(MSG_DEBUG, "random: Got %u/%u bytes from /dev/random",
  		   (unsigned) res,
  		   (unsigned) (sizeof(stub_key) - stub_key_avail));
@@ -57,7 +62,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/crypto/random.c git/source/ho
  	stub_key_avail += res;
  
  	if (stub_key_avail == sizeof(stub_key)) {
-@@ -451,6 +477,19 @@
+@@ -451,6 +477,19 @@ void random_init(const char *entropy_fil
  	}
  #endif /* CONFIG_GETRANDOM */
  
@@ -77,7 +82,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/crypto/random.c git/source/ho
  	random_fd = open("/dev/random", O_RDONLY | O_NONBLOCK);
  	if (random_fd < 0) {
  		wpa_printf(MSG_ERROR, "random: Cannot open /dev/random: %s",
-@@ -459,7 +498,7 @@
+@@ -459,7 +498,7 @@ void random_init(const char *entropy_fil
  	}
  	wpa_printf(MSG_DEBUG, "random: Trying to read entropy from "
  		   "/dev/random");
@@ -86,9 +91,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/crypto/random.c git/source/ho
  	eloop_register_read_sock(random_fd, random_read_fd, NULL, NULL);
  #endif /* __linux__ */
  
-diff --color -Naur git.orig/source/hostap-2.11/hostapd/main.c git/source/hostap-2.11/hostapd/main.c
---- git.orig/source/hostap-2.11/hostapd/main.c	2024-01-18 13:16:27.618546722 +0200
-+++ git/source/hostap-2.11/hostapd/main.c	2024-01-18 14:33:45.357377258 +0200
+Index: git/source/hostap-2.11/hostapd/main.c
+===================================================================
+--- git.orig/source/hostap-2.11/hostapd/main.c
++++ git/source/hostap-2.11/hostapd/main.c
 @@ -32,15 +32,6 @@
  #include "eap_register.h"
  #include "ctrl_iface.h"
@@ -105,10 +111,11 @@ diff --color -Naur git.orig/source/hostap-2.11/hostapd/main.c git/source/hostap-
  #ifndef CONFIG_NO_HOSTAPD_LOGGER
  static void hostapd_logger_cb(void *ctx, const u8 *addr, unsigned int module,
  			      int level, const char *txt, size_t len)
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ap_config.h git/source/hostap-2.11/src/ap/ap_config.h
---- git.orig/source/hostap-2.11/src/ap/ap_config.h	2024-01-18 13:16:27.626546708 +0200
-+++ git/source/hostap-2.11/src/ap/ap_config.h	2024-01-18 16:17:51.863542083 +0200
-@@ -298,6 +298,11 @@
+Index: git/source/hostap-2.11/src/ap/ap_config.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ap_config.h
++++ git/source/hostap-2.11/src/ap/ap_config.h
+@@ -298,6 +298,11 @@ struct hostapd_bss_config {
  	unsigned int chan_util_avg_period;
  
  	int ieee802_1x; /* use IEEE 802.1X */
@@ -120,19 +127,49 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ap_config.h git/source/hos
  	int eapol_version;
  	int eap_server; /* Use internal EAP server instead of external
  			 * RADIUS server */
-@@ -949,6 +954,8 @@
- 	/* The AP's MLD MAC address within the AP MLD */
- 	u8 mld_addr[ETH_ALEN];
+@@ -813,6 +818,17 @@ struct hostapd_bss_config {
+ 	/* Primary VLAN ID to use in Multi-AP */
+ 	int multi_ap_vlanid;
+ 
++#ifdef CONFIG_DRIVER_BRCM_MAP
++	u8 map;
++	u8 map_bh_ssid[SSID_MAX_LEN];
++	size_t map_bh_ssid_len;
++	u16 map_bh_auth;
++	u16 map_bh_encr;
++	u8 map_bh_psk[PMK_LEN_MAX];
++	size_t map_bh_psk_len;
++	int spp_amsdu;
++#endif  /* CONFIG_DRIVER_BRCM_MAP */
++
+ #ifdef CONFIG_AIRTIME_POLICY
+ 	unsigned int airtime_weight;
+ 	int airtime_limit;
+@@ -980,6 +996,8 @@ struct hostapd_bss_config {
+ 	bool mld_indicate_disabled;
+ #endif /* CONFIG_TESTING_OPTIONS */
  #endif /* CONFIG_IEEE80211BE */
 +
 +	int connected_building_avp;
  };
  
  /**
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ap_drv_ops.c git/source/hostap-2.11/src/ap/ap_drv_ops.c
---- git.orig/source/hostap-2.11/src/ap/ap_drv_ops.c	2024-01-18 13:16:27.626546708 +0200
-+++ git/source/hostap-2.11/src/ap/ap_drv_ops.c	2024-01-18 13:54:47.349913498 +0200
-@@ -805,6 +805,14 @@
+@@ -1213,7 +1231,9 @@ struct hostapd_config {
+ 	unsigned int airtime_update_interval;
+ #define AIRTIME_MODE_MAX (__AIRTIME_MODE_MAX - 1)
+ #endif /* CONFIG_AIRTIME_POLICY */
+-
++#ifdef CONFIG_DRIVER_BRCM
++	int ft_rrb_lo_sock; /* Create loopback socket for FT RRB OUI */
++#endif /* CONFIG_DRIVER_BRCM */
+ 	int ieee80211be;
+ #ifdef CONFIG_IEEE80211BE
+ 	enum oper_chan_width eht_oper_chwidth;
+Index: git/source/hostap-2.11/src/ap/ap_drv_ops.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ap_drv_ops.c
++++ git/source/hostap-2.11/src/ap/ap_drv_ops.c
+@@ -895,6 +895,14 @@ int hostapd_drv_sta_deauth(struct hostap
  					reason, link_id);
  }
  
@@ -147,10 +184,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ap_drv_ops.c git/source/ho
  
  int hostapd_drv_sta_disassoc(struct hostapd_data *hapd,
  			     const u8 *addr, int reason)
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ap_drv_ops.h git/source/hostap-2.11/src/ap/ap_drv_ops.h
---- git.orig/source/hostap-2.11/src/ap/ap_drv_ops.h	2024-01-18 13:16:27.626546708 +0200
-+++ git/source/hostap-2.11/src/ap/ap_drv_ops.h	2024-01-18 13:55:12.609951959 +0200
-@@ -102,6 +102,8 @@
+Index: git/source/hostap-2.11/src/ap/ap_drv_ops.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ap_drv_ops.h
++++ git/source/hostap-2.11/src/ap/ap_drv_ops.h
+@@ -111,6 +111,8 @@ int hostapd_drv_send_mlme(struct hostapd
  			  int no_encrypt);
  int hostapd_drv_sta_deauth(struct hostapd_data *hapd,
  			   const u8 *addr, int reason);
@@ -159,10 +197,26 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ap_drv_ops.h git/source/ho
  int hostapd_drv_sta_disassoc(struct hostapd_data *hapd,
  			     const u8 *addr, int reason);
  int hostapd_drv_send_action(struct hostapd_data *hapd, unsigned int freq,
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hostap-2.11/src/ap/hostapd.c
---- git.orig/source/hostap-2.11/src/ap/hostapd.c	2024-01-18 13:16:27.634546695 +0200
-+++ git/source/hostap-2.11/src/ap/hostapd.c	2024-01-18 16:18:39.479347828 +0200
-@@ -1303,6 +1303,17 @@
+@@ -485,5 +487,13 @@ static inline int hostapd_drv_link_sta_r
+ }
+ 
+ #endif /* CONFIG_IEEE80211BE */
+-
++#ifdef CONFIG_DRIVER_BRCM
++static inline int
++hostapd_drv_stop_bss(struct hostapd_data *hapd)
++{
++	if (!hapd->driver || !hapd->driver->stop_bss || !hapd->drv_priv)
++		return 0;
++	return hapd->driver->stop_bss(hapd->drv_priv);
++}
++#endif /* CONFIG_DRIVER_BRCM */
+ #endif /* AP_DRV_OPS */
+Index: git/source/hostap-2.11/src/ap/hostapd.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/hostapd.c
++++ git/source/hostap-2.11/src/ap/hostapd.c
+@@ -1303,6 +1303,17 @@ static int hostapd_start_beacon(struct h
  	if (hapd->driver && hapd->driver->set_operstate)
  		hapd->driver->set_operstate(hapd->drv_priv, 1);
  
@@ -180,7 +234,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hosta
  	return 0;
  }
  
-@@ -1330,7 +1341,11 @@ static int hostapd_bss_radius_init(struct hostapd_data *hapd)
+@@ -1330,7 +1341,11 @@ static int hostapd_bss_radius_init(struc
  		return -1;
  	}
  
@@ -193,7 +247,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hosta
  		struct radius_das_conf das_conf;
  
  		os_memset(&das_conf, 0, sizeof(das_conf));
-@@ -1377,7 +1392,7 @@ static int hostapd_bss_radius_init(struct hostapd_data *hapd)
+@@ -1377,7 +1392,7 @@ static int hostapd_bss_radius_init(struc
   * initialized. Most of the modules that are initialized here will be
   * deinitialized in hostapd_cleanup().
   */
@@ -202,7 +256,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hosta
  			     bool start_beacon)
  {
  	struct hostapd_bss_config *conf = hapd->conf;
-@@ -2064,9 +2079,6 @@ static int setup_interface(struct hostapd_iface *iface)
+@@ -2064,9 +2079,6 @@ static int setup_interface(struct hostap
  		if (os_strncmp(previous_country, country, 2) != 0) {
  			wpa_printf(MSG_DEBUG, "Continue interface setup after channel list update");
  			iface->wait_channel_update = 1;
@@ -212,10 +266,74 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hosta
  			return 0;
  		}
  	}
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.h git/source/hostap-2.11/src/ap/hostapd.h
---- git.orig/source/hostap-2.11/src/ap/hostapd.h	2024-01-18 13:16:27.634546695 +0200
-+++ git/source/hostap-2.11/src/ap/hostapd.h	2024-01-18 21:48:03.629706095 +0200
-@@ -559,6 +559,7 @@
+@@ -4953,3 +4965,36 @@ u16 hostapd_get_punct_bitmap(struct host
+ 
+ 	return punct_bitmap;
+ }
++
++#ifdef CONFIG_DRIVER_BRCM
++/*
++ * start beaconing on virtual BSS iface on ifconfig up
++ */
++void hostapd_set_beacon_on_vif(struct hostapd_data *hapd)
++{
++	struct hostapd_bss_config *conf = hapd->conf;
++	hapd->disabled = 0;
++
++	if ((conf->start_disabled == 1)  && (hapd->bss_started == 0)) {
++		wpa_printf(MSG_DEBUG, "%s: hapd %p, start_disabled %d, bss_started %d. return",
++				conf->iface, hapd, conf->start_disabled, hapd->bss_started);
++		return;
++	}
++
++	hapd->reenable_beacon = 1;
++	if (ieee802_11_set_beacon(hapd) < 0) {
++		wpa_printf(MSG_ERROR, "%s: setting beacon failed", conf->iface);
++	} else {
++		wpa_printf(MSG_DEBUG, "%s: setting beacon success", conf->iface);
++	}
++}
++
++/*
++ * stop beaconing on vritual BSS iface on ifconfig down
++ */
++void hostapd_stop_beacon_on_vif(struct hostapd_data *hapd)
++{
++	wpa_printf(MSG_INFO, "%s: stop beacon", hapd->conf->iface);
++	hapd->disabled = 1;
++}
++#endif /* CONFIG_DRIVER_BRCM */
+Index: git/source/hostap-2.11/src/ap/hostapd.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/hostapd.h
++++ git/source/hostap-2.11/src/ap/hostapd.h
+@@ -178,7 +178,9 @@ struct hostapd_data {
+ 	unsigned int started:1;
+ 	unsigned int disabled:1;
+ 	unsigned int reenable_beacon:1;
+-
++#ifdef CONFIG_DRIVER_BRCM
++	unsigned int bss_started:1; /* BSS started/stopped from cli - start_bss/stop_bss */
++#endif /* CONFIG_DRIVER_BRCM */
+ 	u8 own_addr[ETH_ALEN];
+ 
+ 	int num_sta; /* number of entries in sta_list */
+@@ -250,7 +252,13 @@ struct hostapd_data {
+ 	struct eth_p_oui_ctx *oui_sreq;
+ 	struct eth_p_oui_ctx *oui_sresp;
+ #endif /* CONFIG_IEEE80211R_AP */
+-
++#ifdef CONFIG_DRIVER_BRCM
++	struct eth_p_oui_ctx *lo_oui_pull;
++	struct eth_p_oui_ctx *lo_oui_resp;
++	struct eth_p_oui_ctx *lo_oui_push;
++	struct eth_p_oui_ctx *lo_oui_sreq;
++	struct eth_p_oui_ctx *lo_oui_sresp;
++#endif /* CONFIG_DRIVER_BRCM */
+ 	struct wps_context *wps;
+ 
+ 	int beacon_set_done;
+@@ -602,6 +610,7 @@ struct hostapd_iface {
  	 * current_mode->channels */
  	int num_rates;
  	struct hostapd_rate_data *current_rates;
@@ -223,7 +341,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.h git/source/hosta
  	int *basic_rates;
  	int freq;
  
-@@ -757,12 +758,22 @@
+@@ -805,12 +814,22 @@ struct hostapd_data * hostapd_get_iface(
  void hostapd_event_sta_opmode_changed(struct hostapd_data *hapd, const u8 *addr,
  				      enum smps_mode smps_mode,
  				      enum chan_width chan_width, u8 rx_nss);
@@ -246,10 +364,22 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.h git/source/hosta
  int hostapd_set_acl(struct hostapd_data *hapd);
  struct hostapd_data * hostapd_mbssid_get_tx_bss(struct hostapd_data *hapd);
  int hostapd_mbssid_get_bss_index(struct hostapd_data *hapd);
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/hostap-2.11/src/ap/ieee802_11.c
---- git.orig/source/hostap-2.11/src/ap/ieee802_11.c	2024-01-18 13:16:27.634546695 +0200
-+++ git/source/hostap-2.11/src/ap/ieee802_11.c	2024-01-18 16:25:56.265833398 +0200
-@@ -108,7 +108,7 @@
+Index: git/source/hostap-2.11/src/ap/ieee802_11.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ieee802_11.c
++++ git/source/hostap-2.11/src/ap/ieee802_11.c
+@@ -58,7 +58,9 @@
+ #include "comeback_token.h"
+ #include "nan_usd_ap.h"
+ #include "pasn/pasn_common.h"
+-
++#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
++#include "ce_shared.h"
++#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
+ 
+ #ifdef CONFIG_FILS
+ static struct wpabuf *
+@@ -122,7 +124,7 @@ u8 * hostapd_eid_supp_rates(struct hosta
  	int i, num, count;
  	int h2e_required;
  
@@ -258,7 +388,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
  		return eid;
  
  	*pos++ = WLAN_EID_SUPP_RATES;
-@@ -134,13 +134,25 @@
+@@ -148,13 +150,25 @@ u8 * hostapd_eid_supp_rates(struct hosta
  	}
  
  	*pos++ = num;
@@ -291,7 +421,88 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
  	}
  
  	if (hapd->iconf->ieee80211n && hapd->iconf->require_ht && count < 8) {
-@@ -4695,7 +4707,7 @@
+@@ -508,11 +522,14 @@ static void handle_auth_ft_finish(void *
+ 	struct hostapd_data *hapd = ctx;
+ 	struct sta_info *sta;
+ 	int reply_res;
+-
++//#ifdef CONFIG_DRIVER_BRCM
++	//brcm_build_ft_auth_resp_send(ctx, dst, status, ies, ies_len);
++	//reply_res = status;
++//#else
+ 	reply_res = send_auth_reply(hapd, NULL, dst, WLAN_AUTH_FT,
+ 				    auth_transaction, status, ies, ies_len,
+ 				    "auth-ft-finish");
+-
++//#endif /* CONFIG_DRIVER_BRCM */
+ 	sta = ap_get_sta(hapd, dst);
+ 	if (sta == NULL)
+ 		return;
+@@ -736,7 +753,12 @@ static int auth_sae_send_commit(struct h
+ 				    WLAN_AUTH_SAE, 1,
+ 				    status, wpabuf_head(data),
+ 				    wpabuf_len(data), "sae-send-commit");
+-
++#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
++	if (!reply_res) {
++		CE_SEND_CEVENT_A2C_EXT(hapd->conf->iface, (struct ether_addr *)sta->addr, 0, 0,
++			CEVENT_ST_HOSTAPD, CEVENT_A2C_MT_AUTH_COMMIT_TX, CEVENT_FRAME_DIR_TX, NULL, 0);
++	}
++#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
+ 	wpabuf_free(data);
+ 
+ 	return reply_res;
+@@ -757,7 +779,12 @@ static int auth_sae_send_confirm(struct
+ 				    WLAN_AUTH_SAE, 2,
+ 				    WLAN_STATUS_SUCCESS, wpabuf_head(data),
+ 				    wpabuf_len(data), "sae-send-confirm");
+-
++#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
++	if (!reply_res) {
++		CE_SEND_CEVENT_A2C_EXT(hapd->conf->iface, (struct ether_addr *)sta->addr, 0, 0,
++			CEVENT_ST_HOSTAPD, CEVENT_A2C_MT_AUTH_CONFIRM_TX, CEVENT_FRAME_DIR_TX, NULL, 0);
++	}
++#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
+ 	wpabuf_free(data);
+ 
+ 	return reply_res;
+@@ -1370,7 +1397,10 @@ static void handle_auth_sae(struct hosta
+ 		const u8 *token = NULL;
+ 		size_t token_len = 0;
+ 		int allow_reuse = 0;
+-
++#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
++		CE_SEND_CEVENT_A2C_EXT(hapd->conf->iface, (struct ether_addr *)sta->addr, 0, 0,
++			CEVENT_ST_HOSTAPD, CEVENT_A2C_MT_AUTH_COMMIT_RX, CEVENT_FRAME_DIR_RX, NULL, 0);
++#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
+ 		hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_IEEE80211,
+ 			       HOSTAPD_LEVEL_DEBUG,
+ 			       "start SAE authentication (RX commit, status=%u (%s))",
+@@ -1545,6 +1575,10 @@ static void handle_auth_sae(struct hosta
+ 		resp = sae_sm_step(hapd, sta, auth_transaction,
+ 				   status_code, allow_reuse, &sta_removed);
+ 	} else if (auth_transaction == 2) {
++#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
++		CE_SEND_CEVENT_A2C_EXT(hapd->conf->iface, (struct ether_addr *)sta->addr, 0, 0,
++			CEVENT_ST_HOSTAPD, CEVENT_A2C_MT_AUTH_CONFIRM_RX, CEVENT_FRAME_DIR_RX, NULL, 0);
++#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
+ 		hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_IEEE80211,
+ 			       HOSTAPD_LEVEL_DEBUG,
+ 			       "SAE authentication (RX confirm, status=%u (%s))",
+@@ -3225,7 +3259,11 @@ static void handle_auth(struct hostapd_d
+ 			goto fail;
+ 		}
+ 	}
+-
++#ifdef CONFIG_DRIVER_BRCM
++	else {
++		sta->added_unassoc = 1;
++	}
++#endif /* CONFIG_DRIVER_BRCM */
+ 	switch (auth_alg) {
+ 	case WLAN_AUTH_OPEN:
+ 		hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_IEEE80211,
+@@ -4841,7 +4879,7 @@ static int add_associated_sta(struct hos
  }
  
  
@@ -300,10 +511,75 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/ho
  			   const u8 *addr, u16 status_code, int reassoc,
  			   const u8 *ies, size_t ies_len, int rssi,
  			   int omit_rsnxe, bool allow_mld_addr_trans)
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.h git/source/hostap-2.11/src/ap/ieee802_11.h
---- git.orig/source/hostap-2.11/src/ap/ieee802_11.h	2024-01-18 13:16:27.634546695 +0200
-+++ git/source/hostap-2.11/src/ap/ieee802_11.h	2024-01-18 16:05:46.122181406 +0200
-@@ -263,5 +263,9 @@ int hostapd_process_assoc_ml_info(struct hostapd_data *hapd,
+@@ -5436,6 +5474,9 @@ static void handle_assoc(struct hostapd_
+ 		 * entry in the driver as associated and not authenticated
+ 		 */
+ 		sta->flags |= WLAN_STA_AUTH;
++#ifdef CONFIG_DRIVER_BRCM
++		sta->added_unassoc = 1;
++#endif /* CONFIG_DRIVER_BRCM */
+ 	} else
+ #endif /* CONFIG_IEEE80211R_AP */
+ 	if (sta == NULL || (sta->flags & WLAN_STA_AUTH) == 0) {
+@@ -5486,6 +5527,29 @@ static void handle_assoc(struct hostapd_
+ 			wpa_auth_sm_event(sta->wpa_sm, WPA_AUTH);
+ 			sta->auth_alg = WLAN_AUTH_OPEN;
+ 		} else {
++#ifdef CONFIG_DRIVER_BRCM
++                        sta = ap_sta_add(hapd, mgmt->sa);
++                        if (!sta) {
++                                hostapd_logger(hapd, mgmt->sa,
++                                               HOSTAPD_MODULE_IEEE80211,
++                                               HOSTAPD_LEVEL_INFO,
++                                               "Failed to add STA");
++                                resp = WLAN_STATUS_AP_UNABLE_TO_HANDLE_NEW_STA;
++                                goto fail;
++                        }
++                        hostapd_logger(hapd, sta->addr,
++                                       HOSTAPD_MODULE_IEEE80211,
++                                       HOSTAPD_LEVEL_DEBUG,
++                                       "Skip authentication for DMG/IEEE 802.11ad");
++                        sta->flags |= WLAN_STA_AUTH;
++                        wpa_auth_sm_event(sta->wpa_sm, WPA_AUTH);
++                        sta->auth_alg = WLAN_AUTH_OPEN;
++                        /* It comes here only when STA is already authenticated by the driver
++                         * and association request is getting handled by hostapd.
++                         * So set added_unassoc flag here.
++                         */
++                        sta->added_unassoc = 1;
++#else
+ 			hostapd_logger(hapd, mgmt->sa,
+ 				       HOSTAPD_MODULE_IEEE80211,
+ 				       HOSTAPD_LEVEL_INFO,
+@@ -5495,6 +5559,7 @@ static void handle_assoc(struct hostapd_
+ 			send_deauth(hapd, mgmt->sa,
+ 				    WLAN_REASON_CLASS2_FRAME_FROM_NONAUTH_STA);
+ 			return;
++#endif /* CONFIG_DRIVER_BRCM */
+ 		}
+ 	}
+ 
+@@ -6019,6 +6084,7 @@ static int handle_action(struct hostapd_
+ 		return 0;
+ 	}
+ 
++#ifndef CONFIG_DRIVER_BRCM
+ 	if (sta && (sta->flags & WLAN_STA_MFP) &&
+ 	    !(mgmt->frame_control & host_to_le16(WLAN_FC_ISWEP)) &&
+ 	    robust_action_frame(mgmt->u.action.category)) {
+@@ -6028,6 +6094,7 @@ static int handle_action(struct hostapd_
+ 			       "an MFP STA");
+ 		return 0;
+ 	}
++#endif /* !CONFIG_DRIVER_BRCM */
+ 
+ 	if (sta) {
+ 		u16 fc = le_to_host16(mgmt->frame_control);
+Index: git/source/hostap-2.11/src/ap/ieee802_11.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ieee802_11.h
++++ git/source/hostap-2.11/src/ap/ieee802_11.h
+@@ -263,5 +263,9 @@ int hostapd_process_assoc_ml_info(struct
  				  const u8 *ies, size_t ies_len,
  				  bool reassoc, int tx_link_status,
  				  bool offload);
@@ -313,10 +589,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.h git/source/ho
 +			int omit_rsnxe, bool allow_mld_addr_trans);
  
  #endif /* IEEE802_11_H */
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11_ht.c git/source/hostap-2.11/src/ap/ieee802_11_ht.c
---- git.orig/source/hostap-2.11/src/ap/ieee802_11_ht.c	2024-01-18 13:16:27.638546689 +0200
-+++ git/source/hostap-2.11/src/ap/ieee802_11_ht.c	2024-01-18 16:08:50.649830354 +0200
-@@ -39,6 +39,15 @@
+Index: git/source/hostap-2.11/src/ap/ieee802_11_ht.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ieee802_11_ht.c
++++ git/source/hostap-2.11/src/ap/ieee802_11_ht.c
+@@ -39,6 +39,15 @@ u8 * hostapd_eid_ht_capabilities(struct
  	cap->a_mpdu_params = hapd->iface->current_mode->a_mpdu_params;
  	os_memcpy(cap->supported_mcs_set, hapd->iface->current_mode->mcs_set,
  		  16);
@@ -332,7 +609,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11_ht.c git/source
  
  	/* TODO: ht_extended_capabilities (now fully disabled) */
  	/* TODO: tx_bf_capability_info (now fully disabled) */
-@@ -103,6 +112,16 @@
+@@ -107,6 +116,16 @@ u8 * hostapd_eid_ht_operation(struct hos
  		oper->ht_param |= HT_INFO_HT_PARAM_SECONDARY_CHNL_BELOW |
  			HT_INFO_HT_PARAM_STA_CHNL_WIDTH;
  
@@ -349,9 +626,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11_ht.c git/source
  	pos += sizeof(*oper);
  
  	return pos;
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/hostap-2.11/src/ap/ieee802_1x.c
---- git.orig/source/hostap-2.11/src/ap/ieee802_1x.c	2024-01-18 13:16:27.638546689 +0200
-+++ git/source/hostap-2.11/src/ap/ieee802_1x.c	2024-01-18 16:22:08.438572738 +0200
+Index: git/source/hostap-2.11/src/ap/ieee802_1x.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ieee802_1x.c
++++ git/source/hostap-2.11/src/ap/ieee802_1x.c
 @@ -38,7 +38,9 @@
  #include "ieee802_11.h"
  #include "ieee802_1x.h"
@@ -363,7 +641,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  
  #ifdef CONFIG_HS20
  static void ieee802_1x_wnm_notif_send(void *eloop_ctx, void *timeout_ctx);
-@@ -737,6 +739,33 @@
+@@ -739,6 +741,33 @@ int add_sqlite_radius_attr(struct hostap
  	return 0;
  }
  
@@ -397,7 +675,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  
  void ieee802_1x_encapsulate_radius(struct hostapd_data *hapd,
  				   struct sta_info *sta,
-@@ -900,6 +929,44 @@
+@@ -905,6 +934,44 @@ void ieee802_1x_encapsulate_radius(struc
  		}
  	}
  #endif /* CONFIG_HS20 */
@@ -442,7 +720,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  
  	if (radius_client_send(hapd->radius, msg, RADIUS_AUTH, sta->addr) < 0)
  		goto fail;
-@@ -1054,6 +1121,12 @@
+@@ -1059,6 +1126,12 @@ ieee802_1x_alloc_eapol_sm(struct hostapd
  		if (wpa_auth_sta_get_pmksa(sta->wpa_sm))
  			flags |= EAPOL_SM_FROM_PMKSA_CACHE;
  	}
@@ -455,7 +733,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  	return eapol_auth_alloc(hapd->eapol_auth, sta->addr, flags,
  				sta->wps_ie, sta->p2p_ie, sta,
  				sta->identity, sta->radius_cui);
-@@ -1331,6 +1404,16 @@
+@@ -1336,6 +1409,16 @@ void ieee802_1x_new_station(struct hosta
  		force_1x = 1;
  	}
  #endif /* CONFIG_WPS */
@@ -472,7 +750,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  
  	if (!force_1x && !hapd->conf->ieee802_1x && !hapd->conf->osen) {
  		wpa_printf(MSG_DEBUG,
-@@ -1345,7 +1428,7 @@
+@@ -1350,7 +1433,7 @@ void ieee802_1x_new_station(struct hosta
  
  	key_mgmt = wpa_auth_sta_key_mgmt(sta->wpa_sm);
  	if (key_mgmt != -1 &&
@@ -481,7 +759,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  	     key_mgmt == WPA_KEY_MGMT_DPP)) {
  		wpa_printf(MSG_DEBUG, "IEEE 802.1X: Ignore STA - using PSK");
  		/*
-@@ -1356,7 +1439,7 @@
+@@ -1361,7 +1444,7 @@ void ieee802_1x_new_station(struct hosta
  		return;
  	}
  
@@ -490,7 +768,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  		hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_IEEE8021X,
  			       HOSTAPD_LEVEL_DEBUG, "start authentication");
  		sta->eapol_sm = ieee802_1x_alloc_eapol_sm(hapd, sta);
-@@ -1387,6 +1470,20 @@
+@@ -1392,6 +1475,20 @@ void ieee802_1x_new_station(struct hosta
  
  	sta->eapol_sm->eap_if->portEnabled = true;
  
@@ -511,7 +789,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  #ifdef CONFIG_IEEE80211R_AP
  	if (sta->auth_alg == WLAN_AUTH_FT) {
  		hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_IEEE8021X,
-@@ -2130,6 +2227,10 @@
+@@ -2126,6 +2223,10 @@ ieee802_1x_receive_auth(struct radius_ms
  		ieee802_1x_check_hs20(hapd, sta, msg,
  				      session_timeout_set ?
  				      (int) session_timeout : -1);
@@ -522,7 +800,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  		break;
  	case RADIUS_CODE_ACCESS_REJECT:
  		sm->eap_if->aaaFail = true;
-@@ -2141,6 +2242,37 @@
+@@ -2137,6 +2238,37 @@ ieee802_1x_receive_auth(struct radius_ms
  				   MACSTR, reason_code, MAC2STR(sta->addr));
  			sta->disconnect_reason_code = reason_code;
  		}
@@ -560,10 +838,21 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_1x.c git/source/ho
  		break;
  	case RADIUS_CODE_ACCESS_CHALLENGE:
  		sm->eap_if->aaaEapReq = true;
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_glue.c git/source/hostap-2.11/src/ap/wpa_auth_glue.c
---- git.orig/source/hostap-2.11/src/ap/wpa_auth_glue.c	2024-01-18 13:16:27.646546676 +0200
-+++ git/source/hostap-2.11/src/ap/wpa_auth_glue.c	2024-01-18 14:35:55.164619067 +0200
-@@ -269,6 +269,7 @@
+Index: git/source/hostap-2.11/src/ap/wpa_auth_glue.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/wpa_auth_glue.c
++++ git/source/hostap-2.11/src/ap/wpa_auth_glue.c
+@@ -218,6 +218,9 @@ static void hostapd_wpa_auth_conf(struct
+ #ifdef CONFIG_DPP2
+ 	wconf->dpp_pfs = conf->dpp_pfs;
+ #endif /* CONFIG_DPP2 */
++#ifdef CONFIG_DRIVER_BRCM
++	wconf->spp_amsdu = conf->spp_amsdu;
++#endif /* CONFIG_DRIVER_BRCM */
+ #ifdef CONFIG_PASN
+ #ifdef CONFIG_TESTING_OPTIONS
+ 	wconf->force_kdk_derivation = conf->force_kdk_derivation;
+@@ -279,6 +282,7 @@ static void hostapd_wpa_auth_psk_failure
  	struct hostapd_data *hapd = ctx;
  	wpa_msg(hapd->msg_ctx, MSG_INFO, AP_STA_POSSIBLE_PSK_MISMATCH MACSTR,
  		MAC2STR(addr));
@@ -571,18 +860,188 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_glue.c git/source
  }
  
  
-diff --color -Naur git.orig/source/hostap-2.11/src/common/ieee802_11_defs.h git/source/hostap-2.11/src/common/ieee802_11_defs.h
---- git.orig/source/hostap-2.11/src/common/ieee802_11_defs.h	2024-01-18 13:16:27.654546663 +0200
-+++ git/source/hostap-2.11/src/common/ieee802_11_defs.h	2024-01-18 21:52:13.533096529 +0200
-@@ -275,6 +275,7 @@
+@@ -797,6 +801,29 @@ static struct eth_p_oui_ctx * hostapd_wp
+ 		return NULL;
+ 	}
+ }
++
++#ifdef CONFIG_DRIVER_BRCM
++static struct eth_p_oui_ctx * hostapd_wpa_get_lo_oui(struct hostapd_data *hapd,
++						  u8 oui_suffix)
++{
++	switch (oui_suffix) {
++#ifdef CONFIG_IEEE80211R_AP
++	case FT_PACKET_R0KH_R1KH_PULL:
++		return hapd->lo_oui_pull;
++	case FT_PACKET_R0KH_R1KH_RESP:
++		return hapd->lo_oui_resp;
++	case FT_PACKET_R0KH_R1KH_PUSH:
++		return hapd->lo_oui_push;
++	case FT_PACKET_R0KH_R1KH_SEQ_REQ:
++		return hapd->lo_oui_sreq;
++	case FT_PACKET_R0KH_R1KH_SEQ_RESP:
++		return hapd->lo_oui_sresp;
++#endif /* CONFIG_IEEE80211R_AP */
++	default:
++		return NULL;
++	}
++}
++#endif /* CONFIG_DRIVER_BRCM */
+ #endif /* CONFIG_ETH_P_OUI */
+ 
+ 
+@@ -944,6 +971,16 @@ static int hostapd_wpa_auth_send_oui(voi
+ 			return data_len;
+ 	}
+ #endif /* CONFIG_IEEE80211R_AP */
++#ifdef CONFIG_DRIVER_BRCM
++	/* Send l2 packet on loopback socket as well */
++	if (hapd->iconf->ft_rrb_lo_sock) {
++		oui_ctx = hostapd_wpa_get_lo_oui(hapd, oui_suffix);
++		if (!oui_ctx)
++			return -1;
++
++		eth_p_oui_send(oui_ctx, hapd->own_addr, dst, data, data_len);
++	}
++#endif /* CONFIG_DRIVER_BRCM */
+ 
+ 	oui_ctx = hostapd_wpa_get_oui(hapd, oui_suffix);
+ 	if (!oui_ctx)
+@@ -1406,6 +1443,15 @@ static int hostapd_wpa_auth_get_session_
+ 	return (remaining.sec > 0) ? remaining.sec : 1;
+ }
+ 
++#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
++static char* hostapd_wpa_auth_get_ifname(void *ctx)
++{
++	struct hostapd_data *hapd = ctx;
++	if (hapd && hapd->conf)
++		return hapd->conf->iface;
++	return NULL;
++}
++#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
+ 
+ static void hostapd_rrb_receive(void *ctx, const u8 *src_addr, const u8 *buf,
+ 				size_t len)
+@@ -1486,6 +1532,43 @@ static int hostapd_wpa_register_ft_oui(s
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_DRIVER_BRCM
++static int hostapd_wpa_register_ft_lo_oui(struct hostapd_data *hapd,
++				       const char *ft_iface)
++{
++	hapd->lo_oui_pull = eth_p_oui_register(hapd, ft_iface,
++					    FT_PACKET_R0KH_R1KH_PULL,
++					    hostapd_rrb_oui_receive, hapd);
++	if (!hapd->lo_oui_pull)
++		return -1;
++
++	hapd->lo_oui_resp = eth_p_oui_register(hapd, ft_iface,
++					    FT_PACKET_R0KH_R1KH_RESP,
++					    hostapd_rrb_oui_receive, hapd);
++	if (!hapd->lo_oui_resp)
++		return -1;
++
++	hapd->lo_oui_push = eth_p_oui_register(hapd, ft_iface,
++					    FT_PACKET_R0KH_R1KH_PUSH,
++					    hostapd_rrb_oui_receive, hapd);
++	if (!hapd->lo_oui_push)
++		return -1;
++
++	hapd->lo_oui_sreq = eth_p_oui_register(hapd, ft_iface,
++					    FT_PACKET_R0KH_R1KH_SEQ_REQ,
++					    hostapd_rrb_oui_receive, hapd);
++	if (!hapd->lo_oui_sreq)
++		return -1;
++
++	hapd->lo_oui_sresp = eth_p_oui_register(hapd, ft_iface,
++					     FT_PACKET_R0KH_R1KH_SEQ_RESP,
++					     hostapd_rrb_oui_receive, hapd);
++	if (!hapd->lo_oui_sresp)
++		return -1;
++
++	return 0;
++}
++#endif /* CONFIG_DRIVER_BRCM */
+ 
+ static void hostapd_wpa_unregister_ft_oui(struct hostapd_data *hapd)
+ {
+@@ -1500,6 +1583,22 @@ static void hostapd_wpa_unregister_ft_ou
+ 	eth_p_oui_unregister(hapd->oui_sresp);
+ 	hapd->oui_sresp = NULL;
+ }
++
++#ifdef CONFIG_DRIVER_BRCM
++static void hostapd_wpa_unregister_ft_lo_oui(struct hostapd_data *hapd)
++{
++	eth_p_oui_unregister(hapd->lo_oui_pull);
++	hapd->lo_oui_pull = NULL;
++	eth_p_oui_unregister(hapd->lo_oui_resp);
++	hapd->lo_oui_resp = NULL;
++	eth_p_oui_unregister(hapd->lo_oui_push);
++	hapd->lo_oui_push = NULL;
++	eth_p_oui_unregister(hapd->lo_oui_sreq);
++	hapd->lo_oui_sreq = NULL;
++	eth_p_oui_unregister(hapd->lo_oui_sresp);
++	hapd->lo_oui_sresp = NULL;
++}
++#endif /* CONFIG_DRIVER_BRCM */
+ #endif /* CONFIG_IEEE80211R_AP */
+ 
+ 
+@@ -1650,6 +1749,9 @@ int hostapd_setup_wpa(struct hostapd_dat
+ #ifndef CONFIG_NO_RADIUS
+ 		.request_radius_psk = hostapd_request_radius_psk,
+ #endif /* CONFIG_NO_RADIUS */
++#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
++		.get_ifname = hostapd_wpa_auth_get_ifname,
++#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
+ #ifdef CONFIG_PASN
+ 		.set_ltf_keyseed = hostapd_set_ltf_keyseed,
+ #endif /* CONFIG_PASN */
+@@ -1777,6 +1879,15 @@ int hostapd_setup_wpa(struct hostapd_dat
+ 				   "Failed to open ETH_P_OUI interface");
+ 			return -1;
+ 		}
++#ifdef CONFIG_DRIVER_BRCM
++		/* create loopback socket for FT OUI communication */
++		if (hapd->iconf->ft_rrb_lo_sock) {
++			if (hostapd_wpa_register_ft_lo_oui(hapd, "lo")) {
++				wpa_printf(MSG_ERROR,
++					   "Failed to open ETH_P_OUI loopback interface");
++			}
++		}
++#endif /* CONFIG_DRIVER_BRCM */
+ 	}
+ #endif /* CONFIG_IEEE80211R_AP */
+ 
+@@ -1827,6 +1938,12 @@ void hostapd_deinit_wpa(struct hostapd_d
+ 	l2_packet_deinit(hapd->l2);
+ 	hapd->l2 = NULL;
+ 	hostapd_wpa_unregister_ft_oui(hapd);
++#ifdef CONFIG_DRIVER_BRCM
++	/* Unregister loopback socket created for FT OUI communication */
++	if (hapd->iconf->ft_rrb_lo_sock) {
++		hostapd_wpa_unregister_ft_lo_oui(hapd);
++	}
++#endif /* CONFIG_DRIVER_BRCM */
+ #endif /* CONFIG_IEEE80211R_AP */
+ 
+ #ifdef CONFIG_TESTING_OPTIONS
+Index: git/source/hostap-2.11/src/common/ieee802_11_defs.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/common/ieee802_11_defs.h
++++ git/source/hostap-2.11/src/common/ieee802_11_defs.h
+@@ -296,6 +296,7 @@
  #define WLAN_REASON_MAC_ADDRESS_ALREADY_EXISTS_IN_MBSS 64
  #define WLAN_REASON_MESH_CHANNEL_SWITCH_REGULATORY_REQ 65
  #define WLAN_REASON_MESH_CHANNEL_SWITCH_UNSPECIFIED 66
 +#define WLAN_RADIUS_GREYLIST_REJECT 100
  
  
- /* Information Element IDs (IEEE Std 802.11-2016, 9.4.2.1, Table 9-77) */
-@@ -2763,7 +2764,9 @@
+ /* Element IDs (IEEE Std 802.11-2020, 9.4.2.1, Table 9-92) */
+@@ -2897,7 +2898,9 @@ enum edmg_bw_config {
  };
  
  /* DPP Public Action frame identifiers - OUI_WFA */
@@ -592,10 +1051,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/common/ieee802_11_defs.h git/
  
  /* Robust AV streaming Action field values */
  enum robust_av_streaming_action {
-diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver.h git/source/hostap-2.11/src/drivers/driver.h
---- git.orig/source/hostap-2.11/src/drivers/driver.h	2024-01-18 13:16:27.674546630 +0200
-+++ git/source/hostap-2.11/src/drivers/driver.h	2024-01-18 14:37:14.404201015 +0200
-@@ -3603,6 +3603,9 @@
+Index: git/source/hostap-2.11/src/drivers/driver.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/drivers/driver.h
++++ git/source/hostap-2.11/src/drivers/driver.h
+@@ -3698,6 +3698,9 @@ struct wpa_driver_ops {
  	int (*sta_deauth)(void *priv, const u8 *own_addr, const u8 *addr,
  			  u16 reason, int link_id);
  
@@ -605,10 +1065,43 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver.h git/source/h
  	/**
  	 * sta_disassoc - Disassociate a station (AP only)
  	 * @priv: Private driver interface data
-diff --color -Naur git.orig/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.c git/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.c
---- git.orig/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.c	2024-01-18 13:16:27.714546565 +0200
-+++ git/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.c	2024-01-18 15:41:43.145069474 +0200
-@@ -952,6 +952,17 @@
+@@ -5162,6 +5165,17 @@ struct wpa_driver_ops {
+ 	int (*update_dh_ie)(void *priv, const u8 *peer_mac, u16 reason_code,
+ 			    const u8 *ie, size_t ie_len);
+ 
++#ifdef CONFIG_DRIVER_BRCM
++	/**
++	 * stop_bss - stop beacon on BSS
++	 * @priv: Private driver interface data
++	 * Returns: 0 on success, -1 on failure (or if not supported)
++	 *
++	 * This optional function can be used to disable beaconing on BSS.
++	 */
++	int (*stop_bss)(void *priv);
++#endif /* CONFIG_DRIVER_BRCM */
++
+ 	/**
+ 	 * dpp_listen - Notify driver about start/stop of DPP listen
+ 	 * @priv: Private driver interface data
+@@ -5824,6 +5838,13 @@ enum wpa_event_type {
+ 	 */
+ 	EVENT_UNPROT_BEACON,
+ 
++#ifdef CONFIG_DRIVER_BRCM
++	/**
++	  * EVENT_INTERFACE_ADDR_CHANGED - Notification of updated ip addr for interface
++	  */
++	EVENT_INTERFACE_IP_ADDR_CHANGED,
++#endif	/* CONFIG_DRIVER_BRCM */
++
+ 	/**
+ 	 * EVENT_TX_WAIT_EXPIRE - TX wait timed out
+ 	 *
+Index: git/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.c
++++ git/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.c
+@@ -952,6 +952,17 @@ restart:
  	}
  
  	if (eapol_sm_sta_entry_alive(eapol, addr) && sm->eap) {
@@ -626,9 +1119,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.c gi
  		if (eap_server_sm_step(sm->eap)) {
  			if (--max_steps > 0)
  				goto restart;
-diff --color -Naur git.orig/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.h git/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.h
---- git.orig/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.h	2024-01-18 13:16:27.714546565 +0200
-+++ git/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.h	2024-01-18 15:42:08.629012749 +0200
+Index: git/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.h
++++ git/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.h
 @@ -13,6 +13,9 @@
  #define EAPOL_SM_WAIT_START BIT(1)
  #define EAPOL_SM_USES_WPA BIT(2)
@@ -639,10 +1133,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/eapol_auth/eapol_auth_sm.h gi
  
  struct eapol_auth_config {
  	const struct eap_config *eap_cfg;
-diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius.c git/source/hostap-2.11/src/radius/radius.c
---- git.orig/source/hostap-2.11/src/radius/radius.c	2024-01-18 13:16:27.726546545 +0200
-+++ git/source/hostap-2.11/src/radius/radius.c	2024-01-18 15:43:47.740795981 +0200
-@@ -1042,7 +1042,10 @@
+Index: git/source/hostap-2.11/src/radius/radius.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/radius/radius.c
++++ git/source/hostap-2.11/src/radius/radius.c
+@@ -1077,7 +1077,10 @@ int radius_msg_make_authenticator(struct
   * The returned payload is allocated with os_malloc() and caller must free it
   * by calling os_free().
   */
@@ -654,7 +1149,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius.c git/source/ho
  				      u8 subtype, size_t *alen)
  {
  	u8 *data, *pos;
-@@ -1872,3 +1875,31 @@
+@@ -1907,3 +1910,31 @@ int radius_gen_session_id(u8 *id, size_t
  	 */
  	return os_get_random(id, len);
  }
@@ -686,10 +1181,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius.c git/source/ho
 +	return 1;
 +}
 +#endif /* FEATURE_SUPPORT_RADIUSGREYLIST */
-diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/source/hostap-2.11/src/radius/radius_das.c
---- git.orig/source/hostap-2.11/src/radius/radius_das.c	2024-01-18 13:16:27.730546538 +0200
-+++ git/source/hostap-2.11/src/radius/radius_das.c	2024-01-18 15:47:47.764291063 +0200
-@@ -429,6 +429,9 @@
+Index: git/source/hostap-2.11/src/radius/radius_das.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/radius/radius_das.c
++++ git/source/hostap-2.11/src/radius/radius_das.c
+@@ -439,6 +439,9 @@ static void radius_das_receive(int sock,
  	if (wpa_debug_level <= MSG_MSGDUMP)
  		radius_msg_dump(msg);
  
@@ -699,7 +1195,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/sourc
  	if (radius_msg_verify_das_req(msg, das->shared_secret,
  				       das->shared_secret_len,
  				       das->require_message_authenticator)) {
-@@ -437,7 +440,9 @@
+@@ -447,7 +450,9 @@ static void radius_das_receive(int sock,
  			   abuf, from_port);
  		goto fail;
  	}
@@ -710,7 +1206,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/sourc
  	os_get_time(&now);
  	res = radius_msg_get_attr(msg, RADIUS_ATTR_EVENT_TIMESTAMP,
  				  (u8 *) &val, 4);
-@@ -482,6 +487,9 @@
+@@ -492,6 +497,9 @@ static void radius_das_receive(int sock,
  			wpa_printf(MSG_DEBUG, "DAS: Failed to add "
  				   "Event-Timestamp attribute");
  		}
@@ -720,7 +1216,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/sourc
  
  		if (radius_msg_finish_das_resp(reply, das->shared_secret,
  					       das->shared_secret_len, hdr) <
-@@ -489,7 +497,9 @@
+@@ -499,7 +507,9 @@ static void radius_das_receive(int sock,
  			wpa_printf(MSG_DEBUG, "DAS: Failed to add "
  				   "Message-Authenticator attribute");
  		}
@@ -731,7 +1227,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/sourc
  		if (wpa_debug_level <= MSG_MSGDUMP)
  			radius_msg_dump(reply);
  
-@@ -513,6 +523,9 @@
+@@ -523,6 +533,9 @@ static int radius_das_open_socket(int po
  {
  	int s;
  	struct sockaddr_in addr;
@@ -741,7 +1237,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/sourc
  
  	s = socket(PF_INET, SOCK_DGRAM, 0);
  	if (s < 0) {
-@@ -523,6 +536,11 @@
+@@ -533,6 +546,11 @@ static int radius_das_open_socket(int po
  	os_memset(&addr, 0, sizeof(addr));
  	addr.sin_family = AF_INET;
  	addr.sin_port = htons(port);
@@ -753,7 +1249,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/sourc
  	if (bind(s, (struct sockaddr *) &addr, sizeof(addr)) < 0) {
  		wpa_printf(MSG_INFO, "RADIUS DAS: bind: %s", strerror(errno));
  		close(s);
-@@ -537,9 +555,13 @@
+@@ -547,9 +565,13 @@ struct radius_das_data *
  radius_das_init(struct radius_das_conf *conf)
  {
  	struct radius_das_data *das;
@@ -768,7 +1264,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/sourc
  		return NULL;
  
  	das = os_zalloc(sizeof(*das));
-@@ -556,6 +578,9 @@
+@@ -566,6 +588,9 @@ radius_das_init(struct radius_das_conf *
  
  	os_memcpy(&das->client_addr, conf->client_addr,
  		  sizeof(das->client_addr));
@@ -778,7 +1274,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/sourc
  
  	das->shared_secret = os_memdup(conf->shared_secret,
  				       conf->shared_secret_len);
-@@ -564,6 +589,9 @@
+@@ -574,6 +599,9 @@ radius_das_init(struct radius_das_conf *
  		return NULL;
  	}
  	das->shared_secret_len = conf->shared_secret_len;
@@ -788,10 +1284,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius_das.c git/sourc
  
  	das->sock = radius_das_open_socket(conf->port);
  	if (das->sock < 0) {
-diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius.h git/source/hostap-2.11/src/radius/radius.h
---- git.orig/source/hostap-2.11/src/radius/radius.h	2024-01-18 13:16:27.726546545 +0200
-+++ git/source/hostap-2.11/src/radius/radius.h	2024-01-18 21:39:31.898933399 +0200
-@@ -233,6 +233,21 @@
+Index: git/source/hostap-2.11/src/radius/radius.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/radius/radius.h
++++ git/source/hostap-2.11/src/radius/radius.h
+@@ -233,6 +233,21 @@ enum {
  	RADIUS_VENDOR_ATTR_WFA_HS20_T_C_URL = 10,
  };
  
@@ -813,7 +1310,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius.h git/source/ho
  #ifdef _MSC_VER
  #pragma pack(pop)
  #endif /* _MSC_VER */
-@@ -371,4 +386,11 @@
+@@ -372,4 +387,11 @@ u8 radius_msg_find_unlisted_attr(struct
  
  int radius_gen_session_id(u8 *id, size_t len);
  
@@ -825,10 +1322,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/radius/radius.h git/source/ho
 +			   size_t len);
 +#endif /* FEATURE_SUPPORT_RADIUSGREYLIST */
  #endif /* RADIUS_H */
-diff --color -Naur git.orig/source/hostap-2.11/src/utils/eloop.c git/source/hostap-2.11/src/utils/eloop.c
---- git.orig/source/hostap-2.11/src/utils/eloop.c	2024-01-18 13:16:27.742546519 +0200
-+++ git/source/hostap-2.11/src/utils/eloop.c	2024-01-18 15:39:56.921310947 +0200
-@@ -555,6 +555,8 @@
+Index: git/source/hostap-2.11/src/utils/eloop.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/utils/eloop.c
++++ git/source/hostap-2.11/src/utils/eloop.c
+@@ -555,6 +555,8 @@ static void eloop_sock_table_dispatch(st
  				      struct pollfd **pollfds_map,
  				      int max_pollfd_map)
  {
@@ -837,7 +1335,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/eloop.c git/source/host
  	if (eloop_sock_table_dispatch_table(readers, pollfds_map,
  					    max_pollfd_map, POLLIN | POLLERR |
  					    POLLHUP))
-@@ -609,6 +611,56 @@
+@@ -609,6 +611,56 @@ static void eloop_sock_table_dispatch(st
  	}
  }
  
@@ -894,7 +1392,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/eloop.c git/source/host
  #endif /* CONFIG_ELOOP_SELECT */
  
  
-@@ -962,6 +1014,58 @@
+@@ -962,6 +1014,58 @@ int eloop_replenish_timeout(unsigned int
  	return -1;
  }
  
@@ -953,7 +1451,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/eloop.c git/source/host
  
  #ifndef CONFIG_NATIVE_WINDOWS
  static void eloop_handle_alarm(int sig)
-@@ -1185,6 +1289,8 @@
+@@ -1185,6 +1289,8 @@ void eloop_run(void)
  			goto out;
  		}
  
@@ -962,10 +1460,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/eloop.c git/source/host
  		eloop.readers.changed = 0;
  		eloop.writers.changed = 0;
  		eloop.exceptions.changed = 0;
-diff --color -Naur git.orig/source/hostap-2.11/src/utils/eloop.h git/source/hostap-2.11/src/utils/eloop.h
---- git.orig/source/hostap-2.11/src/utils/eloop.h	2024-01-18 13:16:27.742546519 +0200
-+++ git/source/hostap-2.11/src/utils/eloop.h	2024-01-18 15:40:36.013221078 +0200
-@@ -128,6 +128,10 @@
+Index: git/source/hostap-2.11/src/utils/eloop.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/utils/eloop.h
++++ git/source/hostap-2.11/src/utils/eloop.h
+@@ -128,6 +128,10 @@ int eloop_register_sock(int sock, eloop_
   */
  void eloop_unregister_sock(int sock, eloop_event_type type);
  
@@ -976,7 +1475,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/eloop.h git/source/host
  /**
   * eloop_register_event - Register handler for generic events
   * @event: Event to wait (eloop implementation specific)
-@@ -255,6 +259,8 @@
+@@ -255,6 +259,8 @@ int eloop_deplete_timeout(unsigned int r
  int eloop_replenish_timeout(unsigned int req_secs, unsigned int req_usecs,
  			    eloop_timeout_handler handler, void *eloop_data,
  			    void *user_data);
@@ -985,10 +1484,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/eloop.h git/source/host
  
  /**
   * eloop_register_signal - Register handler for signals
-diff --color -Naur git.orig/source/hostap-2.11/src/utils/wpa_debug.c git/source/hostap-2.11/src/utils/wpa_debug.c
---- git.orig/source/hostap-2.11/src/utils/wpa_debug.c	2024-01-18 13:16:27.750546505 +0200
-+++ git/source/hostap-2.11/src/utils/wpa_debug.c	2024-01-18 14:44:09.090388888 +0200
-@@ -209,6 +209,23 @@
+Index: git/source/hostap-2.11/src/utils/wpa_debug.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/utils/wpa_debug.c
++++ git/source/hostap-2.11/src/utils/wpa_debug.c
+@@ -209,6 +209,23 @@ void wpa_debug_close_linux_tracing(void)
  void wpa_printf(int level, const char *fmt, ...)
  {
  	va_list ap;
@@ -1012,7 +1512,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/wpa_debug.c git/source/
  
  	if (level >= wpa_debug_level) {
  #ifdef CONFIG_ANDROID_LOG
-@@ -226,6 +243,11 @@
+@@ -226,6 +243,11 @@ void wpa_printf(int level, const char *f
  #endif /* CONFIG_DEBUG_SYSLOG */
  		wpa_debug_print_timestamp();
  #ifdef CONFIG_DEBUG_FILE
@@ -1024,7 +1524,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/wpa_debug.c git/source/
  		if (out_file) {
  			va_start(ap, fmt);
  			vfprintf(out_file, fmt, ap);
-@@ -259,6 +281,28 @@
+@@ -259,6 +281,28 @@ static void _wpa_hexdump(int level, cons
  			 size_t len, int show, int only_syslog)
  {
  	size_t i;
@@ -1053,7 +1553,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/wpa_debug.c git/source/
  
  #ifdef CONFIG_DEBUG_LINUX_TRACING
  	if (wpa_debug_tracing_file != NULL) {
-@@ -353,6 +397,11 @@
+@@ -353,6 +397,11 @@ static void _wpa_hexdump(int level, cons
  #endif /* CONFIG_DEBUG_SYSLOG */
  	wpa_debug_print_timestamp();
  #ifdef CONFIG_DEBUG_FILE
@@ -1065,7 +1565,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/wpa_debug.c git/source/
  	if (out_file) {
  		fprintf(out_file, "%s - hexdump(len=%lu):",
  			title, (unsigned long) len);
-@@ -551,6 +600,13 @@
+@@ -551,6 +600,13 @@ int wpa_debug_reopen_file(void)
  int wpa_debug_open_file(const char *path)
  {
  #ifdef CONFIG_DEBUG_FILE
@@ -1079,7 +1579,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/wpa_debug.c git/source/
  	int out_fd;
  
  	if (!path)
-@@ -854,10 +910,10 @@
+@@ -854,10 +910,10 @@ void hostapd_logger(void *ctx, const u8
  	if (hostapd_logger_cb)
  		hostapd_logger_cb(ctx, addr, module, level, buf, len);
  	else if (addr)
@@ -1092,10 +1592,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/utils/wpa_debug.c git/source/
  	bin_clear_free(buf, buflen);
  }
  #endif /* CONFIG_NO_HOSTAPD_LOGGER */
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_common.c git/source/hostap-2.11/src/wps/wps_common.c
---- git.orig/source/hostap-2.11/src/wps/wps_common.c	2024-01-31 22:43:53.867466677 +0200
-+++ git/source/hostap-2.11/src/wps/wps_common.c	2024-01-31 22:45:42.679572283 +0200
-@@ -350,6 +350,33 @@
+Index: git/source/hostap-2.11/src/wps/wps_common.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_common.c
++++ git/source/hostap-2.11/src/wps/wps_common.c
+@@ -350,6 +350,33 @@ void wps_pbc_disable_event(struct wps_co
  	wps->event_cb(wps->cb_ctx, WPS_EV_PBC_DISABLE, NULL);
  }
  
@@ -1129,10 +1630,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_common.c git/source/h
  
  #ifdef CONFIG_WPS_OOB
  
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps.h git/source/hostap-2.11/src/wps/wps.h
---- git.orig/source/hostap-2.11/src/wps/wps.h	2024-01-31 22:43:53.867466677 +0200
-+++ git/source/hostap-2.11/src/wps/wps.h	2024-01-31 22:44:40.983456486 +0200
-@@ -485,6 +485,21 @@
+Index: git/source/hostap-2.11/src/wps/wps.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps.h
++++ git/source/hostap-2.11/src/wps/wps.h
+@@ -490,6 +490,21 @@ enum wps_event {
  	WPS_EV_PBC_DISABLE,
  
  	/**
@@ -1154,10 +1656,33 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps.h git/source/hostap-2
  	 * WPS_EV_ER_AP_ADD - ER: AP added
  	 */
  	WPS_EV_ER_AP_ADD,
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_i.h git/source/hostap-2.11/src/wps/wps_i.h
---- git.orig/source/hostap-2.11/src/wps/wps_i.h	2024-01-31 22:43:53.871466676 +0200
-+++ git/source/hostap-2.11/src/wps/wps_i.h	2024-01-31 22:46:12.427798916 +0200
-@@ -147,6 +147,9 @@
+@@ -846,7 +861,10 @@ struct wps_context {
+ 	struct wpabuf *ap_nfc_dh_pubkey;
+ 	struct wpabuf *ap_nfc_dh_privkey;
+ 	struct wpabuf *ap_nfc_dev_pw;
+-
++#ifdef CONFIG_DRIVER_BRCM_MAP
++    u8 map;
++    struct wps_credential bh_creds; /* Multiap backhaul credentials */
++#endif  /* CONFIG_DRIVER_BRCM_MAP */
+ 	/* Whether to send WPA2-PSK passphrase as a passphrase instead of PSK
+ 	 * for WPA3-Personal transition mode needs. */
+ 	bool use_passphrase;
+Index: git/source/hostap-2.11/src/wps/wps_i.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_i.h
++++ git/source/hostap-2.11/src/wps/wps_i.h
+@@ -128,6 +128,9 @@ struct wps_data {
+ 
+ 	int multi_ap_backhaul_sta;
+ 	int multi_ap_profile;
++#ifdef CONFIG_DRIVER_BRCM_MAP
++    u8 map_ext_attr_e;              /* Enrolee multiap extension attribute */
++#endif  /* CONFIG_DRIVER_BRCM_MAP */
+ };
+ 
+ 
+@@ -148,6 +151,9 @@ void wps_pbc_overlap_event(struct wps_co
  void wps_pbc_timeout_event(struct wps_context *wps);
  void wps_pbc_active_event(struct wps_context *wps);
  void wps_pbc_disable_event(struct wps_context *wps);
@@ -1167,60 +1692,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_i.h git/source/hostap
  
  struct wpabuf * wps_build_wsc_ack(struct wps_data *wps);
  struct wpabuf * wps_build_wsc_nack(struct wps_data *wps);
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ap_config.h git/source/hostap-2.11/src/ap/ap_config.h
---- git.orig/source/hostap-2.11/src/ap/ap_config.h	2024-02-01 01:21:16.081432713 +0200
-+++ git/source/hostap-2.11/src/ap/ap_config.h	2024-02-01 01:23:48.277645045 +0200
-@@ -806,6 +806,17 @@
- #define FRONTHAUL_BSS 2
- 	int multi_ap; /* bitmap of BACKHAUL_BSS, FRONTHAUL_BSS */
- 
-+#ifdef CONFIG_DRIVER_BRCM_MAP
-+	u8 map;
-+	u8 map_bh_ssid[SSID_MAX_LEN];
-+	size_t map_bh_ssid_len;
-+	u16 map_bh_auth;
-+	u16 map_bh_encr;
-+	u8 map_bh_psk[PMK_LEN_MAX];
-+	size_t map_bh_psk_len;
-+	int spp_amsdu;
-+#endif  /* CONFIG_DRIVER_BRCM_MAP */
-+
- #ifdef CONFIG_AIRTIME_POLICY
- 	unsigned int airtime_weight;
- 	int airtime_limit;
-@@ -1202,7 +1213,9 @@
- 	unsigned int airtime_update_interval;
- #define AIRTIME_MODE_MAX (__AIRTIME_MODE_MAX - 1)
- #endif /* CONFIG_AIRTIME_POLICY */
--
-+#ifdef CONFIG_DRIVER_BRCM
-+	int ft_rrb_lo_sock; /* Create loopback socket for FT RRB OUI */
-+#endif /* CONFIG_DRIVER_BRCM */
- 	int ieee80211be;
- #ifdef CONFIG_IEEE80211BE
- 	enum oper_chan_width eht_oper_chwidth;
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ap_drv_ops.h git/source/hostap-2.11/src/ap/ap_drv_ops.h
---- git.orig/source/hostap-2.11/src/ap/ap_drv_ops.h	2024-02-01 01:21:16.085432720 +0200
-+++ git/source/hostap-2.11/src/ap/ap_drv_ops.h	2024-02-01 01:24:31.801691229 +0200
-@@ -459,5 +459,13 @@
- 
- }
- #endif /* CONFIG_IEEE80211BE */
--
-+#ifdef CONFIG_DRIVER_BRCM
-+static inline int
-+hostapd_drv_stop_bss(struct hostapd_data *hapd)
-+{
-+	if (!hapd->driver || !hapd->driver->stop_bss || !hapd->drv_priv)
-+		return 0;
-+	return hapd->driver->stop_bss(hapd->drv_priv);
-+}
-+#endif /* CONFIG_DRIVER_BRCM */
- #endif /* AP_DRV_OPS */
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/beacon.c git/source/hostap-2.11/src/ap/beacon.c
---- git.orig/source/hostap-2.11/src/ap/beacon.c	2024-02-01 01:21:16.069432693 +0200
-+++ git/source/hostap-2.11/src/ap/beacon.c	2024-02-01 01:25:24.437739756 +0200
-@@ -357,6 +357,19 @@
+Index: git/source/hostap-2.11/src/ap/beacon.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/beacon.c
++++ git/source/hostap-2.11/src/ap/beacon.c
+@@ -373,6 +373,19 @@ static u8 * hostapd_get_mde(struct hosta
  	return pos + 2 + ie[1];
  }
  
@@ -1240,7 +1716,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/beacon.c git/source/hostap
  
  static u8 * hostapd_get_rsnxe(struct hostapd_data *hapd, u8 *pos, size_t len)
  {
-@@ -2209,6 +2222,9 @@
+@@ -2283,6 +2296,9 @@ int ieee802_11_build_ap_params(struct ho
  	tailpos = hostapd_eid_rm_enabled_capab(hapd, tailpos,
  					       tailend - tailpos);
  	tailpos = hostapd_get_mde(hapd, tailpos, tailend - tailpos);
@@ -1250,11 +1726,12 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/beacon.c git/source/hostap
  
  	/* eCSA IE */
  	csa_pos = hostapd_eid_ecsa(hapd, tailpos);
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/drv_callbacks.c git/source/hostap-2.11/src/ap/drv_callbacks.c
---- git.orig/source/hostap-2.11/src/ap/drv_callbacks.c	2024-02-01 01:21:16.069432693 +0200
-+++ git/source/hostap-2.11/src/ap/drv_callbacks.c	2024-02-01 01:27:09.677815656 +0200
-@@ -929,6 +929,10 @@
- 
+Index: git/source/hostap-2.11/src/ap/drv_callbacks.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/drv_callbacks.c
++++ git/source/hostap-2.11/src/ap/drv_callbacks.c
+@@ -914,6 +914,10 @@ static void hostapd_remove_sta(struct ho
+ {
  	ap_sta_set_authorized(hapd, sta, 0);
  	sta->flags &= ~(WLAN_STA_AUTH | WLAN_STA_ASSOC);
 +#ifdef CONFIG_DRIVER_BRCM
@@ -1264,7 +1741,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/drv_callbacks.c git/source
  	hostapd_set_sta_flags(hapd, sta);
  	wpa_auth_sm_event(sta->wpa_sm, WPA_DISASSOC);
  	sta->acct_terminate_cause = RADIUS_ACCT_TERMINATE_CAUSE_USER_REQUEST;
-@@ -1442,8 +1446,11 @@
+@@ -1553,8 +1557,11 @@ static void hostapd_notify_auth_ft_finis
  	hostapd_logger(hapd, dst, HOSTAPD_MODULE_IEEE80211,
  		       HOSTAPD_LEVEL_DEBUG, "authentication OK (FT)");
  	sta->flags |= WLAN_STA_AUTH;
@@ -1277,7 +1754,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/drv_callbacks.c git/source
  }
  #endif /* CONFIG_IEEE80211R_AP */
  
-@@ -2515,6 +2522,14 @@
+@@ -2735,6 +2742,14 @@ void wpa_supplicant_event(void *ctx, enu
  			data->wds_sta_interface.ifname,
  			data->wds_sta_interface.sta_addr);
  		break;
@@ -1292,9 +1769,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/drv_callbacks.c git/source
  #ifdef CONFIG_IEEE80211AX
  	case EVENT_BSS_COLOR_COLLISION:
  		/* The BSS color is shared amongst all BBSs on a specific phy.
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/gas_serv.c git/source/hostap-2.11/src/ap/gas_serv.c
---- git.orig/source/hostap-2.11/src/ap/gas_serv.c	2024-02-01 01:21:16.073432700 +0200
-+++ git/source/hostap-2.11/src/ap/gas_serv.c	2024-02-01 02:44:41.217872470 +0200
+Index: git/source/hostap-2.11/src/ap/gas_serv.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/gas_serv.c
++++ git/source/hostap-2.11/src/ap/gas_serv.c
 @@ -19,7 +19,9 @@
  #include "dpp_hostapd.h"
  #include "sta_info.h"
@@ -1306,7 +1784,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/gas_serv.c git/source/host
  
  #ifdef CONFIG_DPP
  static void gas_serv_write_dpp_adv_proto(struct wpabuf *buf)
-@@ -1527,6 +1529,9 @@
+@@ -1527,6 +1529,9 @@ void gas_serv_req_dpp_processing(struct
  				 int prot, struct wpabuf *buf, int freq)
  {
  	struct wpabuf *tx_buf;
@@ -1316,7 +1794,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/gas_serv.c git/source/host
  
  	if (wpabuf_len(buf) > hapd->conf->gas_frag_limit ||
  	    hapd->conf->gas_comeback_delay) {
-@@ -1582,9 +1587,17 @@
+@@ -1582,9 +1587,17 @@ void gas_serv_req_dpp_processing(struct
  		return;
  	if (prot)
  		convert_to_protected_dual(tx_buf);
@@ -1334,238 +1812,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/gas_serv.c git/source/host
  	wpabuf_free(tx_buf);
  }
  #endif /* CONFIG_DPP */
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.c git/source/hostap-2.11/src/ap/hostapd.c
---- git.orig/source/hostap-2.11/src/ap/hostapd.c	2024-02-01 01:21:16.085432720 +0200
-+++ git/source/hostap-2.11/src/ap/hostapd.c	2024-02-01 01:30:02.853890947 +0200
-@@ -4949,3 +4961,36 @@ u16 hostapd_get_punct_bitmap(struct hostapd_data *hapd)
- 
-        return punct_bitmap;
- }
-+
-+#ifdef CONFIG_DRIVER_BRCM
-+/*
-+ * start beaconing on virtual BSS iface on ifconfig up
-+ */
-+void hostapd_set_beacon_on_vif(struct hostapd_data *hapd)
-+{
-+	struct hostapd_bss_config *conf = hapd->conf;
-+	hapd->disabled = 0;
-+
-+	if ((conf->start_disabled == 1)  && (hapd->bss_started == 0)) {
-+		wpa_printf(MSG_DEBUG, "%s: hapd %p, start_disabled %d, bss_started %d. return",
-+				conf->iface, hapd, conf->start_disabled, hapd->bss_started);
-+		return;
-+	}
-+
-+	hapd->reenable_beacon = 1;
-+	if (ieee802_11_set_beacon(hapd) < 0) {
-+		wpa_printf(MSG_ERROR, "%s: setting beacon failed", conf->iface);
-+	} else {
-+		wpa_printf(MSG_DEBUG, "%s: setting beacon success", conf->iface);
-+	}
-+}
-+
-+/*
-+ * stop beaconing on vritual BSS iface on ifconfig down
-+ */
-+void hostapd_stop_beacon_on_vif(struct hostapd_data *hapd)
-+{
-+	wpa_printf(MSG_INFO, "%s: stop beacon", hapd->conf->iface);
-+	hapd->disabled = 1;
-+}
-+#endif /* CONFIG_DRIVER_BRCM */
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/hostapd.h git/source/hostap-2.11/src/ap/hostapd.h
---- git.orig/source/hostap-2.11/src/ap/hostapd.h	2024-02-01 01:21:16.085432720 +0200
-+++ git/source/hostap-2.11/src/ap/hostapd.h	2024-02-01 01:30:53.033903472 +0200
-@@ -173,7 +173,9 @@
- 	unsigned int started:1;
- 	unsigned int disabled:1;
- 	unsigned int reenable_beacon:1;
--
-+#ifdef CONFIG_DRIVER_BRCM
-+	unsigned int bss_started:1; /* BSS started/stopped from cli - start_bss/stop_bss */
-+#endif /* CONFIG_DRIVER_BRCM */
- 	u8 own_addr[ETH_ALEN];
- 	u8 mld_addr[ETH_ALEN];
- 	u8 mld_link_id;
-@@ -251,7 +253,13 @@
- 	struct eth_p_oui_ctx *oui_sreq;
- 	struct eth_p_oui_ctx *oui_sresp;
- #endif /* CONFIG_IEEE80211R_AP */
--
-+#ifdef CONFIG_DRIVER_BRCM
-+	struct eth_p_oui_ctx *lo_oui_pull;
-+	struct eth_p_oui_ctx *lo_oui_resp;
-+	struct eth_p_oui_ctx *lo_oui_push;
-+	struct eth_p_oui_ctx *lo_oui_sreq;
-+	struct eth_p_oui_ctx *lo_oui_sresp;
-+#endif /* CONFIG_DRIVER_BRCM */
- 	struct wps_context *wps;
- 
- 	int beacon_set_done;
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/ieee802_11.c git/source/hostap-2.11/src/ap/ieee802_11.c
---- git.orig/source/hostap-2.11/src/ap/ieee802_11.c	2024-02-01 01:21:16.085432720 +0200
-+++ git/source/hostap-2.11/src/ap/ieee802_11.c	2024-02-01 01:36:49.377644080 +0200
-@@ -57,7 +57,9 @@
- #include "gas_query_ap.h"
- #include "comeback_token.h"
- #include "pasn/pasn_common.h"
--
-+#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
-+#include "ce_shared.h"
-+#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
- 
- #ifdef CONFIG_FILS
- static struct wpabuf *
-@@ -508,11 +522,14 @@
- 	struct hostapd_data *hapd = ctx;
- 	struct sta_info *sta;
- 	int reply_res;
--
-+//#ifdef CONFIG_DRIVER_BRCM
-+	//brcm_build_ft_auth_resp_send(ctx, dst, status, ies, ies_len);
-+	//reply_res = status;
-+//#else
- 	reply_res = send_auth_reply(hapd, NULL, dst, WLAN_AUTH_FT,
- 				    auth_transaction, status, ies, ies_len,
- 				    "auth-ft-finish");
--
-+//#endif /* CONFIG_DRIVER_BRCM */
- 	sta = ap_get_sta(hapd, dst);
- 	if (sta == NULL)
- 		return;
-@@ -741,7 +746,12 @@
- 				    WLAN_AUTH_SAE, 1,
- 				    status, wpabuf_head(data),
- 				    wpabuf_len(data), "sae-send-commit");
--
-+#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
-+	if (!reply_res) {
-+		CE_SEND_CEVENT_A2C_EXT(hapd->conf->iface, (struct ether_addr *)sta->addr, 0, 0,
-+			CEVENT_ST_HOSTAPD, CEVENT_A2C_MT_AUTH_COMMIT_TX, CEVENT_FRAME_DIR_TX, NULL, 0);
-+	}
-+#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
- 	wpabuf_free(data);
- 
- 	return reply_res;
-@@ -763,7 +773,12 @@
- 				    WLAN_AUTH_SAE, 2,
- 				    WLAN_STATUS_SUCCESS, wpabuf_head(data),
- 				    wpabuf_len(data), "sae-send-confirm");
--
-+#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
-+	if (!reply_res) {
-+		CE_SEND_CEVENT_A2C_EXT(hapd->conf->iface, (struct ether_addr *)sta->addr, 0, 0,
-+			CEVENT_ST_HOSTAPD, CEVENT_A2C_MT_AUTH_CONFIRM_TX, CEVENT_FRAME_DIR_TX, NULL, 0);
-+	}
-+#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
- 	wpabuf_free(data);
- 
- 	return reply_res;
-@@ -1335,7 +1350,10 @@
- 		const u8 *token = NULL;
- 		size_t token_len = 0;
- 		int allow_reuse = 0;
--
-+#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
-+		CE_SEND_CEVENT_A2C_EXT(hapd->conf->iface, (struct ether_addr *)sta->addr, 0, 0,
-+			CEVENT_ST_HOSTAPD, CEVENT_A2C_MT_AUTH_COMMIT_RX, CEVENT_FRAME_DIR_RX, NULL, 0);
-+#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
- 		hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_IEEE80211,
- 			       HOSTAPD_LEVEL_DEBUG,
- 			       "start SAE authentication (RX commit, status=%u (%s))",
-@@ -1505,6 +1523,10 @@
- 		resp = sae_sm_step(hapd, sta, mgmt->bssid, auth_transaction,
- 				   status_code, allow_reuse, &sta_removed);
- 	} else if (auth_transaction == 2) {
-+#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
-+		CE_SEND_CEVENT_A2C_EXT(hapd->conf->iface, (struct ether_addr *)sta->addr, 0, 0,
-+			CEVENT_ST_HOSTAPD, CEVENT_A2C_MT_AUTH_CONFIRM_RX, CEVENT_FRAME_DIR_RX, NULL, 0);
-+#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
- 		hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_IEEE80211,
- 			       HOSTAPD_LEVEL_DEBUG,
- 			       "SAE authentication (RX confirm, status=%u (%s))",
-@@ -3160,7 +3182,11 @@
- 			goto fail;
- 		}
- 	}
--
-+#ifdef CONFIG_DRIVER_BRCM
-+	else {
-+		sta->added_unassoc = 1;
-+	}
-+#endif /* CONFIG_DRIVER_BRCM */
- 	switch (auth_alg) {
- 	case WLAN_AUTH_OPEN:
- 		hostapd_logger(hapd, sta->addr, HOSTAPD_MODULE_IEEE80211,
-@@ -5334,6 +5360,9 @@
- 		 * entry in the driver as associated and not authenticated
- 		 */
- 		sta->flags |= WLAN_STA_AUTH;
-+#ifdef CONFIG_DRIVER_BRCM
-+		sta->added_unassoc = 1;
-+#endif /* CONFIG_DRIVER_BRCM */
- 	} else
- #endif /* CONFIG_IEEE80211R_AP */
- 	if (sta == NULL || (sta->flags & WLAN_STA_AUTH) == 0) {
-@@ -5384,6 +5413,29 @@
- 			wpa_auth_sm_event(sta->wpa_sm, WPA_AUTH);
- 			sta->auth_alg = WLAN_AUTH_OPEN;
- 		} else {
-+#ifdef CONFIG_DRIVER_BRCM
-+                        sta = ap_sta_add(hapd, mgmt->sa);
-+                        if (!sta) {
-+                                hostapd_logger(hapd, mgmt->sa,
-+                                               HOSTAPD_MODULE_IEEE80211,
-+                                               HOSTAPD_LEVEL_INFO,
-+                                               "Failed to add STA");
-+                                resp = WLAN_STATUS_AP_UNABLE_TO_HANDLE_NEW_STA;
-+                                goto fail;
-+                        }
-+                        hostapd_logger(hapd, sta->addr,
-+                                       HOSTAPD_MODULE_IEEE80211,
-+                                       HOSTAPD_LEVEL_DEBUG,
-+                                       "Skip authentication for DMG/IEEE 802.11ad");
-+                        sta->flags |= WLAN_STA_AUTH;
-+                        wpa_auth_sm_event(sta->wpa_sm, WPA_AUTH);
-+                        sta->auth_alg = WLAN_AUTH_OPEN;
-+                        /* It comes here only when STA is already authenticated by the driver
-+                         * and association request is getting handled by hostapd.
-+                         * So set added_unassoc flag here.
-+                         */
-+                        sta->added_unassoc = 1;
-+#else
- 			hostapd_logger(hapd, mgmt->sa,
- 				       HOSTAPD_MODULE_IEEE80211,
- 				       HOSTAPD_LEVEL_INFO,
-@@ -5489,6 +5559,7 @@ static void handle_assoc(struct hostapd_data *hapd,
- 			send_deauth(hapd, mgmt->sa,
- 				    WLAN_REASON_CLASS2_FRAME_FROM_NONAUTH_STA);
- 			return;
-+#endif /* CONFIG_DRIVER_BRCM */
- 		}
- 	}
- 
-@@ -6008,6 +6079,7 @@ static int handle_action(struct hostapd_data *hapd,
- 		return 0;
- 	}
- 
-+#ifndef CONFIG_DRIVER_BRCM
- 	if (sta && (sta->flags & WLAN_STA_MFP) &&
- 	    !(mgmt->frame_control & host_to_le16(WLAN_FC_ISWEP)) &&
- 	    robust_action_frame(mgmt->u.action.category)) {
-@@ -6017,6 +6089,7 @@ static int handle_action(struct hostapd_data *hapd,
- 			       "an MFP STA");
- 		return 0;
- 	}
-+#endif /* !CONFIG_DRIVER_BRCM */
- 
- 	if (sta) {
- 		u16 fc = le_to_host16(mgmt->frame_control);
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/sta_info.c git/source/hostap-2.11/src/ap/sta_info.c
---- git.orig/source/hostap-2.11/src/ap/sta_info.c	2024-02-01 01:21:16.077432706 +0200
-+++ git/source/hostap-2.11/src/ap/sta_info.c	2024-02-01 01:38:21.065105301 +0200
-@@ -245,7 +245,18 @@
+Index: git/source/hostap-2.11/src/ap/sta_info.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/sta_info.c
++++ git/source/hostap-2.11/src/ap/sta_info.c
+@@ -245,7 +245,18 @@ void ap_free_sta(struct hostapd_data *ha
  
  	if (!hapd->iface->driver_ap_teardown &&
  	    !(sta->flags & WLAN_STA_PREAUTH)) {
@@ -1584,7 +1835,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/sta_info.c git/source/host
  		sta->added_unassoc = 0;
  	}
  
-@@ -331,7 +342,18 @@
+@@ -381,7 +392,18 @@ void ap_free_sta(struct hostapd_data *ha
  		 */
  		if (hapd->iface->driver_ap_teardown &&
  		    !(sta->flags & WLAN_STA_PREAUTH)) {
@@ -1603,9 +1854,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/sta_info.c git/source/host
  			sta->added_unassoc = 0;
  		}
  		vlan_remove_dynamic(hapd, sta->vlan_id_bound);
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/sta_info.h git/source/hostap-2.11/src/ap/sta_info.h
---- git.orig/source/hostap-2.11/src/ap/sta_info.h	2024-02-01 01:21:16.077432706 +0200
-+++ git/source/hostap-2.11/src/ap/sta_info.h	2024-02-01 01:38:48.612957780 +0200
+Index: git/source/hostap-2.11/src/ap/sta_info.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/sta_info.h
++++ git/source/hostap-2.11/src/ap/sta_info.h
 @@ -22,6 +22,9 @@
  /* STA flags */
  #define WLAN_STA_AUTH BIT(0)
@@ -1616,9 +1868,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/sta_info.h git/source/host
  #define WLAN_STA_AUTHORIZED BIT(5)
  #define WLAN_STA_PENDING_POLL BIT(6) /* pending activity poll not ACKed */
  #define WLAN_STA_SHORT_PREAMBLE BIT(7)
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/hostap-2.11/src/ap/wpa_auth.c
---- git.orig/source/hostap-2.11/src/ap/wpa_auth.c	2024-02-01 01:21:16.081432713 +0200
-+++ git/source/hostap-2.11/src/ap/wpa_auth.c	2024-02-01 01:42:39.775928915 +0200
+Index: git/source/hostap-2.11/src/ap/wpa_auth.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/wpa_auth.c
++++ git/source/hostap-2.11/src/ap/wpa_auth.c
 @@ -34,6 +34,9 @@
  #include "pmksa_cache_auth.h"
  #include "wpa_auth_i.h"
@@ -1629,7 +1882,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/host
  
  #define STATE_MACHINE_DATA struct wpa_state_machine
  #define STATE_MACHINE_DEBUG_PREFIX "WPA"
-@@ -82,6 +85,14 @@
+@@ -85,6 +88,14 @@ static const int dot11RSNAConfigPMKLifet
  static const int dot11RSNAConfigPMKReauthThreshold = 70;
  static const int dot11RSNAConfigSATimeout = 60;
  
@@ -1644,7 +1897,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/host
  
  static const u8 * wpa_auth_get_aa(const struct wpa_state_machine *sm)
  {
-@@ -1251,6 +1262,9 @@
+@@ -1543,6 +1554,9 @@ void wpa_receive(struct wpa_authenticato
  	const u8 *key_data;
  	size_t keyhdrlen, mic_len;
  	u8 *mic;
@@ -1654,7 +1907,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/host
  	u8 *key_data_buf = NULL;
  	size_t key_data_buf_len = 0;
  
-@@ -1350,7 +1364,9 @@
+@@ -1642,7 +1656,9 @@ void wpa_receive(struct wpa_authenticato
  		wpa_hexdump_key(MSG_DEBUG, "RSN: Decrypted EAPOL-Key Key Data",
  				key_data, key_data_length);
  	}
@@ -1665,7 +1918,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/host
  	if (key_info & WPA_KEY_INFO_REQUEST) {
  		msg = REQUEST;
  		msgtxt = "Request";
-@@ -1367,9 +1383,17 @@
+@@ -1659,9 +1675,17 @@ void wpa_receive(struct wpa_authenticato
  		    key_data_length == AES_BLOCK_SIZE)) {
  		msg = PAIRWISE_4;
  		msgtxt = "4/4 Pairwise";
@@ -1683,7 +1936,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/host
  	}
  
  	if (!wpa_auth_valid_counter(wpa_auth, sm, key, msg, msgtxt))
-@@ -2415,6 +2439,9 @@
+@@ -2709,6 +2733,9 @@ SM_STATE(WPA_PTK, PTKSTART)
  #ifdef CONFIG_TESTING_OPTIONS
  	struct wpa_auth_config *conf = &sm->wpa_auth->conf;
  #endif /* CONFIG_TESTING_OPTIONS */
@@ -1693,7 +1946,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/host
  
  	SM_ENTRY_MA(WPA_PTK, PTKSTART, wpa_ptk);
  	sm->PTKRequest = false;
-@@ -2442,6 +2469,11 @@
+@@ -2736,6 +2763,11 @@ SM_STATE(WPA_PTK, PTKSTART)
  	if (!buf)
  		return;
  
@@ -1705,7 +1958,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/host
  	wpa_auth_logger(sm->wpa_auth, wpa_auth_get_spa(sm), LOGGER_DEBUG,
  			"sending 1/4 msg of 4-Way Handshake");
  	/*
-@@ -4247,6 +4279,9 @@
+@@ -4560,6 +4592,9 @@ SM_STATE(WPA_PTK, PTKINITNEGOTIATING)
  #else /* CONFIG_IEEE80211BE */
  	bool is_mld = false;
  #endif /* CONFIG_IEEE80211BE */
@@ -1715,7 +1968,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/host
  
  	SM_ENTRY_MA(WPA_PTK, PTKINITNEGOTIATING, wpa_ptk);
  	sm->TimeoutEvt = false;
-@@ -4300,6 +4335,11 @@
+@@ -4613,6 +4648,11 @@ SM_STATE(WPA_PTK, PTKINITNEGOTIATING)
  		wpa_ie = wpa_ie_buf;
  	}
  #endif /* CONFIG_TESTING_OPTIONS */
@@ -1727,10 +1980,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.c git/source/host
  	wpa_auth_logger(sm->wpa_auth, wpa_auth_get_spa(sm), LOGGER_DEBUG,
  			"sending 3/4 msg of 4-Way Handshake");
  	if (sm->wpa == WPA_VERSION_WPA2) {
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_ft.c git/source/hostap-2.11/src/ap/wpa_auth_ft.c
---- git.orig/source/hostap-2.11/src/ap/wpa_auth_ft.c	2024-02-01 01:21:16.081432713 +0200
-+++ git/source/hostap-2.11/src/ap/wpa_auth_ft.c	2024-02-01 01:44:11.847602107 +0200
-@@ -3819,6 +3819,9 @@
+Index: git/source/hostap-2.11/src/ap/wpa_auth_ft.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/wpa_auth_ft.c
++++ git/source/hostap-2.11/src/ap/wpa_auth_ft.c
+@@ -3819,6 +3819,9 @@ static void wpa_ft_rrb_rx_request_cb(voi
  		   MAC2STR(sm->addr));
  	wpa_ft_send_rrb_auth_resp(sm, sm->ft_pending_current_ap, sm->addr,
  				  WLAN_STATUS_SUCCESS, ies, ies_len);
@@ -1740,7 +1994,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_ft.c git/source/h
  }
  
  
-@@ -3855,6 +3858,9 @@
+@@ -3855,6 +3858,9 @@ static int wpa_ft_rrb_rx_request(struct
  
  	res = wpa_ft_send_rrb_auth_resp(sm, current_ap, sta_addr, status,
  					resp_ies, resp_ies_len);
@@ -1750,192 +2004,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_ft.c git/source/h
  	os_free(resp_ies);
  	return res;
  }
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_glue.c git/source/hostap-2.11/src/ap/wpa_auth_glue.c
---- git.orig/source/hostap-2.11/src/ap/wpa_auth_glue.c	2024-02-01 01:21:16.085432720 +0200
-+++ git/source/hostap-2.11/src/ap/wpa_auth_glue.c	2024-02-01 01:49:18.510740819 +0200
-@@ -217,6 +217,9 @@
- #ifdef CONFIG_DPP2
- 	wconf->dpp_pfs = conf->dpp_pfs;
- #endif /* CONFIG_DPP2 */
-+#ifdef CONFIG_DRIVER_BRCM
-+	wconf->spp_amsdu = conf->spp_amsdu;
-+#endif /* CONFIG_DRIVER_BRCM */
- #ifdef CONFIG_PASN
- #ifdef CONFIG_TESTING_OPTIONS
- 	wconf->force_kdk_derivation = conf->force_kdk_derivation;
-@@ -794,6 +797,29 @@
- 		return NULL;
- 	}
- }
-+
-+#ifdef CONFIG_DRIVER_BRCM
-+static struct eth_p_oui_ctx * hostapd_wpa_get_lo_oui(struct hostapd_data *hapd,
-+						  u8 oui_suffix)
-+{
-+	switch (oui_suffix) {
-+#ifdef CONFIG_IEEE80211R_AP
-+	case FT_PACKET_R0KH_R1KH_PULL:
-+		return hapd->lo_oui_pull;
-+	case FT_PACKET_R0KH_R1KH_RESP:
-+		return hapd->lo_oui_resp;
-+	case FT_PACKET_R0KH_R1KH_PUSH:
-+		return hapd->lo_oui_push;
-+	case FT_PACKET_R0KH_R1KH_SEQ_REQ:
-+		return hapd->lo_oui_sreq;
-+	case FT_PACKET_R0KH_R1KH_SEQ_RESP:
-+		return hapd->lo_oui_sresp;
-+#endif /* CONFIG_IEEE80211R_AP */
-+	default:
-+		return NULL;
-+	}
-+}
-+#endif /* CONFIG_DRIVER_BRCM */
- #endif /* CONFIG_ETH_P_OUI */
- 
- 
-@@ -941,6 +967,16 @@
- 			return data_len;
- 	}
- #endif /* CONFIG_IEEE80211R_AP */
-+#ifdef CONFIG_DRIVER_BRCM
-+	/* Send l2 packet on loopback socket as well */
-+	if (hapd->iconf->ft_rrb_lo_sock) {
-+		oui_ctx = hostapd_wpa_get_lo_oui(hapd, oui_suffix);
-+		if (!oui_ctx)
-+			return -1;
-+
-+		eth_p_oui_send(oui_ctx, hapd->own_addr, dst, data, data_len);
-+	}
-+#endif /* CONFIG_DRIVER_BRCM */
- 
- 	oui_ctx = hostapd_wpa_get_oui(hapd, oui_suffix);
- 	if (!oui_ctx)
-@@ -1403,6 +1439,15 @@
- 	return (remaining.sec > 0) ? remaining.sec : 1;
- }
- 
-+#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
-+static char* hostapd_wpa_auth_get_ifname(void *ctx)
-+{
-+	struct hostapd_data *hapd = ctx;
-+	if (hapd && hapd->conf)
-+		return hapd->conf->iface;
-+	return NULL;
-+}
-+#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
- 
- static void hostapd_rrb_receive(void *ctx, const u8 *src_addr, const u8 *buf,
- 				size_t len)
-@@ -1483,6 +1528,43 @@
- 	return 0;
- }
- 
-+#ifdef CONFIG_DRIVER_BRCM
-+static int hostapd_wpa_register_ft_lo_oui(struct hostapd_data *hapd,
-+				       const char *ft_iface)
-+{
-+	hapd->lo_oui_pull = eth_p_oui_register(hapd, ft_iface,
-+					    FT_PACKET_R0KH_R1KH_PULL,
-+					    hostapd_rrb_oui_receive, hapd);
-+	if (!hapd->lo_oui_pull)
-+		return -1;
-+
-+	hapd->lo_oui_resp = eth_p_oui_register(hapd, ft_iface,
-+					    FT_PACKET_R0KH_R1KH_RESP,
-+					    hostapd_rrb_oui_receive, hapd);
-+	if (!hapd->lo_oui_resp)
-+		return -1;
-+
-+	hapd->lo_oui_push = eth_p_oui_register(hapd, ft_iface,
-+					    FT_PACKET_R0KH_R1KH_PUSH,
-+					    hostapd_rrb_oui_receive, hapd);
-+	if (!hapd->lo_oui_push)
-+		return -1;
-+
-+	hapd->lo_oui_sreq = eth_p_oui_register(hapd, ft_iface,
-+					    FT_PACKET_R0KH_R1KH_SEQ_REQ,
-+					    hostapd_rrb_oui_receive, hapd);
-+	if (!hapd->lo_oui_sreq)
-+		return -1;
-+
-+	hapd->lo_oui_sresp = eth_p_oui_register(hapd, ft_iface,
-+					     FT_PACKET_R0KH_R1KH_SEQ_RESP,
-+					     hostapd_rrb_oui_receive, hapd);
-+	if (!hapd->lo_oui_sresp)
-+		return -1;
-+
-+	return 0;
-+}
-+#endif /* CONFIG_DRIVER_BRCM */
- 
- static void hostapd_wpa_unregister_ft_oui(struct hostapd_data *hapd)
- {
-@@ -1497,6 +1579,22 @@
- 	eth_p_oui_unregister(hapd->oui_sresp);
- 	hapd->oui_sresp = NULL;
- }
-+
-+#ifdef CONFIG_DRIVER_BRCM
-+static void hostapd_wpa_unregister_ft_lo_oui(struct hostapd_data *hapd)
-+{
-+	eth_p_oui_unregister(hapd->lo_oui_pull);
-+	hapd->lo_oui_pull = NULL;
-+	eth_p_oui_unregister(hapd->lo_oui_resp);
-+	hapd->lo_oui_resp = NULL;
-+	eth_p_oui_unregister(hapd->lo_oui_push);
-+	hapd->lo_oui_push = NULL;
-+	eth_p_oui_unregister(hapd->lo_oui_sreq);
-+	hapd->lo_oui_sreq = NULL;
-+	eth_p_oui_unregister(hapd->lo_oui_sresp);
-+	hapd->lo_oui_sresp = NULL;
-+}
-+#endif /* CONFIG_DRIVER_BRCM */
- #endif /* CONFIG_IEEE80211R_AP */
- 
- 
-@@ -1685,6 +1783,9 @@
- #ifndef CONFIG_NO_RADIUS
- 		.request_radius_psk = hostapd_request_radius_psk,
- #endif /* CONFIG_NO_RADIUS */
-+#if defined(CONFIG_DRIVER_BRCM) && defined(CONFIG_DRIVER_BRCM_CEVENT)
-+		.get_ifname = hostapd_wpa_auth_get_ifname,
-+#endif /* CONFIG_DRIVER_BRCM && CONFIG_DRIVER_BRCM_CEVENT */
- #ifdef CONFIG_PASN
- 		.set_ltf_keyseed = hostapd_set_ltf_keyseed,
- #endif /* CONFIG_PASN */
-@@ -1792,6 +1893,15 @@
- 				   "Failed to open ETH_P_OUI interface");
- 			return -1;
- 		}
-+#ifdef CONFIG_DRIVER_BRCM
-+		/* create loopback socket for FT OUI communication */
-+		if (hapd->iconf->ft_rrb_lo_sock) {
-+			if (hostapd_wpa_register_ft_lo_oui(hapd, "lo")) {
-+				wpa_printf(MSG_ERROR,
-+					   "Failed to open ETH_P_OUI loopback interface");
-+			}
-+		}
-+#endif /* CONFIG_DRIVER_BRCM */
- 	}
- #endif /* CONFIG_IEEE80211R_AP */
- 
-@@ -1842,6 +1952,12 @@
- 	l2_packet_deinit(hapd->l2);
- 	hapd->l2 = NULL;
- 	hostapd_wpa_unregister_ft_oui(hapd);
-+#ifdef CONFIG_DRIVER_BRCM
-+	/* Unregister loopback socket created for FT OUI communication */
-+	if (hapd->iconf->ft_rrb_lo_sock) {
-+		hostapd_wpa_unregister_ft_lo_oui(hapd);
-+	}
-+#endif /* CONFIG_DRIVER_BRCM */
- #endif /* CONFIG_IEEE80211R_AP */
- 
- #ifdef CONFIG_TESTING_OPTIONS
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.h git/source/hostap-2.11/src/ap/wpa_auth.h
---- git.orig/source/hostap-2.11/src/ap/wpa_auth.h	2024-02-01 01:21:16.081432713 +0200
-+++ git/source/hostap-2.11/src/ap/wpa_auth.h	2024-02-01 01:43:29.231748517 +0200
-@@ -272,6 +272,9 @@
+Index: git/source/hostap-2.11/src/ap/wpa_auth.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/wpa_auth.h
++++ git/source/hostap-2.11/src/ap/wpa_auth.h
+@@ -272,6 +272,9 @@ struct wpa_auth_config {
  #ifdef CONFIG_DPP2
  	int dpp_pfs;
  #endif /* CONFIG_DPP2 */
@@ -1945,7 +2018,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.h git/source/host
  
  	/*
  	 * If set Key Derivation Key should be derived as part of PMK to
-@@ -395,6 +398,9 @@
+@@ -395,6 +398,9 @@ struct wpa_auth_callbacks {
  #ifdef CONFIG_MESH
  	int (*start_ampe)(void *ctx, const u8 *sta_addr);
  #endif /* CONFIG_MESH */
@@ -1955,10 +2028,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth.h git/source/host
  #ifdef CONFIG_PASN
  	int (*set_ltf_keyseed)(void *ctx, const u8 *addr, const u8 *ltf_keyseed,
  			       size_t ltf_keyseed_len);
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_ie.c git/source/hostap-2.11/src/ap/wpa_auth_ie.c
---- git.orig/source/hostap-2.11/src/ap/wpa_auth_ie.c	2024-02-01 01:21:16.081432713 +0200
-+++ git/source/hostap-2.11/src/ap/wpa_auth_ie.c	2024-02-01 02:33:55.558727493 +0200
-@@ -104,6 +104,14 @@
+Index: git/source/hostap-2.11/src/ap/wpa_auth_ie.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/wpa_auth_ie.c
++++ git/source/hostap-2.11/src/ap/wpa_auth_ie.c
+@@ -104,6 +104,14 @@ static u16 wpa_own_rsn_capab(struct wpa_
  		if (conf->ieee80211w == MGMT_FRAME_PROTECTION_REQUIRED)
  			capab |= WPA_CAPABILITY_MFPR;
  	}
@@ -1973,7 +2047,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_ie.c git/source/h
  #ifdef CONFIG_OCV
  	if (conf->ocv)
  		capab |= WPA_CAPABILITY_OCVC;
-@@ -501,9 +509,15 @@
+@@ -512,9 +520,15 @@ static u8 * wpa_write_osen(struct wpa_au
  
  int wpa_auth_gen_wpa_ie(struct wpa_authenticator *wpa_auth)
  {
@@ -1990,7 +2064,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_ie.c git/source/h
  #ifdef CONFIG_TESTING_OPTIONS
  	if (wpa_auth->conf.own_ie_override_len) {
  		wpa_hexdump(MSG_DEBUG, "WPA: Forced own IE(s) for testing",
-@@ -553,6 +567,23 @@
+@@ -564,6 +578,23 @@ int wpa_auth_gen_wpa_ie(struct wpa_authe
  		if (res < 0)
  			return res;
  		pos += res;
@@ -2014,10 +2088,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wpa_auth_ie.c git/source/h
  	}
  
  	os_free(wpa_auth->wpa_ie);
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.c git/source/hostap-2.11/src/ap/wps_hostapd.c
---- git.orig/source/hostap-2.11/src/ap/wps_hostapd.c	2024-02-01 01:21:16.081432713 +0200
-+++ git/source/hostap-2.11/src/ap/wps_hostapd.c	2024-02-01 01:55:49.805952741 +0200
-@@ -451,6 +451,122 @@
+Index: git/source/hostap-2.11/src/ap/wps_hostapd.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/wps_hostapd.c
++++ git/source/hostap-2.11/src/ap/wps_hostapd.c
+@@ -451,6 +451,122 @@ static int hapd_wps_reconfig_in_memory(s
  	return 0;
  }
  
@@ -2140,7 +2215,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.c git/source/h
  
  static int hapd_wps_cred_cb(struct hostapd_data *hapd, void *ctx)
  {
-@@ -462,6 +578,10 @@
+@@ -462,6 +578,10 @@ static int hapd_wps_cred_cb(struct hosta
  	int multi_bss;
  	int wpa;
  	int pmf_changed = 0;
@@ -2151,7 +2226,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.c git/source/h
  
  	if (hapd->wps == NULL)
  		return 0;
-@@ -552,7 +672,52 @@
+@@ -552,7 +672,52 @@ static int hapd_wps_cred_cb(struct hosta
  		fclose(oconf);
  		return -1;
  	}
@@ -2205,7 +2280,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.c git/source/h
  	fprintf(nconf, "# WPS configuration - START\n");
  
  	fprintf(nconf, "wps_state=2\n");
-@@ -687,6 +852,7 @@
+@@ -687,6 +852,7 @@ static int hapd_wps_cred_cb(struct hosta
  		} else
  			fprintf(nconf, "%s", buf);
  	}
@@ -2213,7 +2288,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.c git/source/h
  
  	fclose(nconf);
  	fclose(oconf);
-@@ -872,14 +1038,28 @@
+@@ -872,14 +1038,28 @@ static void hostapd_wps_event_fail(struc
  
  	if (fail->error_indication > 0 &&
  	    fail->error_indication < NUM_WPS_EI_VALUES) {
@@ -2242,7 +2317,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.c git/source/h
  	}
  }
  
-@@ -1297,7 +1477,16 @@
+@@ -1298,7 +1478,16 @@ int hostapd_init_wps(struct hostapd_data
  
  	wps->ap_settings = conf->ap_settings;
  	wps->ap_settings_len = conf->ap_settings_len;
@@ -2260,7 +2335,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.c git/source/h
  	cfg.new_psk_cb = hostapd_wps_new_psk_cb;
  	cfg.set_ie_cb = hostapd_wps_set_ie_cb;
  	cfg.pin_needed_cb = hostapd_wps_pin_needed_cb;
-@@ -1872,6 +2061,12 @@
+@@ -1873,6 +2062,12 @@ static int wps_ap_pin_set(struct hostapd
  	return 0;
  }
  
@@ -2273,7 +2348,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.c git/source/h
  
  const char * hostapd_wps_ap_pin_random(struct hostapd_data *hapd, int timeout)
  {
-@@ -1976,6 +2171,55 @@
+@@ -1977,6 +2172,55 @@ int hostapd_wps_config_ap(struct hostapd
  	return wps_registrar_config_ap(hapd->wps->registrar, &cred);
  }
  
@@ -2329,10 +2404,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.c git/source/h
  
  #ifdef CONFIG_WPS_NFC
  
-diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.h git/source/hostap-2.11/src/ap/wps_hostapd.h
---- git.orig/source/hostap-2.11/src/ap/wps_hostapd.h	2024-02-01 01:21:16.081432713 +0200
-+++ git/source/hostap-2.11/src/ap/wps_hostapd.h	2024-02-01 01:56:32.637879286 +0200
-@@ -30,8 +30,15 @@
+Index: git/source/hostap-2.11/src/ap/wps_hostapd.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/wps_hostapd.h
++++ git/source/hostap-2.11/src/ap/wps_hostapd.h
+@@ -30,8 +30,15 @@ const char * hostapd_wps_ap_pin_get(stru
  int hostapd_wps_ap_pin_set(struct hostapd_data *hapd, const char *pin,
  			   int timeout);
  void hostapd_wps_update_ie(struct hostapd_data *hapd);
@@ -2348,10 +2424,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/ap/wps_hostapd.h git/source/h
  int hostapd_wps_nfc_tag_read(struct hostapd_data *hapd,
  			     const struct wpabuf *data);
  struct wpabuf * hostapd_wps_nfc_config_token(struct hostapd_data *hapd,
-diff --color -Naur git.orig/source/hostap-2.11/src/common/hw_features_common.c git/source/hostap-2.11/src/common/hw_features_common.c
---- git.orig/source/hostap-2.11/src/common/hw_features_common.c	2024-02-01 01:21:16.093432733 +0200
-+++ git/source/hostap-2.11/src/common/hw_features_common.c	2024-02-01 01:57:17.253804701 +0200
-@@ -425,12 +425,15 @@
+Index: git/source/hostap-2.11/src/common/hw_features_common.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/common/hw_features_common.c
++++ git/source/hostap-2.11/src/common/hw_features_common.c
+@@ -498,12 +498,15 @@ int hostapd_set_freq_params(struct hosta
  				 &data->edmg);
  
  	if (is_6ghz_freq(freq)) {
@@ -2368,10 +2445,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/common/hw_features_common.c g
  		if (center_idx_to_bw_6ghz(channel) < 0) {
  			wpa_printf(MSG_ERROR,
  				   "Invalid control channel for 6 GHz band");
-diff --color -Naur git.orig/source/hostap-2.11/src/common/ieee802_11_common.c git/source/hostap-2.11/src/common/ieee802_11_common.c
---- git.orig/source/hostap-2.11/src/common/ieee802_11_common.c	2024-02-01 01:21:16.093432733 +0200
-+++ git/source/hostap-2.11/src/common/ieee802_11_common.c	2024-02-01 02:00:26.981505994 +0200
-@@ -2772,7 +2798,11 @@
+Index: git/source/hostap-2.11/src/common/ieee802_11_common.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/common/ieee802_11_common.c
++++ git/source/hostap-2.11/src/common/ieee802_11_common.c
+@@ -2911,7 +2911,11 @@ int center_idx_to_bw_6ghz(u8 idx)
  
  bool is_6ghz_freq(int freq)
  {
@@ -2384,7 +2462,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/common/ieee802_11_common.c gi
  		return false;
  
  	if (freq == 5935)
-@@ -2797,13 +2827,24 @@
+@@ -2936,13 +2940,24 @@ bool is_6ghz_psc_frequency(int freq)
  
  	if (!is_6ghz_freq(freq) || freq == 5935)
  		return false;
@@ -2410,10 +2488,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/common/ieee802_11_common.c gi
  	if (i >= 1 && i <= 15)
  		return true;
  
-diff --color -Naur git.orig/source/hostap-2.11/src/common/wpa_common.c git/source/hostap-2.11/src/common/wpa_common.c
---- git.orig/source/hostap-2.11/src/common/wpa_common.c	2024-02-01 01:21:16.097432740 +0200
-+++ git/source/hostap-2.11/src/common/wpa_common.c	2024-02-01 02:01:10.457441057 +0200
-@@ -1758,6 +1758,10 @@
+Index: git/source/hostap-2.11/src/common/wpa_common.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/common/wpa_common.c
++++ git/source/hostap-2.11/src/common/wpa_common.c
+@@ -1760,6 +1760,10 @@ static int rsn_selector_to_bitfield(cons
  		return WPA_CIPHER_BIP_CMAC_256;
  	if (RSN_SELECTOR_GET(s) == RSN_CIPHER_SUITE_NO_GROUP_ADDRESSED)
  		return WPA_CIPHER_GTK_NOT_USED;
@@ -2424,10 +2503,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/common/wpa_common.c git/sourc
  	return 0;
  }
  
-diff --color -Naur git.orig/source/hostap-2.11/src/common/wpa_common.h git/source/hostap-2.11/src/common/wpa_common.h
---- git.orig/source/hostap-2.11/src/common/wpa_common.h	2024-02-01 01:21:16.097432740 +0200
-+++ git/source/hostap-2.11/src/common/wpa_common.h	2024-02-01 02:01:34.333405863 +0200
-@@ -116,6 +116,9 @@
+Index: git/source/hostap-2.11/src/common/wpa_common.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/common/wpa_common.h
++++ git/source/hostap-2.11/src/common/wpa_common.h
+@@ -119,6 +119,9 @@ WPA_CIPHER_BIP_CMAC_256)
  #define RSN_CIPHER_SUITE_CMIC RSN_SELECTOR(0x00, 0x40, 0x96, 2)
  /* KRK is defined for nl80211 use only */
  #define RSN_CIPHER_SUITE_KRK RSN_SELECTOR(0x00, 0x40, 0x96, 255)
@@ -2437,46 +2517,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/common/wpa_common.h git/sourc
  
  /* EAPOL-Key Key Data Encapsulation
   * GroupKey and PeerKey require encryption, otherwise, encryption is optional.
-diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver.h git/source/hostap-2.11/src/drivers/driver.h
---- git.orig/source/hostap-2.11/src/drivers/driver.h	2024-02-01 01:21:16.121432780 +0200
-+++ git/source/hostap-2.11/src/drivers/driver.h	2024-02-01 02:02:33.225320366 +0200
-@@ -5094,6 +5094,17 @@
- 	int (*update_dh_ie)(void *priv, const u8 *peer_mac, u16 reason_code,
- 			    const u8 *ie, size_t ie_len);
- 
-+#ifdef CONFIG_DRIVER_BRCM
-+	/**
-+	 * stop_bss - stop beacon on BSS
-+	 * @priv: Private driver interface data
-+	 * Returns: 0 on success, -1 on failure (or if not supported)
-+	 *
-+	 * This optional function can be used to disable beaconing on BSS.
-+	 */
-+	int (*stop_bss)(void *priv);
-+#endif /* CONFIG_DRIVER_BRCM */
-+
- 	/**
- 	 * dpp_listen - Notify driver about start/stop of DPP listen
- 	 * @priv: Private driver interface data
-@@ -5710,6 +5721,13 @@
- 	 */
- 	EVENT_UNPROT_BEACON,
- 
-+#ifdef CONFIG_DRIVER_BRCM
-+	/**
-+	  * EVENT_INTERFACE_ADDR_CHANGED - Notification of updated ip addr for interface
-+	  */
-+	EVENT_INTERFACE_IP_ADDR_CHANGED,
-+#endif	/* CONFIG_DRIVER_BRCM */
-+
- 	/**
- 	 * EVENT_TX_WAIT_EXPIRE - TX wait timed out
- 	 *
-diff --git a/source/hostap-2.11/src/drivers/driver_nl80211.c b/source/hostap-2.11/src/drivers/driver_nl80211.c
-index e6fbad9..3c6d4fb 100644
---- a/source/hostap-2.11/src/drivers/driver_nl80211.c
-+++ b/source/hostap-2.11/src/drivers/driver_nl80211.c
-@@ -1357,6 +1357,18 @@ static void wpa_driver_nl80211_event_rtm_newlink(void *ctx,
+Index: git/source/hostap-2.11/src/drivers/driver_nl80211.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/drivers/driver_nl80211.c
++++ git/source/hostap-2.11/src/drivers/driver_nl80211.c
+@@ -1357,6 +1357,18 @@ static void wpa_driver_nl80211_event_rtm
  			wpa_printf(MSG_DEBUG,
  				   "nl80211: Not the main interface (%s) - do not indicate interface down",
  				   drv->first_bss->ifname);
@@ -2495,7 +2540,7 @@ index e6fbad9..3c6d4fb 100644
  		} else if (drv->ignore_if_down_event) {
  			wpa_printf(MSG_DEBUG, "nl80211: Ignore interface down "
  				   "event generated by mode change");
-@@ -1378,6 +1390,28 @@ static void wpa_driver_nl80211_event_rtm_newlink(void *ctx,
+@@ -1378,6 +1390,28 @@ static void wpa_driver_nl80211_event_rtm
  		}
  	}
  
@@ -2524,7 +2569,7 @@ index e6fbad9..3c6d4fb 100644
  	if (drv->if_disabled && (ifi->ifi_flags & IFF_UP)) {
  		namebuf[0] = '\0';
  		if (if_indextoname(ifi->ifi_index, namebuf) &&
-@@ -1529,6 +1563,45 @@ static void wpa_driver_nl80211_event_rtm_dellink(void *ctx,
+@@ -1529,6 +1563,45 @@ static void wpa_driver_nl80211_event_rtm
  						 ifname);
  }
  
@@ -2591,7 +2636,7 @@ index e6fbad9..3c6d4fb 100644
  	if (nl80211_alloc_mgmt_handle(bss))
  		return -1;
  	wpa_printf(MSG_DEBUG, "nl80211: Subscribe to mgmt frames with AP "
-@@ -2832,6 +2919,16 @@ static int nl80211_mgmt_subscribe_ap_dev_sme(struct i802_bss *bss)
+@@ -2832,6 +2919,16 @@ static int nl80211_mgmt_subscribe_ap_dev
  		goto out_err;
  
  	if (bss->drv->device_ap_sme) {
@@ -2608,7 +2653,7 @@ index e6fbad9..3c6d4fb 100644
  		u16 type = (WLAN_FC_TYPE_MGMT << 2) | (WLAN_FC_STYPE_AUTH << 4);
  
  		/* Register for all Authentication frames */
-@@ -2839,6 +2936,7 @@ static int nl80211_mgmt_subscribe_ap_dev_sme(struct i802_bss *bss)
+@@ -2839,6 +2936,7 @@ static int nl80211_mgmt_subscribe_ap_dev
  					   false) < 0)
  			wpa_printf(MSG_DEBUG,
  				   "nl80211: Failed to subscribe to handle Authentication frames - SAE offload may not work");
@@ -2616,7 +2661,7 @@ index e6fbad9..3c6d4fb 100644
  	}
  
  	nl80211_mgmt_handle_register_eloop(bss);
-@@ -6008,7 +6106,10 @@ static int nl80211_create_iface_once(struct wpa_driver_nl80211_data *drv,
+@@ -6008,7 +6106,10 @@ static int nl80211_create_iface_once(str
  	msg = nl80211_cmd_msg(drv->first_bss, 0, NL80211_CMD_NEW_INTERFACE);
  	if (!msg ||
  	    nla_put_string(msg, NL80211_ATTR_IFNAME, ifname) ||
@@ -2628,7 +2673,7 @@ index e6fbad9..3c6d4fb 100644
  		goto fail;
  
  	if (iftype == NL80211_IFTYPE_MONITOR) {
-@@ -6025,12 +6126,15 @@ static int nl80211_create_iface_once(struct wpa_driver_nl80211_data *drv,
+@@ -6025,12 +6126,15 @@ static int nl80211_create_iface_once(str
  			goto fail;
  	}
  
@@ -2644,7 +2689,7 @@ index e6fbad9..3c6d4fb 100644
  
  	if ((addr && iftype == NL80211_IFTYPE_P2P_DEVICE) &&
  	    nla_put(msg, NL80211_ATTR_MAC, ETH_ALEN, addr))
-@@ -9930,6 +10034,9 @@ static void * nl80211_global_init(void *ctx)
+@@ -9930,6 +10034,9 @@ static void * nl80211_global_init(void *
  	cfg->ctx = global;
  	cfg->newlink_cb = wpa_driver_nl80211_event_rtm_newlink;
  	cfg->dellink_cb = wpa_driver_nl80211_event_rtm_dellink;
@@ -2667,7 +2712,7 @@ index e6fbad9..3c6d4fb 100644
  
  #ifdef CONFIG_DPP
  static int nl80211_dpp_listen(void *priv, bool enable)
-@@ -14018,6 +14131,11 @@ const struct wpa_driver_ops wpa_driver_nl80211_ops = {
+@@ -14018,6 +14131,11 @@ const struct wpa_driver_ops wpa_driver_n
  	.get_capa = wpa_driver_nl80211_get_capa,
  	.set_operstate = wpa_driver_nl80211_set_operstate,
  	.set_supp_port = wpa_driver_nl80211_set_supp_port,
@@ -2679,7 +2724,7 @@ index e6fbad9..3c6d4fb 100644
  	.set_country = wpa_driver_nl80211_set_country,
  	.get_country = wpa_driver_nl80211_get_country,
  	.set_ap = wpa_driver_nl80211_set_ap,
-@@ -14141,6 +14259,9 @@ const struct wpa_driver_ops wpa_driver_nl80211_ops = {
+@@ -14141,6 +14259,9 @@ const struct wpa_driver_ops wpa_driver_n
  	.update_connect_params = nl80211_update_connection_params,
  	.send_external_auth_status = nl80211_send_external_auth_status,
  	.set_4addr_mode = nl80211_set_4addr_mode,
@@ -2689,10 +2734,11 @@ index e6fbad9..3c6d4fb 100644
  #ifdef CONFIG_DPP
  	.dpp_listen = nl80211_dpp_listen,
  #endif /* CONFIG_DPP */
-diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.c git/source/hostap-2.11/src/drivers/driver_nl80211_event.c
---- git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.c	2024-02-01 01:21:16.117432773 +0200
-+++ git/source/hostap-2.11/src/drivers/driver_nl80211_event.c	2024-02-01 02:42:37.722071078 +0200
-@@ -199,6 +199,10 @@
+Index: git/source/hostap-2.11/src/drivers/driver_nl80211_event.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.c
++++ git/source/hostap-2.11/src/drivers/driver_nl80211_event.c
+@@ -199,6 +199,10 @@ static void mlme_event_auth(struct wpa_d
  {
  	const struct ieee80211_mgmt *mgmt;
  	union wpa_event_data event;
@@ -2703,7 +2749,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.
  
  	if (!(drv->capa.flags & WPA_DRIVER_FLAGS_SME) &&
  	    drv->force_connect_cmd) {
-@@ -222,17 +226,32 @@
+@@ -222,17 +226,32 @@ static void mlme_event_auth(struct wpa_d
  	os_memcpy(drv->auth_bssid, mgmt->sa, ETH_ALEN);
  	os_memset(drv->auth_attempt_bssid, 0, ETH_ALEN);
  	os_memset(&event, 0, sizeof(event));
@@ -2746,7 +2792,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.
  }
  
  
-@@ -2179,6 +2198,14 @@
+@@ -2179,6 +2198,14 @@ static void nl80211_new_station_event(st
  {
  	u8 *peer_addr;
  	union wpa_event_data data;
@@ -2761,7 +2807,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.
  
  	if (tb[NL80211_ATTR_MAC] == NULL)
  		return;
-@@ -2192,6 +2219,15 @@ static void nl80211_new_station_event(struct wpa_driver_nl80211_data *drv,
+@@ -2192,6 +2219,15 @@ static void nl80211_new_station_event(st
  		u8 *req_ies = NULL, *resp_ies = NULL;
  		size_t req_ies_len = 0, resp_ies_len = 0;
  
@@ -2777,7 +2823,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.
  		if (!bss->valid_links &&
  		    (tb[NL80211_ATTR_MLO_LINK_ID] ||
  		     tb[NL80211_ATTR_MLD_ADDR])) {
-@@ -2219,7 +2255,30 @@
+@@ -2227,7 +2263,30 @@ static void nl80211_new_station_event(st
  			wpa_hexdump(MSG_DEBUG, "nl80211: Assoc Resp IEs",
  				    resp_ies, resp_ies_len);
  		}
@@ -2809,10 +2855,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211_event.
  		drv_event_assoc(bss->ctx, peer_addr, req_ies, req_ies_len,
  				resp_ies, resp_ies_len, link_addr,
  				assoc_link_id, 0);
-diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.h git/source/hostap-2.11/src/drivers/driver_nl80211.h
---- git.orig/source/hostap-2.11/src/drivers/driver_nl80211.h	2024-02-01 01:21:16.117432773 +0200
-+++ git/source/hostap-2.11/src/drivers/driver_nl80211.h	2024-02-01 02:08:45.264812846 +0200
-@@ -398,5 +398,9 @@
+Index: git/source/hostap-2.11/src/drivers/driver_nl80211.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/drivers/driver_nl80211.h
++++ git/source/hostap-2.11/src/drivers/driver_nl80211.h
+@@ -409,5 +409,9 @@ int wpa_driver_nl80211_abort_scan(void *
  int wpa_driver_nl80211_vendor_scan(struct i802_bss *bss,
  				   struct wpa_driver_scan_params *params);
  int nl80211_set_default_scan_ies(void *priv, const u8 *ies, size_t ies_len);
@@ -2822,9 +2869,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/driver_nl80211.h git/
 +#endif /* CONFIG_DRIVER_BRCM */
  
  #endif /* DRIVER_NL80211_H */
-diff --color -Naur git.orig/source/hostap-2.11/src/drivers/linux_ioctl.c git/source/hostap-2.11/src/drivers/linux_ioctl.c
---- git.orig/source/hostap-2.11/src/drivers/linux_ioctl.c	2024-02-01 01:21:16.121432780 +0200
-+++ git/source/hostap-2.11/src/drivers/linux_ioctl.c	2024-02-01 02:16:05.420152471 +0200
+Index: git/source/hostap-2.11/src/drivers/linux_ioctl.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/drivers/linux_ioctl.c
++++ git/source/hostap-2.11/src/drivers/linux_ioctl.c
 @@ -14,7 +14,86 @@
  #include "utils/common.h"
  #include "common/linux_bridge.h"
@@ -2912,7 +2960,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/linux_ioctl.c git/sou
  
  int linux_set_iface_flags(int sock, const char *ifname, int dev_up)
  {
-@@ -122,6 +201,21 @@
+@@ -122,6 +201,21 @@ int linux_set_ifhwaddr(int sock, const c
  
  int linux_br_add(int sock, const char *brname)
  {
@@ -2934,7 +2982,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/linux_ioctl.c git/sou
  	if (ioctl(sock, SIOCBRADDBR, brname) < 0) {
  		int saved_errno = errno;
  
-@@ -151,6 +245,16 @@
+@@ -151,6 +245,16 @@ int linux_br_add_if(int sock, const char
  {
  	struct ifreq ifr;
  	int ifindex;
@@ -2951,7 +2999,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/linux_ioctl.c git/sou
  
  	ifindex = if_nametoindex(ifname);
  	if (ifindex == 0)
-@@ -185,7 +289,16 @@
+@@ -185,7 +289,16 @@ int linux_br_del_if(int sock, const char
  {
  	struct ifreq ifr;
  	int ifindex;
@@ -2969,7 +3017,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/linux_ioctl.c git/sou
  	ifindex = if_nametoindex(ifname);
  	if (ifindex == 0)
  		return -1;
-@@ -212,7 +325,11 @@
+@@ -212,7 +325,11 @@ int linux_br_get(char *brname, const cha
  		    ifname);
  	res = readlink(path, brlink, sizeof(brlink));
  	if (res < 0 || (size_t) res >= sizeof(brlink))
@@ -2981,10 +3029,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/linux_ioctl.c git/sou
  	brlink[res] = '\0';
  	pos = os_strrchr(brlink, '/');
  	if (pos == NULL)
-diff --color -Naur git.orig/source/hostap-2.11/src/drivers/netlink.c git/source/hostap-2.11/src/drivers/netlink.c
---- git.orig/source/hostap-2.11/src/drivers/netlink.c	2024-02-01 01:21:16.121432780 +0200
-+++ git/source/hostap-2.11/src/drivers/netlink.c	2024-02-01 02:17:21.904042126 +0200
-@@ -32,6 +32,19 @@
+Index: git/source/hostap-2.11/src/drivers/netlink.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/drivers/netlink.c
++++ git/source/hostap-2.11/src/drivers/netlink.c
+@@ -32,6 +32,19 @@ static void netlink_receive_link(struct
  	   NLMSG_PAYLOAD(h, sizeof(struct ifinfomsg)));
  }
  
@@ -3004,7 +3053,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/netlink.c git/source/
  
  static void netlink_receive(int sock, void *eloop_ctx, void *sock_ctx)
  {
-@@ -65,6 +78,12 @@
+@@ -65,6 +78,12 @@ try_again:
  			netlink_receive_link(netlink, netlink->cfg->dellink_cb,
  					     h);
  			break;
@@ -3017,7 +3066,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/netlink.c git/source/
  		}
  
  		h = NLMSG_NEXT(h, left);
-@@ -107,7 +126,11 @@
+@@ -107,7 +126,11 @@ struct netlink_data * netlink_init(struc
  
  	os_memset(&local, 0, sizeof(local));
  	local.nl_family = AF_NETLINK;
@@ -3029,10 +3078,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/netlink.c git/source/
  	if (bind(netlink->sock, (struct sockaddr *) &local, sizeof(local)) < 0)
  	{
  		wpa_printf(MSG_ERROR, "netlink: Failed to bind netlink "
-diff --color -Naur git.orig/source/hostap-2.11/src/drivers/netlink.h git/source/hostap-2.11/src/drivers/netlink.h
---- git.orig/source/hostap-2.11/src/drivers/netlink.h	2024-02-01 01:21:16.121432780 +0200
-+++ git/source/hostap-2.11/src/drivers/netlink.h	2024-02-01 02:17:51.456000085 +0200
-@@ -18,6 +18,10 @@
+Index: git/source/hostap-2.11/src/drivers/netlink.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/drivers/netlink.h
++++ git/source/hostap-2.11/src/drivers/netlink.h
+@@ -18,6 +18,10 @@ struct netlink_config {
  			   size_t len);
  	void (*dellink_cb)(void *ctx, struct ifinfomsg *ifi, u8 *buf,
  			   size_t len);
@@ -3043,10 +3093,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/netlink.h git/source/
  };
  
  struct netlink_data * netlink_init(struct netlink_config *cfg);
-diff --color -Naur git.orig/source/hostap-2.11/src/drivers/priv_netlink.h git/source/hostap-2.11/src/drivers/priv_netlink.h
---- git.orig/source/hostap-2.11/src/drivers/priv_netlink.h	2024-02-01 01:21:16.121432780 +0200
-+++ git/source/hostap-2.11/src/drivers/priv_netlink.h	2024-02-01 02:18:16.707964400 +0200
-@@ -106,4 +106,22 @@
+Index: git/source/hostap-2.11/src/drivers/priv_netlink.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/drivers/priv_netlink.h
++++ git/source/hostap-2.11/src/drivers/priv_netlink.h
+@@ -106,4 +106,22 @@ struct rtattr
  	unsigned short rta_type;
  };
  
@@ -3069,10 +3120,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/drivers/priv_netlink.h git/so
 +#endif  /* CONFIG_DRIVER_BRCM */
 +
  #endif /* PRIV_NETLINK_H */
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/http_server.c git/source/hostap-2.11/src/wps/http_server.c
---- git.orig/source/hostap-2.11/src/wps/http_server.c	2024-02-01 01:21:16.181432881 +0200
-+++ git/source/hostap-2.11/src/wps/http_server.c	2024-02-01 02:19:01.907901045 +0200
-@@ -244,7 +244,12 @@
+Index: git/source/hostap-2.11/src/wps/http_server.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/http_server.c
++++ git/source/hostap-2.11/src/wps/http_server.c
+@@ -244,7 +244,12 @@ struct http_server * http_server_init(st
  	if (srv->fd < 0)
  		goto fail;
  
@@ -3085,10 +3137,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/http_server.c git/source/
  	{
  		wpa_printf(MSG_DEBUG,
  			   "HTTP: setsockopt(SO_REUSEADDR) failed: %s",
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_attr_parse.c git/source/hostap-2.11/src/wps/wps_attr_parse.c
---- git.orig/source/hostap-2.11/src/wps/wps_attr_parse.c	2024-02-01 01:21:16.181432881 +0200
-+++ git/source/hostap-2.11/src/wps/wps_attr_parse.c	2024-02-01 02:20:48.439754074 +0200
-@@ -67,6 +67,15 @@
+Index: git/source/hostap-2.11/src/wps/wps_attr_parse.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_attr_parse.c
++++ git/source/hostap-2.11/src/wps/wps_attr_parse.c
+@@ -67,6 +67,15 @@ static int wps_set_vendor_ext_wfa_subele
  		}
  		attr->registrar_configuration_methods = pos;
  		break;
@@ -3104,7 +3157,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_attr_parse.c git/sour
  	case WFA_ELEM_MULTI_AP:
  		if (len != 1) {
  			wpa_printf(MSG_DEBUG,
-@@ -78,6 +87,7 @@
+@@ -78,6 +87,7 @@ static int wps_set_vendor_ext_wfa_subele
  		wpa_printf(MSG_DEBUG, "WPS: Multi-AP Extension 0x%02x",
  			   attr->multi_ap_ext);
  		break;
@@ -3112,10 +3165,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_attr_parse.c git/sour
  	default:
  		wpa_printf(MSG_MSGDUMP, "WPS: Skipped unknown WFA Vendor "
  			   "Extension subelement %u", id);
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_attr_parse.h git/source/hostap-2.11/src/wps/wps_attr_parse.h
---- git.orig/source/hostap-2.11/src/wps/wps_attr_parse.h	2024-02-01 01:21:16.181432881 +0200
-+++ git/source/hostap-2.11/src/wps/wps_attr_parse.h	2024-02-01 02:21:13.419720037 +0200
-@@ -56,7 +56,9 @@
+Index: git/source/hostap-2.11/src/wps/wps_attr_parse.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_attr_parse.h
++++ git/source/hostap-2.11/src/wps/wps_attr_parse.h
+@@ -56,7 +56,9 @@ struct wps_parse_attr {
  	const u8 *request_to_enroll; /* 1 octet (Bool) */
  	const u8 *ap_channel; /* 2 octets */
  	const u8 *registrar_configuration_methods; /* 2 octets */
@@ -3126,10 +3180,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_attr_parse.h git/sour
  	/* variable length fields */
  	const u8 *manufacturer;
  	const u8 *model_name;
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_defs.h git/source/hostap-2.11/src/wps/wps_defs.h
---- git.orig/source/hostap-2.11/src/wps/wps_defs.h	2024-02-01 01:21:16.181432881 +0200
-+++ git/source/hostap-2.11/src/wps/wps_defs.h	2024-02-01 02:22:03.587652111 +0200
-@@ -153,7 +153,10 @@
+Index: git/source/hostap-2.11/src/wps/wps_defs.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_defs.h
++++ git/source/hostap-2.11/src/wps/wps_defs.h
+@@ -153,7 +153,10 @@ enum {
  	WFA_ELEM_REQUEST_TO_ENROLL = 0x03,
  	WFA_ELEM_SETTINGS_DELAY_TIME = 0x04,
  	WFA_ELEM_REGISTRAR_CONFIGURATION_METHODS = 0x05,
@@ -3141,7 +3196,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_defs.h git/source/hos
  };
  
  /* Device Password ID */
-@@ -380,5 +383,9 @@
+@@ -380,5 +383,9 @@ enum wps_response_type {
  #define WPS_PBC_WALK_TIME 120
  
  #define WPS_MAX_AUTHORIZED_MACS 5
@@ -3151,38 +3206,27 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_defs.h git/source/hos
 +#endif  /* CONFIG_DRIVER_BRCM_MAP */
  
  #endif /* WPS_DEFS_H */
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps.h git/source/hostap-2.11/src/wps/wps.h
---- git.orig/source/hostap-2.11/src/wps/wps.h	2024-02-01 01:21:16.185432888 +0200
-+++ git/source/hostap-2.11/src/wps/wps.h	2024-02-01 02:19:43.959842659 +0200
-@@ -856,7 +856,10 @@
- 	struct wpabuf *ap_nfc_dh_pubkey;
- 	struct wpabuf *ap_nfc_dh_privkey;
- 	struct wpabuf *ap_nfc_dev_pw;
--
-+#ifdef CONFIG_DRIVER_BRCM_MAP
-+    u8 map;
-+    struct wps_credential bh_creds; /* Multiap backhaul credentials */
-+#endif  /* CONFIG_DRIVER_BRCM_MAP */
- 	/* Whether to send WPA2-PSK passphrase as a passphrase instead of PSK
- 	 * for WPA3-Personal transition mode needs. */
- 	bool use_passphrase;
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_i.h git/source/hostap-2.11/src/wps/wps_i.h
---- git.orig/source/hostap-2.11/src/wps/wps_i.h	2024-02-01 01:21:16.185432888 +0200
-+++ git/source/hostap-2.11/src/wps/wps_i.h	2024-02-01 02:22:28.499618583 +0200
-@@ -128,6 +128,9 @@ struct wps_data {
+Index: git/source/hostap-2.11/src/wps/wps_registrar.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_registrar.c
++++ git/source/hostap-2.11/src/wps/wps_registrar.c
+@@ -831,6 +831,7 @@ int wps_registrar_add_pin(struct wps_reg
+ 	eloop_register_timeout(WPS_PBC_WALK_TIME, 0,
+ 			       wps_registrar_set_selected_timeout,
+ 			       reg, NULL);
++	wps_pin_active_event(reg->wps);
  
- 	int multi_ap_backhaul_sta;
- 	int multi_ap_profile;
-+#ifdef CONFIG_DRIVER_BRCM_MAP
-+    u8 map_ext_attr_e;              /* Enrolee multiap extension attribute */
-+#endif  /* CONFIG_DRIVER_BRCM_MAP */
- };
- 
- 
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_registrar.c git/source/hostap-2.11/src/wps/wps_registrar.c
---- git.orig/source/hostap-2.11/src/wps/wps_registrar.c	2024-02-01 01:21:16.185432888 +0200
-+++ git/source/hostap-2.11/src/wps/wps_registrar.c	2024-02-01 02:23:53.775504723 +0200
-@@ -1633,7 +1633,20 @@
+ 	return 0;
+ }
+@@ -1127,6 +1128,7 @@ int wps_registrar_wps_cancel(struct wps_
+ 		wpa_printf(MSG_DEBUG, "WPS: PIN is set - cancelling it");
+ 		wps_registrar_pin_completed(reg);
+ 		wps_registrar_invalidate_wildcard_pin(reg, NULL, 0);
++		wps_pin_disable_event(reg->wps);
+ 		return 1;
+ 	}
+ 	return 0;
+@@ -1631,7 +1633,20 @@ int wps_build_cred(struct wps_data *wps,
  		goto use_provided;
  	}
  	os_memset(&wps->cred, 0, sizeof(wps->cred));
@@ -3204,7 +3248,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_registrar.c git/sourc
  	if (wps->peer_dev.multi_ap_ext == MULTI_AP_BACKHAUL_STA &&
  	    reg->multi_ap_backhaul_ssid_len) {
  		wpa_printf(MSG_DEBUG, "WPS: Use backhaul STA credentials");
-@@ -1656,7 +1669,7 @@
+@@ -1654,7 +1669,7 @@ int wps_build_cred(struct wps_data *wps,
  		}
  		goto use_provided;
  	}
@@ -3213,7 +3257,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_registrar.c git/sourc
  	os_memcpy(wps->cred.ssid, wps->wps->ssid, wps->wps->ssid_len);
  	wps->cred.ssid_len = wps->wps->ssid_len;
  
-@@ -2603,6 +2616,21 @@
+@@ -2601,6 +2616,21 @@ static int wps_process_config_error(stru
  	return 0;
  }
  
@@ -3235,7 +3279,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_registrar.c git/sourc
  
  static int wps_registrar_p2p_dev_addr_match(struct wps_data *wps)
  {
-@@ -2668,7 +2696,11 @@
+@@ -2666,7 +2696,11 @@ static enum wps_process_res wps_process_
  	    wps_process_assoc_state(wps, attr->assoc_state) ||
  	    wps_process_dev_password_id(wps, attr->dev_password_id) ||
  	    wps_process_config_error(wps, attr->config_error) ||
@@ -3248,10 +3292,19 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_registrar.c git/sourc
  		return WPS_FAILURE;
  
  	if (wps->dev_pw_id < 0x10 &&
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp_ap.c git/source/hostap-2.11/src/wps/wps_upnp_ap.c
---- git.orig/source/hostap-2.11/src/wps/wps_upnp_ap.c	2024-02-01 01:21:16.185432888 +0200
-+++ git/source/hostap-2.11/src/wps/wps_upnp_ap.c	2024-02-01 02:29:21.555077079 +0200
-@@ -76,8 +76,11 @@
+@@ -3473,6 +3507,7 @@ static void wps_registrar_set_selected_t
+ 	reg->pbc = 0;
+ 	wps_registrar_expire_pins(reg);
+ 	wps_registrar_selected_registrar_changed(reg, 0);
++	wps_pin_timeout_event(reg->wps);
+ }
+ 
+ 
+Index: git/source/hostap-2.11/src/wps/wps_upnp_ap.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_upnp_ap.c
++++ git/source/hostap-2.11/src/wps/wps_upnp_ap.c
+@@ -76,8 +76,11 @@ int upnp_er_set_selected_registrar(struc
  void upnp_er_remove_notification(struct wps_registrar *reg,
  				 struct subscription *s)
  {
@@ -3264,9 +3317,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp_ap.c git/source/
  	s->selected_registrar = 0;
  	eloop_cancel_timeout(upnp_er_set_selected_timeout, s, reg);
  	if (reg && was_sel_reg)
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hostap-2.11/src/wps/wps_upnp.c
---- git.orig/source/hostap-2.11/src/wps/wps_upnp.c	2024-02-01 01:21:16.185432888 +0200
-+++ git/source/hostap-2.11/src/wps/wps_upnp.c	2024-02-01 02:28:30.259143179 +0200
+Index: git/source/hostap-2.11/src/wps/wps_upnp.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_upnp.c
++++ git/source/hostap-2.11/src/wps/wps_upnp.c
 @@ -184,6 +184,9 @@
  #include "wps_i.h"
  #include "wps_upnp.h"
@@ -3318,7 +3372,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
  
  /* Write the current date/time per RFC */
  void format_date(struct wpabuf *buf)
-@@ -1044,6 +1077,10 @@
+@@ -1044,6 +1077,10 @@ static void upnp_wps_device_stop(struct
   */
  static int upnp_wps_device_start(struct upnp_wps_device_sm *sm, char *net_if)
  {
@@ -3329,7 +3383,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
  	if (!sm || !net_if)
  		return -1;
  
-@@ -1054,6 +1091,9 @@
+@@ -1054,6 +1091,9 @@ static int upnp_wps_device_start(struct
  	sm->ssdp_sd = -1;
  	sm->started = 1;
  	sm->advertise_count = 0;
@@ -3339,7 +3393,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
  
  	/* Fix up linux multicast handling */
  	if (add_ssdp_network(net_if))
-@@ -1064,7 +1104,11 @@
+@@ -1064,7 +1104,11 @@ static int upnp_wps_device_start(struct
  			   &sm->netmask, sm->mac_addr)) {
  		wpa_printf(MSG_INFO, "WPS UPnP: Could not get IP/MAC address "
  			   "for %s. Does it have IP address?", net_if);
@@ -3351,7 +3405,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
  	}
  	wpa_printf(MSG_DEBUG, "WPS UPnP: Local IP address %s netmask %s hwaddr "
  		   MACSTR,
-@@ -1074,8 +1118,13 @@
+@@ -1074,8 +1118,13 @@ static int upnp_wps_device_start(struct
  	/* Listen for incoming TCP connections so that others
  	 * can fetch our "xml files" from us.
  	 */
@@ -3365,7 +3419,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
  
  	/* Set up for receiving discovery (UDP) packets */
  	if (ssdp_listener_start(sm))
-@@ -1133,6 +1182,9 @@
+@@ -1133,6 +1182,9 @@ void upnp_wps_device_deinit(struct upnp_
  			   "instance to deinit");
  		return;
  	}
@@ -3375,7 +3429,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
  	wpa_printf(MSG_DEBUG, "WPS UPnP: Deinit interface instance %p", iface);
  	if (dl_list_len(&sm->interfaces) == 1) {
  		wpa_printf(MSG_DEBUG, "WPS UPnP: Deinitializing last instance "
-@@ -1157,8 +1209,16 @@
+@@ -1157,8 +1209,16 @@ void upnp_wps_device_deinit(struct upnp_
  	if (dl_list_empty(&sm->interfaces)) {
  		os_free(sm->root_dir);
  		os_free(sm->desc_url);
@@ -3392,7 +3446,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
  	}
  }
  
-@@ -1192,10 +1252,19 @@
+@@ -1192,10 +1252,19 @@ upnp_wps_device_init(struct upnp_wps_dev
  	iface->wps = wps;
  	iface->priv = priv;
  
@@ -3412,7 +3466,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
  	} else {
  		wpa_printf(MSG_DEBUG, "WPS UPnP: Initialize device context");
  		sm = os_zalloc(sizeof(*sm));
-@@ -1207,7 +1276,11 @@
+@@ -1207,7 +1276,11 @@ upnp_wps_device_init(struct upnp_wps_dev
  			os_free(ctx);
  			return NULL;
  		}
@@ -3425,7 +3479,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
  
  		dl_list_init(&sm->msearch_replies);
  		dl_list_init(&sm->subscriptions);
-@@ -1257,3 +1330,37 @@
+@@ -1257,3 +1330,37 @@ int upnp_wps_set_ap_pin(struct upnp_wps_
  
  	return 0;
  }
@@ -3464,10 +3518,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.c git/source/hos
 +}
 +#endif	/* CONFIG_DRIVER_BRCM */
 \ No newline at end of file
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.h git/source/hostap-2.11/src/wps/wps_upnp.h
---- git.orig/source/hostap-2.11/src/wps/wps_upnp.h	2024-02-01 01:21:16.185432888 +0200
-+++ git/source/hostap-2.11/src/wps/wps_upnp.h	2024-02-01 02:28:54.447111979 +0200
-@@ -47,5 +47,8 @@
+Index: git/source/hostap-2.11/src/wps/wps_upnp.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_upnp.h
++++ git/source/hostap-2.11/src/wps/wps_upnp.h
+@@ -47,5 +47,8 @@ int upnp_wps_device_send_wlan_event(stru
  				    const struct wpabuf *msg);
  int upnp_wps_subscribers(struct upnp_wps_device_sm *sm);
  int upnp_wps_set_ap_pin(struct upnp_wps_device_sm *sm, const char *ap_pin);
@@ -3476,10 +3531,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp.h git/source/hos
 +#endif	/* CONFIG_DRIVER_BRCM */
  
  #endif /* WPS_UPNP_H */
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp_i.h git/source/hostap-2.11/src/wps/wps_upnp_i.h
---- git.orig/source/hostap-2.11/src/wps/wps_upnp_i.h	2024-02-01 01:21:16.185432888 +0200
-+++ git/source/hostap-2.11/src/wps/wps_upnp_i.h	2024-02-01 02:29:44.975046979 +0200
-@@ -146,6 +146,9 @@
+Index: git/source/hostap-2.11/src/wps/wps_upnp_i.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_upnp_i.h
++++ git/source/hostap-2.11/src/wps/wps_upnp_i.h
+@@ -146,6 +146,9 @@ struct upnp_wps_device_sm {
  	enum upnp_wps_wlanevent_type wlanevent_type;
  	os_time_t last_event_sec;
  	unsigned int num_events_in_sec;
@@ -3489,10 +3545,11 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_upnp_i.h git/source/h
  };
  
  /* wps_upnp.c */
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_validate.c git/source/hostap-2.11/src/wps/wps_validate.c
---- git.orig/source/hostap-2.11/src/wps/wps_validate.c	2024-02-01 01:21:16.185432888 +0200
-+++ git/source/hostap-2.11/src/wps/wps_validate.c	2024-02-01 02:30:26.478993754 +0200
-@@ -421,6 +421,24 @@
+Index: git/source/hostap-2.11/src/wps/wps_validate.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/wps/wps_validate.c
++++ git/source/hostap-2.11/src/wps/wps_validate.c
+@@ -421,6 +421,24 @@ static int wps_validate_request_to_enrol
  	return 0;
  }
  
@@ -3517,7 +3574,7 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_validate.c git/source
  
  static int wps_validate_req_dev_type(const u8 *req_dev_type[], size_t num,
  				     int mandatory)
-@@ -1324,7 +1342,11 @@
+@@ -1324,7 +1342,11 @@ int wps_validate_m1(const struct wpabuf
  	    wps_validate_config_error(attr.config_error, 1) ||
  	    wps_validate_os_version(attr.os_version, 1) ||
  	    wps_validate_version2(attr.version2, wps2) ||
@@ -3530,9 +3587,10 @@ diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_validate.c git/source
  		wpa_printf(MSG_INFO, "WPS-STRICT: Invalid M1");
  #ifdef WPS_STRICT_WPS2
  		if (wps2)
-diff --color -Naur git.orig/.vscode/settings.json git/.vscode/settings.json
---- git.orig/.vscode/settings.json	1970-01-01 02:00:00.000000000 +0200
-+++ git/.vscode/settings.json	2024-02-01 01:31:19.221908604 +0200
+Index: git/.vscode/settings.json
+===================================================================
+--- /dev/null
++++ git/.vscode/settings.json
 @@ -0,0 +1,7 @@
 +{
 +    "files.associations": {
@@ -3542,28 +3600,3 @@ diff --color -Naur git.orig/.vscode/settings.json git/.vscode/settings.json
 +    }
 +}
 \ No newline at end of file
-diff --color -Naur git.orig/source/hostap-2.11/src/wps/wps_registrar.c git/source/hostap-2.11/src/wps/wps_registrar.c
---- git.orig/source/hostap-2.11/src/wps/wps_registrar.c	2024-01-31 22:43:53.871466676 +0200
-+++ git/source/hostap-2.11/src/wps/wps_registrar.c	2024-01-31 22:47:22.716292672 +0200
-@@ -831,6 +831,7 @@
- 	eloop_register_timeout(WPS_PBC_WALK_TIME, 0,
- 			       wps_registrar_set_selected_timeout,
- 			       reg, NULL);
-+	wps_pin_active_event(reg->wps);
- 
- 	return 0;
- }
-@@ -1127,6 +1128,7 @@
- 		wpa_printf(MSG_DEBUG, "WPS: PIN is set - cancelling it");
- 		wps_registrar_pin_completed(reg);
- 		wps_registrar_invalidate_wildcard_pin(reg, NULL, 0);
-+		wps_pin_disable_event(reg->wps);
- 		return 1;
- 	}
- 	return 0;
-@@ -3473,6 +3475,7 @@
- 	reg->pbc = 0;
- 	wps_registrar_expire_pins(reg);
- 	wps_registrar_selected_registrar_changed(reg, 0);
-+	wps_pin_timeout_event(reg->wps);
- }

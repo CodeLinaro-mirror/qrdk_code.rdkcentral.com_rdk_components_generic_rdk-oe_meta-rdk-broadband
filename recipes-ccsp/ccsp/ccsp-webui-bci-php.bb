@@ -105,20 +105,20 @@ do_install:append_bcm3390(){
     install -m 755 ${S}/../../scripts/confPhp ${D}${exec_prefix}/ccsp/confPhp
 }
 
-SYSTEMD_SERVICE_${PN} = "cosalogs.service"
+SYSTEMD_SERVICE:${PN} = "cosalogs.service"
 
-FILES_${PN} += "/fss/* /fss/gw/* /fss/gw/usr/* /fss/gw/usr/ccsp/* /opt/www/* ${base_libdir}/rdk/* ${libdir}"
+FILES:${PN} += "/fss/* /fss/gw/* /fss/gw/usr/* /fss/gw/usr/ccsp/* /opt/www/* ${base_libdir}/rdk/* ${libdir}"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
      ${systemd_unitdir}/system/cosalogs.service \
      "
-FILES_${PN} += "/usr/www/*"
-FILES_${PN} += "/usr/www/actionHandler/*"
-FILES_${PN} += "/usr/www/CSRF-Protector-PHP/libs/*"
-FILES_${PN} += "/usr/www/CSRF-Protector-PHP/libs/csrf/*"
-FILES_${PN} += "/usr/www/cmn/*"
-FILES_${PN} += "/usr/www/includes/*"
-FILES_${PN} += "${exec_prefix}/ccsp/confPhp"
-FILES_${PN}-dbg += "${libdir}/php5/extensions/*/.debug/* \
+FILES:${PN} += "/usr/www/*"
+FILES:${PN} += "/usr/www/actionHandler/*"
+FILES:${PN} += "/usr/www/CSRF-Protector-PHP/libs/*"
+FILES:${PN} += "/usr/www/CSRF-Protector-PHP/libs/csrf/*"
+FILES:${PN} += "/usr/www/cmn/*"
+FILES:${PN} += "/usr/www/includes/*"
+FILES:${PN} += "${exec_prefix}/ccsp/confPhp"
+FILES:${PN}-dbg += "${libdir}/php5/extensions/*/.debug/* \
                     ${libdir}/extensions/*/.debug/* \
                     /fss/gw/usr/ccsp/.debug/*"

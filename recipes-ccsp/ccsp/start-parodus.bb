@@ -23,7 +23,7 @@ EXTRA_OECONF:append  = " --with-ccsp-arch=arm "
 
 inherit autotools pkgconfig
 DEPENDS:append = " hal-platform hal-cm openssl cpgc lxy "
-RDEPENDS_${PN} += " cjson hal-platform hal-cm utopia "
+RDEPENDS:${PN} += " cjson hal-platform hal-cm utopia "
 
 LDFLAGS:append = " -lbreakpadwrapper -lhal_platform -lcm_mgnt -lsyscfg -lcjson -lsysevent -lutapi -lutctx -lm "
 
@@ -40,4 +40,4 @@ CFLAGS:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_bin", "-DENA
 # generating minidumps
 PACKAGECONFIG:append = " breakpad"
 
-FILES_${PN} += "/usr/bin/* "
+FILES:${PN} += "/usr/bin/* "

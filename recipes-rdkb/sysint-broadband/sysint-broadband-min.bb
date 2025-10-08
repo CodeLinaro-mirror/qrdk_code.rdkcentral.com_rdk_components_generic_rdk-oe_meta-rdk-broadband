@@ -64,8 +64,8 @@ do_install:append_qemux86broadband() {
 }
  
  
-FILES_${PN} += "${sysconfdir}/*"
-FILES_${PN} += "rdklogger/*"
-FILES_${PN} += "${base_libdir}/rdk/*"
-FILES_${PN} += "${sbindir}/deviceinfo.sh"
-FILES_${PN}:append_qemux86broadband += "${systemd_unitdir}/system/*"
+FILES:${PN} += "${sysconfdir}/*"
+FILES:${PN} += "rdklogger/*"
+FILES:${PN} += "${base_libdir}/rdk/*"
+FILES:${PN} += "${sbindir}/deviceinfo.sh"
+FILES:${PN}:append_qemux86broadband += "${systemd_unitdir}/system/*"

@@ -48,7 +48,7 @@ do_install () {
     ln -s libbattery_hal_bluetooth.so.1 ${D}${libdir}/libbattery_hal_bluetooth.so
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${bindir}/* \
    ${libdir}/* \
 "

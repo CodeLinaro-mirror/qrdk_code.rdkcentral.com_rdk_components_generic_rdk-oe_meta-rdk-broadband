@@ -13,8 +13,8 @@ DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '
 DEPENDS:append = " libtirpc"
 DEPENDS:remove_morty = " libtirpc"
 
-RDEPENDS_${PN}:append = " bash"
-RDEPENDS_${PN}:remove_morty = " bash"
+RDEPENDS:${PN}:append = " bash"
+RDEPENDS:${PN}:remove_morty = " bash"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/Utopia;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=Utopia"
@@ -132,23 +132,23 @@ USERADD_PACKAGES = "${PN}"
 GROUPADD_PARAM:${PN} = "--system firewall"
 USERADD_PARAM:${PN} += "--system --home ${localstatedir}/run/firewall/ -M -g firewall --shell /bin/false firewall"
 
-FILES_${PN} += "${sysconfdir}/utopia/"
-FILES_${PN} += "${sysconfdir}/dhcp_static_hosts"
-FILES_${PN} += "${sysconfdir}/IGD/"
-FILES_${PN} += "${sysconfdir}/cron"
-FILES_${PN} += "${sysconfdir}/utopia/service.d/"
-FILES_${PN} += "${sysconfdir}/utopia/registrartion.d/"
-FILES_${PN} += "${sysconfdir}/utopia/post.d/"
-FILES_${PN} += "${sysconfdir}/utopia/service.d/service_bridge/"
-FILES_${PN} += "${sysconfdir}/utopia/service.d/service_ddns/"
-FILES_${PN} += "${sysconfdir}/utopia/service.d/service_dhcp_server/"
-FILES_${PN} += "${sysconfdir}/utopia/service.d/service_lan/"
-FILES_${PN} += "${sysconfdir}/utopia/service.d/service_multinet/"
-FILES_${PN} += "${sysconfdir}/utopia/service.d/service_syslog/"
-FILES_${PN} += "${sysconfdir}/utopia/service.d/service_wan/"
-FILES_${PN} += "/fss/gw/etc/syslog.conf.${BPN}"
+FILES:${PN} += "${sysconfdir}/utopia/"
+FILES:${PN} += "${sysconfdir}/dhcp_static_hosts"
+FILES:${PN} += "${sysconfdir}/IGD/"
+FILES:${PN} += "${sysconfdir}/cron"
+FILES:${PN} += "${sysconfdir}/utopia/service.d/"
+FILES:${PN} += "${sysconfdir}/utopia/registrartion.d/"
+FILES:${PN} += "${sysconfdir}/utopia/post.d/"
+FILES:${PN} += "${sysconfdir}/utopia/service.d/service_bridge/"
+FILES:${PN} += "${sysconfdir}/utopia/service.d/service_ddns/"
+FILES:${PN} += "${sysconfdir}/utopia/service.d/service_dhcp_server/"
+FILES:${PN} += "${sysconfdir}/utopia/service.d/service_lan/"
+FILES:${PN} += "${sysconfdir}/utopia/service.d/service_multinet/"
+FILES:${PN} += "${sysconfdir}/utopia/service.d/service_syslog/"
+FILES:${PN} += "${sysconfdir}/utopia/service.d/service_wan/"
+FILES:${PN} += "/fss/gw/etc/syslog.conf.${BPN}"
 
-FILES_${PN}-dbg += " \
+FILES:${PN}-dbg += " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \
@@ -159,15 +159,15 @@ ALTERNATIVE_PRIORITY = "190"
 ALTERNATIVE_${PN} = "syslog-conf"
 ALTERNATIVE_LINK_NAME[syslog-conf] = "${sysconfdir}/syslog.conf"
 ALTERNATIVE_TARGET[syslog-conf] = "/fss/gw/etc/syslog.conf.${BPN}"
-CONFFILES_${PN} = "/fss/gw/${sysconfdir}/syslog.conf.${BPN}"
+CONFFILES:${PN} = "/fss/gw/${sysconfdir}/syslog.conf.${BPN}"
 
 DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'telemetry2_0', ' telemetry', '', d)}"
 
-FILES_${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','${systemd_unitdir}/system/ApplySystemDefaults.service','',d)}"
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','ApplySystemDefaults.service','',d)}"
+FILES:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','${systemd_unitdir}/system/ApplySystemDefaults.service','',d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','ApplySystemDefaults.service','',d)}"
 
-RDEPENDS_${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
-RDEPENDS_${PN}:remove_morty = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+RDEPENDS:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
+RDEPENDS:${PN}:remove_morty = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 CFLAGS:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"
 EXTRA_OECONF:append = " --enable-core_net_lib_feature_support=${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', 'yes', 'no', d)} "

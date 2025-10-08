@@ -62,14 +62,14 @@ do_install:append () {
 # This will automatically start the service on boot up on platforms that use systemd init system.
 # The .service systemd unit shouldn't start automatically upon bootup, but rather wait for
 # CcspWiFiAgent to finish initializing. It will be started by the .path unit.
-#SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'RdkEasyMeshController.service', '', d)}"
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'RdkEasyMeshController.path', '', d)}"
+#SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'RdkEasyMeshController.service', '', d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'RdkEasyMeshController.path', '', d)}"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${exec_prefix}/ccsp/easymesh/em-ctl \
     ${exec_prefix}/ccsp/easymesh/RdkEasyMeshController.xml \
     ${bindir}/* \
 "
 
-FILES_${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.service', '', d)}"
-FILES_${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.path', '', d)}"
+FILES:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.service', '', d)}"
+FILES:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.path', '', d)}"

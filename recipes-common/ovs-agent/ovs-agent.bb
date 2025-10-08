@@ -53,9 +53,9 @@ do_install:append () {
     install -D -m 0644 ${S}/systemd_units/OvsAgent.path ${D}${systemd_unitdir}/system/OvsAgent.path
 }
 
-SYSTEMD_SERVICE_${PN} = "OvsAgent.path"
+SYSTEMD_SERVICE:${PN} = "OvsAgent.path"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${bindir}/OvsAgent \
     ${prefix}/ccsp/ovsagent/OvsAgent \
     ${prefix}/ccsp/ovsagent/syscfg_check.sh \
@@ -70,7 +70,7 @@ FILES_${PN} += " \
     ${libdir}/systemd \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/ovsagent/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

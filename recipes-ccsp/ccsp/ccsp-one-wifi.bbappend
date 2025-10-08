@@ -3,7 +3,7 @@ require ccsp_common.inc
 DEPENDS:append = " ccsp-common-library utopia libparodus"
 
 DEPENDS:append = " hal-wifi hal-cm  hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi avro-c "
-RDEPENDS_${PN}:append = " libparodus"
+RDEPENDS:${PN}:append = " libparodus"
 
 EXTRA_OECONF:append = " --enable-journalctl"
 EXTRA_OECONF:append = " ONEWIFI_CAC_APP_SUPPORT=true"
@@ -35,3 +35,5 @@ LDFLAGS:append = " -lutctx"
 do_compile:prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-WiFi-USGv2.XML ${S}/source/dml/wifi_ssp/dm_pack_datamodel.c)
 }
+FILES:${PN}:remove = "${libdir}/libwifi.so"
+FILES:${PN}-dev += "${libdir}/*.so"

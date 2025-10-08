@@ -14,7 +14,7 @@ CFLAGS:append = " \
     -I${STAGING_INCDIR}/trower-base64 \
     "
 
-RDEPENDS_${PN}:append = " libparodus "
+RDEPENDS:${PN}:append = " libparodus "
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-implicit-function-declaration -Wno-type-limits -Wno-unused-parameter -Wno-enum-conversion -Wno-format -fcommon"
 
@@ -111,9 +111,9 @@ do_install:append_bcm3390() {
     rm ${D}/usr/ccsp/wifi/br0_ip.sh
 }
 
-FILES_${PN} = "\
+FILES:${PN} = "\
     ${bindir}/CcspWifiSsp \
-    ${libdir}/libwifi.so* \
+    ${libdir}/libwifi.so.* \
     ${prefix}/ccsp/wifi/process_monitor_atom.sh \
     ${prefix}/ccsp/wifi/br0_ip.sh \
     ${prefix}/ccsp/wifi/br106_addvlan.sh \
@@ -134,19 +134,19 @@ FILES_${PN} = "\
     ${prefix}/ccsp/wifi/rdkb-wifi.ovsschema \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/wifi/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \
     ${libdir}/.debug \
 "
 
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry.target', '', d)}"
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry-cron.service', '', d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry.target', '', d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'wifi-telemetry-cron.service', '', d)}"
 
-FILES_${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${exec_prefix}/ccsp/wifi/wifiTelemetrySetup.sh', '', d)}"
-FILES_${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry.target', '', d)}"
-FILES_${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry-cron.service', '', d)}"
+FILES:${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${exec_prefix}/ccsp/wifi/wifiTelemetrySetup.sh', '', d)}"
+FILES:${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry.target', '', d)}"
+FILES:${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/wifi-telemetry-cron.service', '', d)}"
 
 ERROR_QA:remove_morty = "la"
 

@@ -9,6 +9,6 @@ do_install:append() {
    fi
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
        ${@bb.utils.contains("DISTRO_FEATURES", "bci", " ", "/etc/* ", d)} \
 "

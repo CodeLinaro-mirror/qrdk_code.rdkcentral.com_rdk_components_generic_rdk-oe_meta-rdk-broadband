@@ -50,13 +50,13 @@ do_install:append () {
 }
 
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${exec_prefix}/rdk/fwupgrademanager/fwupgrademanager \
    ${exec_prefix}/rdk/fwupgrademanager/RdkFwUpgradeManager.xml \
    ${bindir}/* \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${exec_prefix}/ccsp/fwupgrademanager/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

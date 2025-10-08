@@ -3,8 +3,8 @@ DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 DEPENDS:append = "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " rbus cjson ", " ", d)}"
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-RDEPENDS_${PN} += "avro-c trower-base64 rdk-logger msgpackc util-linux utopia "
-RDEPENDS_${PN} += "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " cjson ", " ", d)}"
+RDEPENDS:${PN} += "avro-c trower-base64 rdk-logger msgpackc util-linux utopia "
+RDEPENDS:${PN} += "${@bb.utils.contains("DISTRO_FEATURES", "OneWifi", " cjson ", " ", d)}"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
@@ -87,11 +87,11 @@ do_install:append () {
     install -m 664 ${S}/config-atom/GatewayAccessPointNeighborScanReport.avsc -t ${D}/usr/ccsp/harvester
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${exec_prefix}/ccsp/harvester/InterfaceDevicesWifi.avsc \
     ${exec_prefix}/ccsp/harvester/RadioInterfacesStatistics.avsc \
     ${exec_prefix}/ccsp/harvester/GatewayAccessPointNeighborScanReport.avsc \
-    ${libdir}/libwifi.so* \
+    ${libdir}/libwifi.so.* \
 "
 
 ERROR_QA:remove_morty = "la"

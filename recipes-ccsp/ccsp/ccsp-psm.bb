@@ -62,13 +62,13 @@ do_install:append_qemuarm () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${prefix}/ccsp/psm \
     ${prefix}/ccsp/PsmSsp \
     ${prefix}/ccsp/config/bbhm_def_cfg.xml \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

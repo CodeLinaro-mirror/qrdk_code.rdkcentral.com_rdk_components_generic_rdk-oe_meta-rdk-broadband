@@ -12,6 +12,10 @@ do_install:append(){
             sed -i '/PsmSsp/!b;n;n;c \      "drop":"UGID_GROUP"' ${D}${sysconfdir}/security/caps/process-capabilities.json
             sed -i '/CcspLMLite/!b;n;n;c \      "drop":""' ${D}${sysconfdir}/security/caps/process-capabilities.json
         fi
+
+        cp -a ${B}/source/.libs/libprivilege.so* ${D}${libdir}/
 }
 
-FILES_${PN} += " ${sysconfdir}/security/caps/process-capabilities.json"
+FILES:${PN} += " ${sysconfdir}/security/caps/process-capabilities.json"
+FILES:${PN}-dev += " ${libdir}/*.so"
+FILES:${PN} += " ${libdir}/*.so.*"

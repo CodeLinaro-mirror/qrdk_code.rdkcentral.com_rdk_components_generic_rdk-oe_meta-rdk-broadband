@@ -23,11 +23,11 @@ CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-type-
 CFLAGS:append_kirkstone = " -fcommon"
 CFLAGS:append:scarthgap = " -fcommon"
 
-RDEPENDS_${PN} += "libpcap"
-RDEPENDS_${PN}:append = " bash"
-RDEPENDS_${PN}-ccsp:append = " bash"
-RDEPENDS_${PN}:remove_morty = "bash"
-RDEPENDS_${PN}-ccsp:remove_morty = "bash"
+RDEPENDS:${PN} += "libpcap"
+RDEPENDS:${PN}:append = " bash"
+RDEPENDS:${PN}-ccsp:append = " bash"
+RDEPENDS:${PN}:remove_morty = "bash"
+RDEPENDS:${PN}-ccsp:remove_morty = "bash"
 
 inherit autotools ${@bb.utils.contains_any('DISTRO_FEATURES', 'kirkstone scarthgap', 'python3native', 'pythonnative', d)} breakpad-logmapper
 
@@ -96,7 +96,7 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${libdir}/libdiagnostic.so.* \
     ${libdir}/libdmltad.so.* \
     ${prefix}/ccsp/Sub64 \
@@ -108,7 +108,7 @@ FILES_${PN}-ccsp = " \
     ${sbindir}/* \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/tad/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

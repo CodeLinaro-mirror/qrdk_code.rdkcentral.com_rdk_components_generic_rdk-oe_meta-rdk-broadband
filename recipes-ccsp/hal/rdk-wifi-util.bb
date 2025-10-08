@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../LICENSE;md5=5d50b1d1fb741ca457897f9e370bc747"
 
 PROVIDES = "rdk-wifi-util"
-RPROVIDES_${PN} = "rdk-wifi-util"
+RPROVIDES:${PN} = "rdk-wifi-util"
 
 DEPENDS += "openssl halinterface"
 # To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where

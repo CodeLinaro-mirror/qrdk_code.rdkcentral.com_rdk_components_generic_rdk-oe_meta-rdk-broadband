@@ -34,11 +34,11 @@ do_install:append() {
   install -m 755 ${S}/jsts/php.jst ${D}/etc/firmware_download/includes/php.jst
  fi
 }
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
 "
-FILES_${PN} += "/usr/*"
-FILES_${PN} += "/usr/www2/*"
-FILES_${PN} += "/usr/www2/includes/*"
-FILES_${PN} += "/usr/video_analytics/*"
-FILES_${PN} += "/etc/firmware_download/*"
-FILES_${PN} += "/etc/firmware_download/includes/*"
+FILES:${PN} += "/usr/*"
+FILES:${PN} += "/usr/www2/*"
+FILES:${PN} += "/usr/www2/includes/*"
+FILES:${PN} += "/usr/video_analytics/*"
+FILES:${PN} += "/etc/firmware_download/*"
+FILES:${PN} += "/etc/firmware_download/includes/*"

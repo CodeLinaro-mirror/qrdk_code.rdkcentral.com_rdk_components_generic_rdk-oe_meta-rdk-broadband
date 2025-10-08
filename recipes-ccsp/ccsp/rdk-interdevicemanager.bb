@@ -39,7 +39,7 @@ CFLAGS:prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'IDM_DEBUG',' -DIDM_
 
 EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
-SYSTEMD_SERVICE_${PN} = "RdkInterDeviceManager.service"
+SYSTEMD_SERVICE:${PN} = "RdkInterDeviceManager.service"
 
 do_install:append () {
     # Config files and scripts
@@ -55,7 +55,7 @@ do_install:append () {
 }
 
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${bindir}/* \
    ${exec_prefix}/rdk/interdevicemanager/* \
    ${systemd_unitdir}/system/RdkInterDeviceManager.service \
@@ -63,7 +63,7 @@ FILES_${PN} = " \
    ${sysconfdir}/idm/ssl.conf \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${exec_prefix}/rdk/rdkinterdevicemanager/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

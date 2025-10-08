@@ -31,19 +31,19 @@ do_install:append () {
     # install -m 644 ${S}/source/include/Tr69_Tlv.h -t ${D}/${STAGING_INCDIR}
 }
 
-SYSTEMD_SERVICE_${PN} = "gwprovepon.service"
+SYSTEMD_SERVICE:${PN} = "gwprovepon.service"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${STAGING_INCDIR} \
     /usr/ccsp \
     /usr/ccsp/gw_prov_epon \
 "
 
-FILES_${PN} += " \
+FILES:${PN} += " \
      ${systemd_unitdir}/system/gwprovepon.service \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

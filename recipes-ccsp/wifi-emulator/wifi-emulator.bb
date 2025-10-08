@@ -41,16 +41,16 @@ do_install:append()  {
     install -m 0755 ${S}/scripts/rdkfmac_modprobe.sh ${D}${bindir}/rdkfmac_modprobe.sh
 }
 
-SYSTEMD_SERVICE_${PN} += "rdkfmac.service"
-FILES_${PN} += "${systemd_unitdir}/system/rdkfmac.service"
+SYSTEMD_SERVICE:${PN} += "rdkfmac.service"
+FILES:${PN} += "${systemd_unitdir}/system/rdkfmac.service"
 
-SYSTEMD_SERVICE_${PN}:remove_raspberrypi4-64-rdk-broadband = "rdkfmac.service"
-SYSTEMD_SERVICE_${PN}:remove_bananapi4-rdk-broadband = "rdkfmac.service"
+SYSTEMD_SERVICE:${PN}:remove_raspberrypi4-64-rdk-broadband = "rdkfmac.service"
+SYSTEMD_SERVICE:${PN}:remove_bananapi4-rdk-broadband = "rdkfmac.service"
 
-FILES_${PN}:remove_raspberrypi4-64-rdk-broadband = "${systemd_unitdir}/system/rdkfmac.service"
-FILES_${PN}:remove_bananapi4-rdk-broadband = "${systemd_unitdir}/system/rdkfmac.service"
+FILES:${PN}:remove_raspberrypi4-64-rdk-broadband = "${systemd_unitdir}/system/rdkfmac.service"
+FILES:${PN}:remove_bananapi4-rdk-broadband = "${systemd_unitdir}/system/rdkfmac.service"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
         ${bindir}/* \
         ${base_bindir_native}/* \
         ${base_bindir}/* \

@@ -20,8 +20,8 @@ EXTRA_OECONF += "--enable-agent-build --enable-client-build --enable-hwselftestt
 EXTRA_OECONF += " --with-diag-emmc --with-diag-moca --with-diag-wan --with-diag-bluetooth --with-diag-dram --with-diag-wifi --with-diag-mta --with-diag-xhs --with-diag-lan --with-diag-zigbee"
 
 DEPENDS = "jansson breakpad breakpad-wrapper xupnp ccsp-common-library dbus hal-platform"
-RDEPENDS_${PN}:append = "bash"
-RDEPENDS_${PN}:remove_morty = "bash"
+RDEPENDS:${PN}:append = "bash"
+RDEPENDS:${PN}:remove_morty = "bash"
 
 inherit autotools pkgconfig systemd
 
@@ -41,7 +41,7 @@ do_install:append() {
     install -m 0755 ${S}/agent/rootfs/usr/bin/hwselftest_runptr.sh ${D}${bindir}
 }
 
-FILES_${PN} += "/usr/www2/*"
-FILES_${PN} += "${systemd_unitdir}/system/hwselftest.service"
+FILES:${PN} += "/usr/www2/*"
+FILES:${PN} += "${systemd_unitdir}/system/hwselftest.service"
 
-SYSTEMD_SERVICE_${PN} = "hwselftest.service"
+SYSTEMD_SERVICE:${PN} = "hwselftest.service"

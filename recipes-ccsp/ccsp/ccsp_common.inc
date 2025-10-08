@@ -150,6 +150,6 @@ CFLAGS:append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'pm_lan_mgr', ' -DLA
 CFLAGS:append =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DNO_MOCA_FEATURE_SUPPORT ', '', d)}"
 CFLAGS:remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DMOCA_DIAGONISTIC -DMOCA_HOME_ISOLATION -DCONFIG_SYSTEM_MOCA ', '', d)}"
 
-FILES_${PN} += "${libdir}/*.so"
+FILES:${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"

@@ -1,4 +1,5 @@
 DEPENDS += " ccsp-common-library webconfig-framework libunpriv dbus mountutils libsyswrapper rdkconfig"
+DEPENDS += " ccsp-common-library-native"
 
 LDFLAGS:append = " \
         -lprivilege \
@@ -32,7 +33,8 @@ do_install:append () {
     install -m 755 ${S}/config/Default_T2_ReportProfile.json ${D}${sysconfdir}/Default_T2_ReportProfile.json
 }
 
-FILES_${PN}:append = " \
+FILES:${PN}:append = " \
+    ${prefix}/ccsp/ \
     ${prefix}/ccsp/telemetry/T2Agent.cfg \
     ${prefix}/ccsp/telemetry/CcspDmLib.cfg \
     ${sysconfdir}/Default_T2_ReportProfile.json \

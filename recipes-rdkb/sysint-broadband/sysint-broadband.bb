@@ -34,7 +34,7 @@ S = "${WORKDIR}/git"
 inherit systemd breakpad-logmapper
 
 do_install() {
-        install -d ${D}/bin
+        install -d ${D}${bindir}
 	install -d ${D}${sysconfdir}
         install -d ${D}/rdklogger
         install -d ${D}${systemd_unitdir}/system
@@ -139,7 +139,7 @@ do_install() {
 	fi
         install -m 0644 ${S}/etc/telemetry2_0.properties ${D}${sysconfdir}
 	install -m 755 ${S}/log_timestamp.sh ${D}${sysconfdir}
-	install -m 755 ${S}/timestamp ${D}/bin
+	install -m 755 ${S}/timestamp ${D}${bindir}
    	install -m 755 ${S}/postwanstatusevent.sh ${D}${base_libdir}/rdk
         if ${@bb.utils.contains('DISTRO_FEATURES', 'snmppa', 'true', 'false', d)}; then
              install -m 755 ${S}/handlesnmpv3.sh ${D}${base_libdir}/rdk
@@ -194,22 +194,22 @@ do_install:append_rdkzram() {
 }
 
 
-SYSTEMD_SERVICE_${PN}:append_qemux86broadband = "  dropbear.service"
-SYSTEMD_SERVICE_${PN}:append_rdkzram = " rdkzram.service"
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'ocsp-support.service', '', d)}"
+SYSTEMD_SERVICE:${PN}:append_qemux86broadband = "  dropbear.service"
+SYSTEMD_SERVICE:${PN}:append_rdkzram = " rdkzram.service"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'ocsp-support.service', '', d)}"
 
-FILES_${PN} += "/bin/*"
-FILES_${PN} += "${sysconfdir}/*"
-FILES_${PN} += "rdklogger/*"
-FILES_${PN} += "${base_libdir}/rdk/*"
-FILES_${PN}:append_qemux86broadband += "${systemd_unitdir}/system/*"
+FILES:${PN} += "${bindir}/*"
+FILES:${PN} += "${sysconfdir}/*"
+FILES:${PN} += "rdklogger/*"
+FILES:${PN} += "${base_libdir}/rdk/*"
+FILES:${PN}:append_qemux86broadband += "${systemd_unitdir}/system/*"
 
-FILES_${PN}:append_arrisxb3atom += " \
+FILES:${PN}:append_arrisxb3atom += " \
           /rdklogger/atom_log_monitor.sh \
 	   /rdklogger/flush_logs_atom.sh \
          "
 
-FILES_${PN}:append_container = " \
+FILES:${PN}:append_container = " \
            ${systemd_unitdir}/system/iptables_lxc.service \
            ${systemd_unitdir}/system/iptables_lxc.path \
            ${base_libdir}/rdk/getip_file.sh \
@@ -217,7 +217,7 @@ FILES_${PN}:append_container = " \
            ${base_libdir}/rdk/iptables_container.sh \
          "
 
-SYSTEMD_SERVICE_${PN}:append_container = " iptables_lxc.path \
+SYSTEMD_SERVICE:${PN}:append_container = " iptables_lxc.path \
                                            lxc.path \
                                          "
 # Breakpad processname and logfile mapping

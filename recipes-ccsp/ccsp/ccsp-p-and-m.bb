@@ -3,7 +3,7 @@ HOMEPAGE = "http://github.com/belvedere-yocto/CcspPandM"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
-RPROVIDES_${PN} = "ccsp-p-and-m"
+RPROVIDES:${PN} = "ccsp-p-and-m"
 
 DEPENDS = "ccsp-common-library webconfig-framework ccsp-lm-lite telemetry ccsp-hotspot mountutils"
 DEPENDS:append = " utopia hal-cm hal-dhcpv4c hal-ethsw hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi curl ccsp-misc ccsp-hotspot cjson libsyswrapper cjson trower-base64 msgpack-c nanomsg wrp-c libparodus rbus"
@@ -16,14 +16,14 @@ DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', 
 
 # Add remotedebugger dependency
 DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rrd', ' remotedebugger', " ", d)}"
-RDEPENDS_${PN}:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rrd',' remotedebugger', '',d)}"
+RDEPENDS:${PN}:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'rrd',' remotedebugger', '',d)}"
 CFLAGS:append     = "${@bb.utils.contains('DISTRO_FEATURES', 'rrd', ' -I=${includedir}/rrd/', '', d)}"
 CFLAGS:append     = "${@bb.utils.contains('DISTRO_FEATURES', 'rrd', ' -DUSE_REMOTE_DEBUGGER', '', d)}"
  
-RDEPENDS_${PN}:append = " cjson trower-base64 msgpack-c nanomsg wrp-c libparodus "
+RDEPENDS:${PN}:append = " cjson trower-base64 msgpack-c nanomsg wrp-c libparodus "
 
-RDEPENDS_${PN}-ccsp:append = " bash"
-RDEPENDS_${PN}-ccsp:remove_morty = "bash"
+RDEPENDS:${PN}-ccsp:append = " bash"
+RDEPENDS:${PN}-ccsp:remove_morty = "bash"
 
 require ccsp_common.inc
 
@@ -215,7 +215,7 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${prefix}/ccsp/pam/CcspDmLib.cfg  \
     ${prefix}/ccsp/pam/CcspPam.cfg  \
     ${prefix}/ccsp/pam/email_notification_monitor.sh  \
@@ -236,11 +236,11 @@ FILES_${PN}-ccsp = " \
     /fss/gw/usr/ccsp/pam/mapping.txt \
 "
 
-FILES_${PN}-ccsp:remove_no_moca_support = " \
+FILES:${PN}-ccsp:remove_no_moca_support = " \
     ${prefix}/ccsp/pam/moca_status.sh \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/pam/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

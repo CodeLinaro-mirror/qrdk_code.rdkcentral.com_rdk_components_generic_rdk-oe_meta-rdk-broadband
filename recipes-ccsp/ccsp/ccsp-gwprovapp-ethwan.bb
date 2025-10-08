@@ -36,9 +36,9 @@ do_install:append () {
 #    install -m 0644 ${S}/service/gwprovethwan.service ${D}${systemd_unitdir}/system
 }
 
-#SYSTEMD_SERVICE_${PN} = "gwprovethwan.service"
+#SYSTEMD_SERVICE:${PN} = "gwprovethwan.service"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${STAGING_INCDIR} \
     /usr/ccsp \
     /usr/ccsp/gw_prov_ethwan \
@@ -48,7 +48,7 @@ FILES_${PN} += " \
 #     ${systemd_unitdir}/system/gwprovethwan.service \
 #"
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

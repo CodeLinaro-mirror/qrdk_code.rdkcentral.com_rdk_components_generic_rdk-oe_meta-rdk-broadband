@@ -59,12 +59,12 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${prefix}/ccsp/mta/CcspMta.cfg \
     ${prefix}/ccsp/mta/CcspMtaLib.cfg \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/mta/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

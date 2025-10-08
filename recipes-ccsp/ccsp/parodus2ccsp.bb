@@ -6,14 +6,15 @@ HOMEPAGE = "https://github.com/Comcast/parodus2ccsp"
 DEPENDS = "cjson msgpack-c rdk-logger dbus ccsp-common-library trower-base64 cimplog wdmp-c nanomsg wrp-c libparodus breakpad breakpad-wrapper utopia libunpriv rbus"
 DEPENDS:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " curl webcfg ", " ", d)}"
 DEPENDS:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " curl ", " ", d)}"
-RDEPENDS_${PN} = "cjson msgpack-c rdk-logger trower-base64 cimplog wdmp-c nanomsg wrp-c libparodus utopia bash"
-RDEPENDS_${PN}:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " curl webcfg ", " ", d)}"
-RDEPENDS_${PN}:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " curl ", " ", d)}"
+RDEPENDS:${PN} = "cjson msgpack-c rdk-logger trower-base64 cimplog wdmp-c nanomsg wrp-c libparodus utopia bash"
+RDEPENDS:${PN}:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig", " curl webcfg ", " ", d)}"
+RDEPENDS:${PN}:append = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", " curl ", " ", d)}"
 
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=e3fc50a88d0a364313df4b21ef20c29e"
 
 SRCREV = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "d26d16eb4a85348404259178a48bfcdc49830463", "1b4abb76fff13c8c653363d0fc12069050eb89dc" , d)}"
+#SRCREV = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "d26d16eb4a85348404259178a48bfcdc49830463", "c453158491e8ff858b6eabe6f3e3e76daf3b2978" , d)}"
 
 do_configure:prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/source/arch/intel_usg/boards/rdkb_atom/config/comcast/WebpaAgent.xml ${S}/source/broadband/dm_pack_datamodel.c)
@@ -23,7 +24,6 @@ BRANCH = "${@bb.utils.contains("DISTRO_FEATURES", "webconfig_phase1", "webconfig
 SRC_URI = "\
     git://github.com/xmidt-org/parodus2ccsp.git;branch=${BRANCH};protocol=https  \
     file://WebPA_drop_root.patch \
-    file://WebPA_getValues.patch \
     "
 PV = "git+${SRCPV}"
 S = "${WORKDIR}/git"
@@ -78,7 +78,7 @@ SRC_URI:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfig', 'file:/
 # generating minidumps
 PACKAGECONFIG:append = " breakpad"
 do_install:append() {
-    install -d ${D}/usr/ccsp/webpa
+    install -d ${D}${exec_prefix}/ccsp/webpa
 
     install -d ${D}/etc
 
@@ -94,10 +94,11 @@ do_install:append() {
     fi
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${exec_prefix}/ccsp/webpa \
     ${bindir}/webpa \
 "
+
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "webpa"
 BREAKPAD_LOGMAPPER_LOGLIST = "WEBPAlog.txt.0"

@@ -43,19 +43,19 @@ do_install:append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     /fss/gw/usr/ccsp/* \
     ${prefix}/ccsp/pwrMgr/* \
     ${prefix}/ccsp/* \
 "
 
-FILES_${PN} = " \
+FILES:${PN} = " \
     /usr/bin/rdkbPowerMgr \
     ${prefix}/ccsp/pwrMgr/rdkb_power_manager.sh \
     ${prefix}/ccsp/pwrMgr/rdkbPowerMgr \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \
