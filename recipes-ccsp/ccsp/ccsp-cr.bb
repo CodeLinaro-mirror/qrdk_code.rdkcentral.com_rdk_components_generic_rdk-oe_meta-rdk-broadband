@@ -42,7 +42,15 @@ do_install_append () {
     ln -sf /usr/bin/CcspCrSsp ${D}/usr/ccsp/CcspCrSsp
     install -m 644 ${S}/source/cr-ethwan-deviceprofile.xml ${D}/usr/ccsp/cr-ethwan-deviceprofile.xml
     install -m 644 ${S}/config/cr-deviceprofile_embedded.xml ${D}/usr/ccsp/cr-deviceprofile.xml
+    #Remove mta component registration from config file.
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'true', 'false', d)}; then
+            sed -i -e "/mta/{n;d}" ${D}/usr/ccsp/cr-deviceprofile.xml
+            sed -i -e 'N;/mta/!P;D' ${D}/usr/ccsp/cr-deviceprofile.xml
+            sed -i -e "/mta/{n;d}" ${D}/usr/ccsp/cr-ethwan-deviceprofile.xml
+            sed -i -e 'N;/mta/!P;D' ${D}/usr/ccsp/cr-ethwan-deviceprofile.xml
+    fi
 }
+
 
 PACKAGES += "${PN}-ccsp"
 

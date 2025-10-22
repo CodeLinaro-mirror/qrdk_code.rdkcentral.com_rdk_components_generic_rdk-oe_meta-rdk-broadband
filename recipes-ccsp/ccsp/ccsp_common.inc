@@ -153,6 +153,9 @@ CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'pm_lan_mgr', ' -DLA
 CFLAGS_append =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DNO_MOCA_FEATURE_SUPPORT ', '', d)}"
 CFLAGS_remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DMOCA_DIAGONISTIC -DMOCA_HOME_ISOLATION -DCONFIG_SYSTEM_MOCA ', '', d)}"
 
+CFLAGS_append =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', ' -DNO_MTA_FEATURE_SUPPORT ', '', d)}"
+CFLAGS_remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', ' -DEROUTER_DHCP_OPTION_MTA ', '', d)}"
+
 FILES_${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"
