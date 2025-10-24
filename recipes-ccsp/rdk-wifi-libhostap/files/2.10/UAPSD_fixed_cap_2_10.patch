@@ -1,0 +1,15 @@
+Index: git/source/hostap-2.10/src/ap/ieee802_11.c
+===================================================================
+--- git.orig/source/hostap-2.10/src/ap/ieee802_11.c
++++ git/source/hostap-2.10/src/ap/ieee802_11.c
+@@ -314,6 +314,10 @@ u16 hostapd_own_capab_info(struct hostap
+ 		}
+ 	}
+ 
++    if (hapd->conf->wmm_enabled && hapd->conf->wmm_uapsd) {
++        capab |= WLAN_CAPABILITY_APSD;
++    }
++
+ 	return capab;
+ }
+ 
