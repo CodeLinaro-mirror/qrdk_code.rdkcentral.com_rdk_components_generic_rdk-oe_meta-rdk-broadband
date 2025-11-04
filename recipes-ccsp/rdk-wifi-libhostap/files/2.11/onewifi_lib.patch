@@ -359,7 +359,7 @@ Index: git/source/hostap-2.11/src/ap/hostapd.h
 +        size_t drv_count;
 +};
 +
-+struct hapd_global global;
++extern struct hapd_global global;
 +
  int hostapd_set_acl(struct hostapd_data *hapd);
  struct hostapd_data * hostapd_mbssid_get_tx_bss(struct hostapd_data *hapd);
