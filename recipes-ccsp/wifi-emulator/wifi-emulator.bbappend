@@ -1,3 +1,3 @@
 FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
 
-SRC_URI += "file://upgrade_image_step.patch"
+SRC_URI += "file://image_upgrade_and_factory_reset.patch"

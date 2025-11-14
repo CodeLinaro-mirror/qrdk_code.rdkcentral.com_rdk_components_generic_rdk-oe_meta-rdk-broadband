@@ -1,0 +1,192 @@
+diff --git a/src/tests/wlan_emu_test_param_upgrade_or_reboot.cpp b/src/tests/wlan_emu_test_param_upgrade_or_reboot.cpp
+index c281182..a7c13bd 100644
+--- a/src/tests/wlan_emu_test_param_upgrade_or_reboot.cpp
++++ b/src/tests/wlan_emu_test_param_upgrade_or_reboot.cpp
+@@ -14,11 +14,110 @@
+ #include <string.h>
+ #include <cjson/cJSON.h>
+
+-int test_step_param_upgrade_or_reboot::create_reboot_case_json(test_step_params_t *step)
++int test_step_param_upgrade_or_reboot::upgrade_image(test_step_params_t *step)
+ {
+-    wlan_emu_print(wlan_emu_log_level_dbg, "%s:%d: Entered create_reboot_case_json\n",
++    char command[1024];
++    char filepath[256];
++    const char *build_name;
++
++    if (step == NULL) {
++        wlan_emu_print(wlan_emu_log_level_err, "%s:%d: step is NULL\n",
++                       __func__, __LINE__);
++        return RETURN_ERR;
++    }
++
++    build_name = step->u.upgrade_or_reboot->build_name.c_str();
++    snprintf(filepath, sizeof(filepath), "/tmp/%s.bin", build_name);
++
++    snprintf(command, sizeof(command),
++             "cd /tmp && curl --connect-timeout 30 -fgLO "
++             "\"http://dac15cdlserver.ae.ccp.xcal.tv:8080/Images/%s.bin\"",
++             build_name);
++
++    FILE *fp = popen(command, "r");
++    if (fp == NULL) {
++        wlan_emu_print(wlan_emu_log_level_err, "%s:%d: popen failed for curl: %s\n",
++                       __func__, __LINE__, strerror(errno));
++        return RETURN_ERR;
++    }
++    pclose(fp);
++
++    if (access(filepath, R_OK) != 0) {
++        wlan_emu_print(wlan_emu_log_level_err, "%s:%d: Downloaded file not found: %s\n",
++                       __func__, __LINE__, filepath);
++        return RETURN_ERR;
++    }
++
++#if (defined(_XB8_PRODUCT_REQ_) || defined(_XB7_PRODUCT_REQ_)) && !defined(_XB10_PRODUCT_REQ_)
++
++    wlan_emu_print(wlan_emu_log_level_dbg, "%s:%d: Using pcido for upgrade\n",
++                   __func__, __LINE__);
++    snprintf(command, sizeof(command),
++             "pcido confirm -s0 -w && pcido commit -w -s100 -f=%s",
++             filepath);
++
++    fp = popen(command, "r");
++    if (fp == NULL) {
++        wlan_emu_print(wlan_emu_log_level_err, "%s:%d: popen failed for pcido: %s\n",
++                       __func__, __LINE__, strerror(errno));
++        return RETURN_ERR;
++    }
++    pclose(fp);
++    return RETURN_OK;
++#elif defined(_XB10_PRODUCT_REQ_)
++    wlan_emu_print(wlan_emu_log_level_dbg, "%s:%d: Using rdload for upgrade\n",
+                    __func__, __LINE__);
++    snprintf(command, sizeof(command),
++             "rdload -f %s.bin", filepath);
++
++    fp = popen(command, "r");
++    if (fp == NULL) {
++        wlan_emu_print(wlan_emu_log_level_err, "%s:%d: popen failed for rdload: %s\n",
++                       __func__, __LINE__, strerror(errno));
++        return RETURN_ERR;
++    }
++    pclose(fp);
++    return RETURN_OK;
++#else
++    wlan_emu_print(wlan_emu_log_level_err, "%s:%d: Upgrade not supported on this platform\n",
++                   __func__, __LINE__);
++    snprintf(command, sizeof(command), "rm -f %s", filepath);
++    fp = popen(command, "r");
++    if (fp != NULL) {
++        pclose(fp);
++    }
++    return RETURN_ERR;
++#endif
++}
+
++int test_step_param_upgrade_or_reboot::factory_reset(test_step_params_t *step)
++{
++    char command[1024] = {0};
++
++    if (step == NULL) {
++        wlan_emu_print(wlan_emu_log_level_err, "%s:%d: step is NULL\n", __func__, __LINE__);
++        return RETURN_ERR;
++    }
++
++    snprintf(command, sizeof(command),
++        "dmcli eRT setv Device.X_CISCO_COM_DeviceControl.FactoryReset string \"Router, Wifi, VoIP, "
++        "Dect, MoCA\"");
++
++    FILE *fp = popen(command, "r");
++    if (fp == NULL) {
++        wlan_emu_print(wlan_emu_log_level_err, "%s:%d: popen failed to execute factory reset: %s\n",
++            __func__, __LINE__, strerror(errno));
++        return RETURN_ERR;
++    }
++
++    pthread_cancel(step->m_ui_mgr->get_heartbeat_thread_id());
++    WaitForDuration(5000);
++    pclose(fp);
++    return RETURN_OK;
++}
++
++int test_step_param_upgrade_or_reboot::create_reboot_case_json(test_step_params_t *step)
++{
+     if (step == NULL) {
+         wlan_emu_print(wlan_emu_log_level_err, "%s:%d: step is NULL\n",
+                        __func__, __LINE__);
+@@ -45,7 +144,6 @@ int test_step_param_upgrade_or_reboot::create_reboot_case_json(test_step_params_
+     cJSON_AddStringToObject(root, "interface", step->m_ui_mgr->get_tda_interface());
+     cJSON_AddNumberToObject(root, "simulated_client_count", step->m_ui_mgr->get_simulated_client_count());
+     cJSON_AddStringToObject(root, "ResultsFileName", step->m_ui_mgr->get_tda_output_file());
+-
+     // logging_step_numbers
+     queue_t *q = step->u.upgrade_or_reboot->logging_step_numbers;
+     size_t count = q ? queue_count(q) : 0;
+@@ -163,7 +261,16 @@ int test_step_param_upgrade_or_reboot::step_execute()
+         return RETURN_ERR;
+     }
+     step->m_ui_mgr->upload_results();
+-    if (step->m_ui_mgr->cci_report_pause_to_tda() != RETURN_OK) {
++    WaitForDuration(5000); // Sleep for 5 seconds
++    if (this->u.upgrade_or_reboot->is_fr_enabled == true) {
++        if (step->m_ui_mgr->cci_report_factory_reset_to_tda() != RETURN_OK) {
++            wlan_emu_print(wlan_emu_log_level_err,
++                "%s:%d: cci_report_factory_reset_to_tda failed\n", __func__, __LINE__);
++            this->test_state = wlan_emu_tests_state_cmd_abort;
++            step->m_ui_mgr->cci_error_code = ECURLPOST;
++            return RETURN_ERR;
++        }
++    } else if (step->m_ui_mgr->cci_report_pause_to_tda() != RETURN_OK) {
+         wlan_emu_print(wlan_emu_log_level_err, "%s:%d: cci_report_pause_to_tda failed\n", __func__,
+             __LINE__);
+         this->test_state = wlan_emu_tests_state_cmd_abort;
+@@ -171,18 +278,33 @@ int test_step_param_upgrade_or_reboot::step_execute()
+         return RETURN_ERR;
+     }
+
++    if (this->u.upgrade_or_reboot->build_name != "") {
++        if (upgrade_image(step) != RETURN_OK) {
++            wlan_emu_print(wlan_emu_log_level_err, "%s:%d: upgrade_image failed\n", __func__,
++                __LINE__);
++            this->test_state = wlan_emu_tests_state_cmd_abort;
++            step->m_ui_mgr->cci_error_code = ECURLPOST;
++            return RETURN_ERR;
++        }
++    }
++
+     if (access(CCI_TEST_REBOOT_STEP_CONFIG_JSON, R_OK) == 0) {
+-        WaitForDuration(5000); // Sleep for 5 seconds
+-        if (reboot(LINUX_REBOOT_CMD_RESTART) == -1) {
++        if (this->u.upgrade_or_reboot->is_fr_enabled == true) {
++            if (factory_reset(step) != RETURN_OK) {
++                wlan_emu_print(wlan_emu_log_level_err, "%s:%d: Factory reset failed\n", __func__,
++                    __LINE__);
++                this->test_state = wlan_emu_tests_state_cmd_abort;
++                step->m_ui_mgr->cci_error_code = ECURLPOST;
++                return RETURN_ERR;
++            }
++        } else if (reboot(LINUX_REBOOT_CMD_RESTART) == -1) {
+             wlan_emu_print(wlan_emu_log_level_err, "%s:%d: Reboot failed: %s\n", __func__, __LINE__,
+                 strerror(errno));
+             this->test_state = wlan_emu_tests_state_cmd_abort;
+             step->m_ui_mgr->cci_error_code = ECURLPOST;
+             return RETURN_ERR;
+         }
+-        this->test_state = wlan_emu_tests_state_cmd_abort;
+-        step->m_ui_mgr->cci_error_code = ECURLPOST;
+-        return RETURN_ERR;
++        return RETURN_OK;
+     } else {
+         this->test_state = wlan_emu_tests_state_cmd_abort;
+         step->m_ui_mgr->cci_error_code = ECURLPOST;
+@@ -224,7 +346,9 @@ test_step_param_upgrade_or_reboot::test_step_param_upgrade_or_reboot()
+     //this->u.upgrade_or_reboot->is_upgrade = false; // Default to reboot
+     this->u.upgrade_or_reboot->is_logging_enabled = false;
+     this->u.upgrade_or_reboot->logging_step_numbers = NULL;
++    this->u.upgrade_or_reboot->build_name = "";
+     this->is_step_initialized = true;
++    this->u.upgrade_or_reboot->is_fr_enabled = false;
+ }
+
+ int test_step_param_upgrade_or_reboot::step_frame_filter(wlan_emu_msg_t *msg)
