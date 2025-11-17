@@ -12,7 +12,7 @@ DEPENDS += "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' rdk-
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 require ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/miscellaneous-broadband;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/miscellaneous-broadband;protocol=https;${BRANCH_ccsp_misc}"
 
 S = "${WORKDIR}/git"
 

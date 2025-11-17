@@ -10,7 +10,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 
 require ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/gw-provisioning-application;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/gw-provisioning-application;protocol=https;${BRANCH_ccsp_gwprovapp}"
 
 S = "${WORKDIR}/git"
 

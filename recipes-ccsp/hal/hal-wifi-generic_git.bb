@@ -10,7 +10,7 @@ RPROVIDES_${PN} = "hal-wifi"
 DEPENDS += "rdk-wifi-halif safec-common-wrapper"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=wifihal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=wifihal"
 SRCREV_FORMAT = "wifihal"
 
 S = "${WORKDIR}/git/source/wifi"

@@ -11,7 +11,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler'
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/test-and-diagnostic;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/test-and-diagnostic;protocol=https;${BRANCH_test_and_diagnostic}"
 
 S = "${WORKDIR}/git"
 

@@ -13,7 +13,7 @@ BREAKPAD_BIN_append = " parodusStart"
 
 CFLAGS += " -Wall -Werror -Wextra "
 
-SRC_URI = "${CMF_GITHUB_ROOT}/start-parodus;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/start-parodus;protocol=https;${BRANCH_start_parodus}"
 
 S = "${WORKDIR}/git"
 

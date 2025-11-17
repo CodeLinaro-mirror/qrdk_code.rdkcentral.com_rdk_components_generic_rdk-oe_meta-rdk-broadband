@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://${THISDIR}/../../LICENSE;md5=5bfad6e034e497ee148eec56
 DEPENDS = "ccsp-common-library"
 require ccsp_common.inc
 SRC_URI = "\
-    ${CMF_GITHUB_ROOT}/webui-bwg;protocol=https;nobranch=1 \
+    ${CMF_GITHUB_ROOT}/webui-bwg;protocol=https;${BRANCH_ccsp_webui_bci_jst} \
     ${CMF_GIT_ROOT}/rdkb/devices/rdkbemu/rdkbemu_xb3;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=xb3;name=xb3 \
     "
 

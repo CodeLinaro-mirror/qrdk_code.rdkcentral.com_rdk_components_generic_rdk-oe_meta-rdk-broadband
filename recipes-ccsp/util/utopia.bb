@@ -18,7 +18,7 @@ RDEPENDS_${PN}_remove_morty = " bash"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/utopia;protocol=https;nobranch=1;name=Utopia"
+SRC_URI = "${CMF_GITHUB_ROOT}/utopia;protocol=https;${BRANCH_utopia};name=Utopia"
 
 S = "${WORKDIR}/git"
 

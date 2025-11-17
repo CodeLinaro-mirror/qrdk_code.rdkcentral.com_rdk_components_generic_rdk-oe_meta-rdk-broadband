@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://../../LICENSE;md5=0ef5cb68a38cd4d4c9f9d350c50f68f8"
 DEPENDS = "ccsp-common-library php ccsp-webui-csrf"
 require ccsp_common.inc
 SRC_URI = "\
-    ${CMF_GITHUB_ROOT}/webui-bwg;protocol=https;nobranch=1 \
+    ${CMF_GITHUB_ROOT}/webui-bwg;protocol=https;${BRANCH_ccsp_webui_bci_php} \
     ${CMF_GIT_ROOT}/rdkb/devices/rdkbemu/rdkbemu_xb3;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=xb3;name=xb3 \
     "
 

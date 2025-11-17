@@ -13,7 +13,7 @@ RDEPENDS_${PN}_remove_morty = "bash"
 
 require ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/common-library;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/common-library;protocol=https;${BRANCH_ccsp_common_library}"
 
 SRC_URI_append = " file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"
 SRC_URI_remove_morty = " file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"

@@ -9,7 +9,7 @@ RPROVIDES_${PN} = "hal-firewall"
 
 DEPENDS += "halinterface"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=firewallhal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=firewallhal"
 SRCREV_FORMAT = "firewallhal"
 
 S = "${WORKDIR}/git/source/firewall"

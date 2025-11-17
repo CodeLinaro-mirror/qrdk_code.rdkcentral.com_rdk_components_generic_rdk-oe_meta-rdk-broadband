@@ -12,7 +12,7 @@ require recipes-ccsp/ccsp/ccsp_common.inc
 RDEPENDS_${PN} = " trower-base64 "
 DEPENDS += " trower-base64"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/xdns;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/xdns;protocol=https;${BRANCH_ccsp_xdns}"
 
 S = "${WORKDIR}/git"
 

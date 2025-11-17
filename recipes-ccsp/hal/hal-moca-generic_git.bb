@@ -10,7 +10,7 @@ RPROVIDES_${PN} = "hal-moca"
 DEPENDS += "rdkb-halif-moca safec-common-wrapper"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=mocahal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=mocahal"
 SRCREV_FORMAT = "mocahal"
 
 S = "${WORKDIR}/git/source/moca"

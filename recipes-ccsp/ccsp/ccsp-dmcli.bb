@@ -9,7 +9,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 
 require ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/data-model-cli;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/data-model-cli;protocol=https;${BRANCH_ccsp_dmcli}"
 
 S = "${WORKDIR}/git"
 

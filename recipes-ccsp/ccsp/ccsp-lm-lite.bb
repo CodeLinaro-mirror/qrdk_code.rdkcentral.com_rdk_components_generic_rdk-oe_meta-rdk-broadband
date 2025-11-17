@@ -9,7 +9,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 DEPENDS_append = "${@bb.utils.contains("DISTRO_FEATURES", "WanFailOverSupportEnable", " rbus ", " ", d)}"
 require ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/lan-manager-lite;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/lan-manager-lite;protocol=https;${BRANCH_ccsp_lm_lite}"
 
 S = "${WORKDIR}/git"
 

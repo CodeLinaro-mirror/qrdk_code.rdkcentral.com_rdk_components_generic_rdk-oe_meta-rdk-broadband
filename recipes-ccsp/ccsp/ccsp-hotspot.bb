@@ -12,7 +12,7 @@ require ccsp_common.inc
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare "
 CFLAGS_append_kirkstone = " -Wno-array-bounds -Wno-stringop-overflow "
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hotspot;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/hotspot;protocol=https;${BRANCH_ccsp_hotspot}"
 
 S = "${WORKDIR}/git"
 

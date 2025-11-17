@@ -8,7 +8,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/lan-manager;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/lan-manager;protocol=https;${BRANCH_lanmanager}"
 
 S = "${WORKDIR}/git"
 

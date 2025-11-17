@@ -6,7 +6,7 @@ DEPENDS = "ccsp-common-library utopia hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/power-manager;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/power-manager;protocol=https;${BRANCH_powermgr}"
 
 CFLAGS_append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \

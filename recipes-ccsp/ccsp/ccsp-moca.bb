@@ -11,7 +11,7 @@ require ccsp_common.inc
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-address -Wno-enum-conversion"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/moca-agent;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/moca-agent;protocol=https;${BRANCH_ccsp_moca}"
 
 S = "${WORKDIR}/git"
 

@@ -10,7 +10,7 @@ RPROVIDES_${PN} = "hal-platform"
 DEPENDS += "rdkb-halif-platform safec-common-wrapper"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=platformhal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=platformhal"
 SRCREV_FORMAT = "platformhal"
 
 S = "${WORKDIR}/git/source/platform"

@@ -7,7 +7,7 @@ DEPENDS = "ccsp-common-library utopia rdk-logger telemetry jansson libsyswrapper
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/open-virtual-switch-agent;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/open-virtual-switch-agent;protocol=https;${BRANCH_ovs_agent}"
 
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"

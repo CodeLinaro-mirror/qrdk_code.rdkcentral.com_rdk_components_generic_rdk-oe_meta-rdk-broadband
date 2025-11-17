@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 DEPENDS = "libxml2 ccsp-common-library utopia curl mountutils"
 require ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/home-security;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/home-security;protocol=https;${BRANCH_ccsp_home_security}"
 
 S = "${WORKDIR}/git"
 

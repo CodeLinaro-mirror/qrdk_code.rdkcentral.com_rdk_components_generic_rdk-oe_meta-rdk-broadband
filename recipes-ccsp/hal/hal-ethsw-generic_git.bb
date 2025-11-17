@@ -9,7 +9,7 @@ RPROVIDES_${PN} = "hal-ethsw"
 
 DEPENDS += "rdkb-halif-ethsw"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=ethswhal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=ethswhal"
 SRCREV_FORMAT = "ethswhal"
 
 S = "${WORKDIR}/git/source/ethsw"

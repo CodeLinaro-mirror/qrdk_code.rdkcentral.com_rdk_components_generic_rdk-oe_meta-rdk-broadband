@@ -10,7 +10,7 @@ RPROVIDES_${PN} = "hal-vlan"
 DEPENDS += "rdkb-halif-vlan safec-common-wrapper"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=vlanhal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=vlanhal"
 SRCREV_FORMAT = "vlanhal"
 
 S = "${WORKDIR}/git/source/vlan"

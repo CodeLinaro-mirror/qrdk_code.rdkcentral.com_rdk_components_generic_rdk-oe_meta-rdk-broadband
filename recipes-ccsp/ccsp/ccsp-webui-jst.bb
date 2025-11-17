@@ -9,7 +9,7 @@ DEPENDS = "ccsp-common-library chrpath-replacement-native"
 require ccsp_common.inc
 
 SRC_URI = "\
-    ${CMF_GITHUB_ROOT}/webui;protocol=https;nobranch=1 \
+    ${CMF_GITHUB_ROOT}/webui;protocol=https;${BRANCH_ccsp_webui_jst} \
     git://${RDK_GIT}/rdk/rdkb/devices/rdkbemu/rdkbemu_xb3;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=xb3;name=xb3 \
     "
 

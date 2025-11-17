@@ -31,7 +31,7 @@ CFLAGS += " -Wall -Werror -Wextra -Wno-shift-negative-value"
 
 CFLAGS_append = " -Wno-deprecated-declarations -Wno-stringop-overflow -Wno-format-truncation -Wno-enum-conversion -Wno-array-bounds -Wno-misleading-indentation"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/provisioning-and-management;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/provisioning-and-management;protocol=https;${BRANCH_ccsp_p_and_m}"
 
 S = "${WORKDIR}/git"
 

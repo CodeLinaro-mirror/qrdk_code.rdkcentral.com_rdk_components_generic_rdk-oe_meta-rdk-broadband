@@ -11,7 +11,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 require ccsp_common.inc
 
 SRC_URI = "\
-    ${CMF_GITHUB_ROOT}/webui;protocol=https;nobranch=1 \
+    ${CMF_GITHUB_ROOT}/webui;protocol=https;${BRANCH_ccsp_webui_php} \
     ${CMF_GIT_ROOT}/rdkb/devices/rdkbemu/rdkbemu_xb3;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=xb3;name=xb3 \
     "
 

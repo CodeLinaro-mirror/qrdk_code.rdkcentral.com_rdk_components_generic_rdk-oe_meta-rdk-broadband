@@ -13,7 +13,7 @@ RDEPENDS_${PN}_remove_morty = "bash"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/xconf-client;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/xconf-client;protocol=https;${BRANCH_ccsp_xconf}"
 
 S = "${WORKDIR}/git"
 

@@ -10,7 +10,7 @@ RPROVIDES_${PN} = "hal-dhcpv4c"
 DEPENDS += "rdkb-halif-dhcp safec-common-wrapper"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=dhcpv4hal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=dhcpv4hal"
 SRCREV_FORMAT = "dhcpv4hal"
 
 S = "${WORKDIR}/git/source/dhcpv4c"

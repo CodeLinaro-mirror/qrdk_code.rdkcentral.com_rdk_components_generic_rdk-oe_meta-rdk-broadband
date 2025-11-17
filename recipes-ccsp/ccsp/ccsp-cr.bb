@@ -11,7 +11,7 @@ require ccsp_common.inc
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-enum-conversion"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/component-registry;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/component-registry;protocol=https;${BRANCH_ccsp_cr}"
 
 S = "${WORKDIR}/git"
 

@@ -10,7 +10,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEn
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 require ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/ethernet-agent;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/ethernet-agent;protocol=https;${BRANCH_ccsp_eth_agent}"
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-format-overflow -Wno-format-truncation -Wno-array-bounds"
 

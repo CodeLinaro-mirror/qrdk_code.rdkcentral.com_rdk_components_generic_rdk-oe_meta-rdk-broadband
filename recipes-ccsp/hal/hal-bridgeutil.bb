@@ -9,7 +9,7 @@ RPROVIDES_${PN} = "hal-bridgeutil"
 
 DEPENDS += "rdkb-halif-bridge-util"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=bridgeutilhal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=bridgeutilhal"
 SRCREV_FORMAT = "bridgeutilhal"
 
 S = "${WORKDIR}/git/source/bridgeutil"

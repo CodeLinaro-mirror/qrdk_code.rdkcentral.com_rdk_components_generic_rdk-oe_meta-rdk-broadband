@@ -9,7 +9,7 @@ RPROVIDES_${PN} = "hal-epon"
 
 DEPENDS += "halinterface"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=eponhal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=eponhal"
 SRCREV_FORMAT = "eponhal"
 
 S = "${WORKDIR}/git/source/epon"

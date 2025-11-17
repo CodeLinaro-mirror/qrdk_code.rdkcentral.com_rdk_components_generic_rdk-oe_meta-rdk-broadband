@@ -10,7 +10,7 @@ RPROVIDES_${PN} = "hal-cm"
 DEPENDS += "rdkb-halif-cm safec-common-wrapper"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
-SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;nobranch=1;name=cmhal"
+SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=cmhal"
 SRCREV_FORMAT = "cmhal"
 
 S = "${WORKDIR}/git/source/cm"

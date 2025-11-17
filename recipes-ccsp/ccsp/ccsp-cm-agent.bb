@@ -14,7 +14,7 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' cor
 
 require ccsp_common.inc
 
-SRC_URI = "${CMF_GITHUB_ROOT}/cable-modem-agent;protocol=https;nobranch=1"
+SRC_URI = "${CMF_GITHUB_ROOT}/cable-modem-agent;protocol=https;${BRANCH_ccsp_cm_agent}"
 
 S = "${WORKDIR}/git"
 
