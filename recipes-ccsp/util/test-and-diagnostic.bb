@@ -69,6 +69,10 @@ LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',
 EXTRA_OECONF_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', '--enable-mta', '', d)}"
 
 do_compile_prepend () {
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'no_fan_support', 'true', 'false', d)}; then
+    sed -i '2i <?define NO_FAN_FEATURE_SUPPORT=True?>' ${S}/config/TestAndDiagnostic_arm.XML
+    fi
+    
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TestAndDiagnostic_arm.XML ${S}/source/TandDSsp/dm_pack_datamodel.c)
 }
 do_install_append () {
