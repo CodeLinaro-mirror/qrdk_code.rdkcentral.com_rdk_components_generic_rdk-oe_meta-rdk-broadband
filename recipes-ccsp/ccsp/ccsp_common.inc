@@ -57,6 +57,12 @@ CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'referencepltfm', '-D
 # Add flags to support DSLite Feature
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'dslite', '-DDSLITE_FEATURE_SUPPORT', '', d)}"
 
+# Add flags to support next generation DSLite Feature
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'dslite_v2', '-DFEATURE_DSLITE_V2', '', d)}"
+
+# Add flags to support Dual Stack mode for next generation DSLite Feature
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'dslite_v2_dualstack_support', '-DFEATURE_DSLITE_V2_DUALSTACK_SUPPORT', '', d)}"
+
 # Add flags to support the DDNS standard based on  Broadband forum - RDKBDEV-73
 CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'ddns_broadband', '-DDDNS_BROADBANDFORUM', '', d)}"
 
