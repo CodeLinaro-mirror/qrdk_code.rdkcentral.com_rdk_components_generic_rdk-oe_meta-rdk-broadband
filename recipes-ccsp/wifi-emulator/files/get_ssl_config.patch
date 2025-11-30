@@ -33,7 +33,7 @@ index 9c3cd7f..f05a632 100644
  
 -    snprintf(ssl_key, sizeof(ssl_key), "%s", "dummy_ssl_key");
 -    snprintf(ssl_cert, sizeof(ssl_cert), "%s", "dummy_ssl_cert_path");
-+#ifdef CONFIG_XB7_MTLS
++#if defined(CONFIG_XB7_MTLS) || defined(CONFIG_XB9_MTLS)
 +    char default_cpe_ssl_cert[] = "/nvram/certs/devicecert_1.pk12";
 +#else
 +    char default_cpe_ssl_cert[] = "/nvram/certs/devicecert_2.pk12";
@@ -42,7 +42,7 @@ index 9c3cd7f..f05a632 100644
 +    FILE *fp;
 +    FILE *fp1;
 +
-+#ifdef CONFIG_XB7_MTLS
++#if defined(CONFIG_XB7_MTLS) || defined(CONFIG_XB9_MTLS)
 +    if (access(default_cpe_ssl_cert, F_OK) == -1) {
 +        // The cpe file does not exist
 +        snprintf(ssl_cert, sizeof(ssl_cert), "%s", "/etc/ssl/certs/staticXpkiCrt.pk12");
