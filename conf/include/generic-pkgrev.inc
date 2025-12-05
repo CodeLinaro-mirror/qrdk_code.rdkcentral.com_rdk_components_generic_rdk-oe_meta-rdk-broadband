@@ -5,10 +5,10 @@ PR_pn-ccsp-adv-security = "r0"
 PV_pn-ccsp-cm-agent = "1.2.0_stable2"
 PR_pn-ccsp-cm-agent = "r0"
 
-PV_pn-ccsp-common-library = "1.3.0_stable2"
+PV_pn-ccsp-common-library = "1.3.0_stable2_20251205"
 PR_pn-ccsp-common-library = "r0"
 
-PV_pn-ccsp-common-library-native = "1.3.0_stable2"
+PV_pn-ccsp-common-library-native = "1.3.0_stable2_20251205"
 PR_pn-ccsp-common-library-native = "r0"
 
 PV_pn-ccsp-cr = "1.0.0"
@@ -17,10 +17,10 @@ PR_pn-ccsp-cr = "r0"
 PV_pn-ccsp-dmcli = "1.0.0"
 PR_pn-ccsp-dmcli = "r0"
 
-PV_pn-ccsp-eth-agent = "1.4.0_stable2"
+PV_pn-ccsp-eth-agent = "1.4.0_stable2_20251205"
 PR_pn-ccsp-eth-agent = "r0"
 
-PV_pn-ccsp-gwprovapp = "1.2.0_stable2"
+PV_pn-ccsp-gwprovapp = "1.2.0_stable_20251205"
 PR_pn-ccsp-gwprovapp = "r0"
 
 PV_pn-ccsp-gwprovapp-ethwan = "1.0.0"
@@ -35,7 +35,7 @@ PR_pn-ccsp-hotspot = "r0"
 PV_pn-ccsp-hotspot-kmod = "1.0.0"
 PR_pn-ccsp-hotspot-kmod = "r0"
 
-PV_pn-ccsp-lm-lite = "1.3.0_stable2"
+PV_pn-ccsp-lm-lite = "1.3.0_stable2_20251205"
 PR_pn-ccsp-lm-lite = "r0"
 
 PV_pn-ccsp-misc = "1.3.0_stable2"
@@ -47,7 +47,7 @@ PR_pn-ccsp-moca = "r0"
 PV_pn-ccsp-mta-agent = "1.2.0_stable2"
 PR_pn-ccsp-mta-agent = "r0"
 
-PV_pn-ccsp-p-and-m = "1.3.0_stable2"
+PV_pn-ccsp-p-and-m = "1.3.0_stable2_20251205"
 PR_pn-ccsp-p-and-m = "r0"
 
 PV_pn-ccsp-psm = "1.0.1"
@@ -65,13 +65,13 @@ PR_pn-ccsp-webui-bci-jst = "r0"
 PV_pn-ccsp-webui-bci-php = "1.2.1"
 PR_pn-ccsp-webui-bci-php = "r0"
 
-PV_pn-ccsp-webui-jst = "1.3.0_stable2"
+PV_pn-ccsp-webui-jst = "1.3.0_stable2_20251205"
 PR_pn-ccsp-webui-jst = "r0"
 
-PV_pn-ccsp-webui-php = "1.3.0_stable2"
+PV_pn-ccsp-webui-php = "1.3.0_stable2_20251205"
 PR_pn-ccsp-webui-php = "r0"
 
-PV_pn-ccsp-xconf = "1.1.0_stable2"
+PV_pn-ccsp-xconf = "1.1.0_stable2_20251205"
 PR_pn-ccsp-xconf = "r0"
 
 PV_pn-ccsp-xdns = "1.0.0"
@@ -119,7 +119,7 @@ PR_pn-hal-vlan-generic = "r0"
 PV_pn-hal-wifi-generic = "1.0.0"
 PR_pn-hal-wifi-generic = "r0"
 
-PV_pn-harvester = "1.1.1_stable2"
+PV_pn-harvester = "1.1.1_stable2_20251205"
 PR_pn-harvester = "r0"
 
 PV_pn-json-hal-lib = "2.0.0"
@@ -137,7 +137,7 @@ PR_pn-notify-comp = "r0"
 PV_pn-ovs-agent = "1.1.0_stable2"
 PR_pn-ovs-agent = "r0"
 
-PV_pn-powermgr = "1.1.0_stable2"
+PV_pn-powermgr = "1.1.0_stable2_20251205"
 PR_pn-powermgr = "r0"
 
 PV_pn-rdk-fwupgrade-manager = "1.1.0"
@@ -149,8 +149,8 @@ PR_pn-rdk-cellularmanager = "r0"
 PV_pn-start-parodus = "1.2.1"
 PR_pn-start-parodus = "r0"
 
-PV_pn-test-and-diagnostic = "1.3.0_stable2"
+PV_pn-test-and-diagnostic = "1.3.0_stable2_20251205"
 PR_pn-test-and-diagnostic = "r0"
 
-PV_pn-utopia = "1.3.0_stable2"
+PV_pn-utopia = "1.3.0_stable2_20251205"
 PR_pn-utopia = "r0"
