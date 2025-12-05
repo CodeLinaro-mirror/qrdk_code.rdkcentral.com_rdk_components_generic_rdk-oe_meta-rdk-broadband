@@ -165,6 +165,7 @@
     <rollingpolicy name="PPPMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="TELCOVOICEMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="NFCMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
+    <rollingpolicy name="RDMAGENT_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
 
     <appender name="TR69rollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="TR69log.txt" layout="comcast_dated" rollingpolicy="TR69_rollingpolicy"/>
     <appender name="MWOrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="MWO.log" layout="comcast_dated" rollingpolicy="MWO_rollingpolicy"/>
@@ -270,6 +271,7 @@
     <appender name="PPPMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="PPPMANAGERLog.txt" layout="comcast_dated" rollingpolicy="PPPMANAGER_rollingpolicy"/>
     <appender name="TELCOVOICEMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="TELCOVOICEMANAGERLog.txt" layout="comcast_dated" rollingpolicy="TELCOVOICEMANAGER_rollingpolicy"/>
     <appender name="RDKNFCMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="NFCManagerLog.txt" layout="comcast_dated" rollingpolicy="NFCMANAGER_rollingpolicy"/>
+    <appender name="RDMAGENTrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="rdm-status.log" layout="comcast_dated" rollingpolicy="RDMAGENT_rollingpolicy"/>
     <appender name="stdout" type="stream_env" layout="comcast_dated"/>
 
     <!--
@@ -402,5 +404,6 @@
     <category name="LOG.RDK.PPPMANAGER" priority="info" appender="PPPMANAGERrollingfileappender"/>
     <category name="LOG.RDK.TELCOVOICEMANAGER" priority="info" appender="TELCOVOICEMANAGERrollingfileappender"/>
     <category name="LOG.RDK.RDKNFCMANAGER" priority="info" appender="RDKNFCMANAGERrollingfileappender"/>
+    <category name="LOG.RDK.RDMAGENT" priority="info" appender="RDMAGENTrollingfileappender"/>
 </log4c>
 
