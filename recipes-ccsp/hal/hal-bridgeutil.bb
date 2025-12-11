@@ -9,6 +9,8 @@ RPROVIDES_${PN} = "hal-bridgeutil"
 
 DEPENDS += "rdkb-halif-bridge-util"
 
+require recipes-ccsp/ccsp/ccsp_common.inc
+
 SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=bridgeutilhal"
 SRCREV_FORMAT = "bridgeutilhal"
 
