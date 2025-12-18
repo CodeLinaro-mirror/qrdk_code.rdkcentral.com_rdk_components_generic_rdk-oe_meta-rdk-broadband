@@ -100,4 +100,4 @@ SRCREV_pn-rdk-fwupgrade-manager = "${@srcrev_for_branch(d, '${SRCREV_rdk_fwupgra
 SRCREV_pn-rdk-cellularmanager = "${@srcrev_for_branch(d, '${SRCREV_rdk_cellularmanager}')}"
 SRCREV_pn-start-parodus = "${@srcrev_for_branch(d, '${SRCREV_start_parodus}')}"
 SRCREV_pn-test-and-diagnostic = "${@srcrev_for_branch(d, '${SRCREV_test_and_diagnostic}')}"
-SRCREV_pn-utopia = "b338083a199c646fd2295b4ef763249eac1d1e80"
+SRCREV_pn-utopia = "${@srcrev_for_branch(d, '${SRCREV_utopia}')}"
