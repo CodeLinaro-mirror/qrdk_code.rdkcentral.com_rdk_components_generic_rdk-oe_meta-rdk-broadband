@@ -66,6 +66,7 @@ EXTRA_OECONF_append = " --enable-core_net_lib_feature_support=${@bb.utils.contai
 EXTRA_OECONF_append = "${@bb.utils.contains('DISTRO_FEATURES', 'enable_device_prioritization',' --enable-device_prioritization','',d)}"
 EXTRA_OECONF_append = "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' --enable-rdk_scheduler','',d)}"
 LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' -lcimplog','',d)}"
+EXTRA_OECONF_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', '--enable-mta', '', d)}"
 
 do_compile_prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TestAndDiagnostic_arm.XML ${S}/source/TandDSsp/dm_pack_datamodel.c)

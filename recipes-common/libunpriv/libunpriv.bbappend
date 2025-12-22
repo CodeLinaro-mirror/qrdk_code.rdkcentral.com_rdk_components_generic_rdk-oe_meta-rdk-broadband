@@ -12,6 +12,10 @@ do_install_append(){
             sed -i '/PsmSsp/!b;n;n;c \      "drop":"UGID_GROUP"' ${D}${sysconfdir}/security/caps/process-capabilities.json
             sed -i '/CcspLMLite/!b;n;n;c \      "drop":""' ${D}${sysconfdir}/security/caps/process-capabilities.json
         fi
+        #Remove mta dependency from process-capabilities.json
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'true', 'false', d)}; then
+            sed -i -e 'N;/CcspMtaAgentSsp/,/drop/d;P;D' ${D}${sysconfdir}/security/caps/process-capabilities.json
+        fi
 }
 
 FILES_${PN} += " ${sysconfdir}/security/caps/process-capabilities.json"

@@ -68,6 +68,12 @@ LDFLAGS_append_libc-musl = " -ltirpc"
 LDFLAGS_append = " -ltirpc -lrt"
 LDFLAGS_remove_morty = " -ltirpc -lrt"
 
+do_install_prepend  () {
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'true', 'false', d)}; then
+       sed -i '/mta/Id' ${WORKDIR}/git/source/scripts/init/defaults/system_defaults_arm
+    fi
+}
+
 do_install_append () {
 #    install -D -m 0644 ${S}/source/include/autoconf.h ${D}${includedir}/utctx/autoconf.h
     install -D -m 0644 ${S}/source/ulog/ulog.h ${D}${includedir}/ulog/ulog.h
@@ -97,7 +103,9 @@ do_install_append () {
 
     install -m 0644 ${S}/source/scripts/init/service.d/cron.allow ${D}${sysconfdir}/cron/
     install -m 755 ${S}/source/scripts/init/service.d/ddns_daily.sh ${D}${sysconfdir}/cron/cron.daily/
-    install -m 755 ${S}/source/scripts/init/service.d/mta_overcurrent_status_daily.sh ${D}${sysconfdir}/cron/cron.daily/
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'false', 'true', d)}; then
+       install -m 755 ${S}/source/scripts/init/service.d/mta_overcurrent_status_daily.sh ${D}${sysconfdir}/cron/cron.daily/
+    fi
     install -m 755 ${S}/source/scripts/init/service.d/remove_max_cpu_usage_file.sh ${D}${sysconfdir}/cron/cron.daily/
     install -m 755 ${S}/source/scripts/init/service.d/log_hourly.sh ${D}${sysconfdir}/cron/cron.hourly/
     install -m 755 ${S}/source/scripts/init/service.d/ntp_hourly.sh ${D}${sysconfdir}/cron/cron.hourly/

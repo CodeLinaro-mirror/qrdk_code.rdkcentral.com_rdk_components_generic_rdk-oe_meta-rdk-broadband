@@ -196,6 +196,10 @@ do_install_append () {
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/restart_services.sh ${D}/etc/restart_services.sh
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/AutoReboot.sh ${D}/etc/AutoReboot.sh
     install -m 755 ${S}/arch/intel_usg/boards/arm_shared/scripts/RebootCondition.sh ${D}/etc/RebootCondition.sh
+    #Remove mta dm entries from partners_defaults.json
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'true', 'false', d)}; then
+        sed -i -e "/MTA/d" ${D}${sysconfdir}/partners_defaults.json
+    fi
 }
 
 #do_install_append_qemux86 () {

@@ -49,7 +49,10 @@ do_install_append () {
 		install -m 644 ${S}/Mib2DmMapping/SELFHEAL-DEVICE-MIB.xml -t ${D}/usr/ccsp/snmp
 		install -m 644 ${S}/Mib2DmMapping/DEVICE-WEBPA-MIB.xml -t ${D}/usr/ccsp/snmp
 	fi
-
+        #Remove mta releated mib support.
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'true', 'false', d)}; then
+           sed -i -e 'N;/rdkbRgDeviceMTA/,/scalarGroup/d;P;D' ${D}${exec_prefix}/ccsp/snmp/Ccsp_RDKB-RG-MIB-DeviceMgmt.xml
+        fi
 }
 
 PACKAGES += "${PN}-ccsp"
