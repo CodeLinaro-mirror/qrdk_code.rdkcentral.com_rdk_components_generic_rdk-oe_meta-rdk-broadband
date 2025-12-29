@@ -134,6 +134,7 @@
     <rollingpolicy name="BATTERYMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="VLANMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="GPONMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
+    <rollingpolicy name="EPONMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="CELLULARMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="INTERDEVICEMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="GATEWAYMANAGER_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
@@ -243,6 +244,7 @@
     <appender name="BATTERYMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="BatteryManagerLog.txt" layout="comcast_dated" rollingpolicy="BATTERYMANAGER_rollingpolicy"/>
     <appender name="VLANMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="VLANManagerLog.txt" layout="comcast_dated" rollingpolicy="VLANMANAGER_rollingpolicy"/>
     <appender name="GPONMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="GPONMANAGERLog.txt" layout="comcast_dated" rollingpolicy="GPONMANAGER_rollingpolicy"/>
+    <appender name="EPONMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="EPONMANAGERLog.txt" layout="comcast_dated" rollingpolicy="EPONMANAGER_rollingpolicy"/>
     <appender name="CELLULARMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="CellularManagerLog.txt" layout="comcast_dated" rollingpolicy="CELLULARMANAGER_rollingpolicy"/>
     <appender name="INTERDEVICEMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="InterDeviceManager.txt" layout="comcast_dated" rollingpolicy="INTERDEVICEMANAGER_rollingpolicy"/>
     <appender name="GATEWAYMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="GatewayManagerLog.txt" layout="comcast_dated" rollingpolicy="GATEWAYMANAGER_rollingpolicy"/>
@@ -377,6 +379,7 @@
     <category name="LOG.RDK.BATTERYMANAGER" priority="info" appender="BATTERYMANAGERrollingfileappender"/>
     <category name="LOG.RDK.VLANMANAGER" priority="info" appender="VLANMANAGERrollingfileappender"/>
     <category name="LOG.RDK.GPONMANAGER" priority="info" appender="GPONMANAGERrollingfileappender"/>
+    <category name="LOG.RDK.EPONMANAGER" priority="info" appender="EPONMANAGERrollingfileappender"/>
     <category name="LOG.RDK.CELLULARMANAGER" priority="info" appender="CELLULARMANAGERrollingfileappender"/>
     <category name="LOG.RDK.INTERDEVICEMANAGER" priority="info" appender="INTERDEVICEMANAGERrollingfileappender"/>
     <category name="LOG.RDK.GATEWAYMANAGER" priority="info" appender="GATEWAYMANAGERrollingfileappender"/>
