@@ -1,7 +1,14 @@
 # For custom build verification in sprint:
-#     Update SRCREV of specific component here
+#     Update SRCREV_pn of specific component in this .inc file
+#         Example: SRCREV_pn-ccsp-adv-security = "1234abcd"
 #     and mention 'nobranch=1' for the same component in generic-branch.inc
+# (or)
+#     Update feature branch for specific component in generic-branch.inc
+#         Example: BRANCH_ccsp_adv_security = "branch=feature/RDKB-12345"
 
+#######################################################################
+# Below mentioned SRCREV is not applicable for sprint builds
+#######################################################################
 SRCREV_ccsp_adv_security = "dbb16fe43ee8899bd95d277a688099aed6b9f4b9"
 SRCREV_ccsp_cm_agent = "443cf61ce0a1de25baece4b4460ff3c1e6897770"
 SRCREV_ccsp_common_library = "40c402a9b7bc8dbf0801d76bca26f88b43cc2ebf"
@@ -49,6 +56,9 @@ def srcrev_for_branch(d, default_rev):
         return '${AUTOREV}'
     return default_rev
 
+#######################################################################
+# Update SRCREV_pn here for custom build verification in sprint
+#######################################################################
 SRCREV_pn-ccsp-adv-security = "${@srcrev_for_branch(d, '${SRCREV_ccsp_adv_security}')}"
 SRCREV_pn-ccsp-cm-agent = "${@srcrev_for_branch(d, '${SRCREV_ccsp_cm_agent}')}"
 SRCREV_pn-ccsp-common-library = "${@srcrev_for_branch(d, '${SRCREV_ccsp_common_library}')}"
