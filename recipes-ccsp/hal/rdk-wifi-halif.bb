@@ -6,7 +6,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 SRC_URI = "git://github.com/rdkcentral/rdkb-halif-wifi.git;protocol=https;branch=main"
 
-SRCREV = "b1a454808cf1976333f84f46d9a371af050cdf3c"
+SRCREV = "62f91847807513075b671f6a2380a8272fd0911c"
 
 S = "${WORKDIR}/git"
 

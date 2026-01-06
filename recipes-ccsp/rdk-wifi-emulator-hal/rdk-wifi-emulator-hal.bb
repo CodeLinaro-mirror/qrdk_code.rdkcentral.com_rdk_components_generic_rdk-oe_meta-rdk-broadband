@@ -13,7 +13,7 @@ DEPENDS += "openssl rdk-wifi-halif rdk-wifi-util cjson libpcap pkgconfig-native"
 # To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where
 # the changes are merged before creating a pull request to github.com/rdkcentral/rdk-wifi-hal
 SRC_URI = "git://github.com/rdkcentral/rdk-wifi-hal.git;protocol=https;branch=main;name=rdk-wifi-emulator-hal"
-SRCREV = "6a77a2c2fd1344dadf0f315a36164fbe2e4635ba"
+SRCREV = "65b9c1d3705d74eea01ae87b65be1ca8a0f2d333"
 
 DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'rdk-wifi-libhostap libnl broadcom-wifi', '', d)}"
 
