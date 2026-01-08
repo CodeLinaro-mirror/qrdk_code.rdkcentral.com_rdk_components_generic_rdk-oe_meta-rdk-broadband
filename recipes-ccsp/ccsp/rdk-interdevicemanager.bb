@@ -14,7 +14,7 @@ SRC_URI += " \
     file://idm_recovery.sh \
 "
 
-SRCREV_InterDeviceManager = "v2.0.2"
+SRCREV_InterDeviceManager = "v2.0.3"
 
 SRCREV_FORMAT = "InterDeviceManager"
 
