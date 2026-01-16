@@ -9,13 +9,13 @@ OS_CORE_VERSION="${@bb.utils.contains('DISTRO_FEATURES','Opensync_4.4.0','4.4.0'
 
 OS_CORE_GIT_2.4.1="${RDK_COMPONENTS_ROOT_GIT}/generic/opensync-core/${OS_CORE_VERSION}/generic;protocol=${RDK_GIT_PROTOCOL};name=opensync-headers;branch=${RDK_GIT_BRANCH};destsuffix=git/os-headers"
 OS_CORE_GIT_4.4.0="${RDK_COMPONENTS_ROOT_GIT}/generic/opensync-core/generic;protocol=${RDK_GIT_PROTOCOL};name=opensync-headers;branch=osync_4.4.0;destsuffix=git/os-headers"
-SRC_URI += " ${@bb.utils.contains('DISTRO_FEATURES','Opensync_4.4.0', '${OS_CORE_GIT_4.4.0}', '${OS_CORE_GIT_2.4.1}', d)}"
+SRC_URI = " ${@bb.utils.contains('DISTRO_FEATURES','Opensync_4.4.0', '${OS_CORE_GIT_4.4.0}', '${OS_CORE_GIT_2.4.1}', d)}"
 
-PV = "${RDK_RELEASE}+git${SRCPV}"
+PV ?= "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git/os-headers"
 
 SRCREV_FORMAT = "opensync-headers"
-SRCREV_opensync-headers = "${AUTOREV}"
+SRCREV_pn-opensync-headers = "${AUTOREV}"
 
 do_compile[noexec] = "1"
 do_populate_lic[noexec] = "1"
