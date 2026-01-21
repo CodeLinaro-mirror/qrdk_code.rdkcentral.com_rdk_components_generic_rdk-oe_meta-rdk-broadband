@@ -22,7 +22,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig systemd ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
 
-DEPENDS = "rdk-wifi-halif opensync-headers rbus libsyswrapper jansson webconfig-framework libev"
+DEPENDS = "rdk-wifi-halif opensync-headers rbus libsyswrapper jansson webconfig-framework libev openssl"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 

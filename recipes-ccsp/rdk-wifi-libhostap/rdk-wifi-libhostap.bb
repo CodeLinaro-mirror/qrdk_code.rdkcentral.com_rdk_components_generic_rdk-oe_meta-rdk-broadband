@@ -96,6 +96,7 @@ SRC_URI += " \
         file://${HOSTAPD_PV}/wpa3_pcm_rsno_2_hostap_2_11_stable2.patch \
         file://${HOSTAPD_PV}/chan_to_freq_us_2_11.patch \
         file://${HOSTAPD_PV}/wpa_auth_null_check_2_11.patch \
+        file://${HOSTAPD_PV}/advertise_T2LM_negotiation_support_based_on_driver_support.patch \
     ','', d)} \
 "
 
@@ -201,7 +202,7 @@ do_configure_prepend () {
     fi
     if ${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_11', 'true', 'false', d)}; then
         if ${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'true', 'false', d)}; then
-            mv ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm.c ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm_test.c
+            cp -f ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm.c ${S}/source/hostap-${HOSTAPD_PV}/wpa_supplicant/rrm_test.c
         fi
     fi
 }

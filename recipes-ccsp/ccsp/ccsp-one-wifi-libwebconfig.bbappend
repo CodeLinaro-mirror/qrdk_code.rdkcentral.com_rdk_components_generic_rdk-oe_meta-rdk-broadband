@@ -11,10 +11,10 @@ CFLAGS_append = " -DONEWIFI_OVSDB_TABLE_SUPPORT   \
                   -DONEWIFI_BLASTER_APP_SUPPORT \
                   -DONEWIFI_RDKB_APP_SUPPORT \
                   -DONEWIFI_DB_SUPPORT \
-                  -DONEWIFI_DML_SUPPORT \
-                  -DONEWIFI_RDKB_CCSP_SUPPORT \
                   "
 
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_support', '-DONEWIFI_JSON_DML_SUPPORT', '-DONEWIFI_DML_SUPPORT -DONEWIFI_RDKB_CCSP_SUPPORT', d)}"
+CFLAGS_remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_support', '-DCCSP_SUPPORT_ENABLED', '', d)}"
 
 EXTRA_OECONF_append = "${@bb.utils.contains('DISTRO_FEATURES', 'sm_app', ' --enable-sm-app', '', d)}"
 
