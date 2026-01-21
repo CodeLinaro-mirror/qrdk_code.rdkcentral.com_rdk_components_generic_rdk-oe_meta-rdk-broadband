@@ -31,7 +31,7 @@ SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;na
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_OneWifi = "236cd9f8f3da8fcf6beefa787a803f3ce19e2109"
+SRCREV_OneWifi = "3e2bc4ffb417bacd3e1c303b7d02ba65d76c02b6"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"
 
@@ -206,6 +206,8 @@ FILES_${PN} = "\
     ${prefix}/ccsp/wifi/rdkb-wifi.ovsschema \
     ${prefix}/ccsp/wifi/wifi_db_ovsh \
     ${sbindir}/get_vlan.sh \
+    ${libdir}/libwifi_math_utils.so.* \
+    ${libdir}/libwifi_quality_manager.so.* \
 "
 FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', '${prefix}/ccsp/wifi/Heapwalkcheckrss.sh', '', d)}"
 FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', '${prefix}/ccsp/wifi/HeapwalkField.sh', '', d)}"
