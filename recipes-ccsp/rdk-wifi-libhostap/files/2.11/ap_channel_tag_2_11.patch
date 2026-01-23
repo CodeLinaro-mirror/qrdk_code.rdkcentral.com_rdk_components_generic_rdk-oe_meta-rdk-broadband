@@ -1,0 +1,86 @@
+Index: git/source/hostap-2.11/src/ap/ap_drv_ops.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ap_drv_ops.c
++++ git/source/hostap-2.11/src/ap/ap_drv_ops.c
+@@ -1396,3 +1396,11 @@ int hostapd_drv_set_secure_ranging_ctx(s
+ 	return hapd->driver->set_secure_ranging_ctx(hapd->drv_priv, &params);
+ }
+ #endif /* CONFIG_PASN */
++
++u8 * hostapd_drv_eid_ap_channel_report(struct hostapd_data *hapd, u8 *eid)
++{
++    if (!hapd->driver || !hapd->driver->get_ap_channel_report_ie || !hapd->drv_priv)
++        return eid;
++    
++    return hapd->driver->get_ap_channel_report_ie(hapd->drv_priv, eid);
++}
+Index: git/source/hostap-2.11/src/ap/ap_drv_ops.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ap_drv_ops.h
++++ git/source/hostap-2.11/src/ap/ap_drv_ops.h
+@@ -173,6 +173,7 @@ int hostapd_drv_set_secure_ranging_ctx(s
+ 				       u32 cipher, u8 key_len, const u8 *key,
+ 				       u8 ltf_keyseed_len,
+ 				       const u8 *ltf_keyseed, u32 action);
++u8 * hostapd_drv_eid_ap_channel_report(struct hostapd_data *hapd, u8 *eid);
+ 
+ 
+ #include "drivers/driver.h"
+Index: git/source/hostap-2.11/src/ap/beacon.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/beacon.c
++++ git/source/hostap-2.11/src/ap/beacon.c
+@@ -849,6 +849,8 @@ static u8 * hostapd_probe_resp_fill_elem
+ 	/* Extended supported rates */
+ 	pos = hostapd_eid_ext_supp_rates(hapd, pos);
+ 
++    pos = hostapd_eid_ap_channel_report(hapd, pos);
++
+ 	pos = hostapd_get_rsne(hapd, pos, epos - pos);
+ 	pos = hostapd_eid_bss_load(hapd, pos, epos - pos);
+ #ifdef RDK_ONEWIFI
+@@ -2361,6 +2363,8 @@ int ieee802_11_build_ap_params(struct ho
+ 	/* Extended supported rates */
+ 	tailpos = hostapd_eid_ext_supp_rates(hapd, tailpos);
+ 
++    tailpos = hostapd_eid_ap_channel_report(hapd, tailpos);
++
+ 	tailpos = hostapd_get_rsne(hapd, tailpos, tailend - tailpos);
+ 	tailpos = hostapd_eid_bss_load(hapd, tailpos, tailend - tailpos);
+ 	tailpos = hostapd_eid_rm_enabled_capab(hapd, tailpos,
+Index: git/source/hostap-2.11/src/ap/ieee802_11.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ieee802_11.h
++++ git/source/hostap-2.11/src/ap/ieee802_11.h
+@@ -267,5 +267,6 @@ u16 send_assoc_resp(struct hostapd_data
+ 			const u8 *addr, u16 status_code, int reassoc,
+ 			const u8 *ies, size_t ies_len, int rssi,
+ 			int omit_rsnxe, bool allow_mld_addr_trans);
++u8 * hostapd_eid_ap_channel_report(struct hostapd_data *hapd, u8 *eid);
+ 
+ #endif /* IEEE802_11_H */
+Index: git/source/hostap-2.11/src/ap/ieee802_11_shared.c
+===================================================================
+--- git.orig/source/hostap-2.11/src/ap/ieee802_11_shared.c
++++ git/source/hostap-2.11/src/ap/ieee802_11_shared.c
+@@ -1226,3 +1226,8 @@ bool hostapd_get_ht_vht_twt_responder(st
+ 		(hapd->iface->drv_flags2 &
+ 		 WPA_DRIVER_FLAGS2_HT_VHT_TWT_RESPONDER);
+ }
++
++u8 * hostapd_eid_ap_channel_report(struct hostapd_data *hapd, u8 *eid)
++{ 
++    return hostapd_drv_eid_ap_channel_report(hapd, eid);
++}
+Index: git/source/hostap-2.11/src/drivers/driver.h
+===================================================================
+--- git.orig/source/hostap-2.11/src/drivers/driver.h
++++ git/source/hostap-2.11/src/drivers/driver.h
+@@ -5295,6 +5295,7 @@ struct wpa_driver_ops {
+ 			unsigned int frame_stype, u8 elem_count,
+ 			u8 **elem_offset);
+ 	u8* (*get_mbssid_config)(void *priv, u8 *eid);
++    u8* (*get_ap_channel_report_ie)(void *priv, u8 *eid);
+ };
+ 
+ /**

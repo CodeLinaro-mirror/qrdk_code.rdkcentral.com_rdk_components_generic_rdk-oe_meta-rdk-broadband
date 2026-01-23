@@ -1,0 +1,88 @@
+Index: git/source/hostap-2.10/src/ap/ap_drv_ops.c
+===================================================================
+--- git.orig/source/hostap-2.10/src/ap/ap_drv_ops.c
++++ git/source/hostap-2.10/src/ap/ap_drv_ops.c
+@@ -1160,3 +1160,11 @@ int hostapd_drv_get_sta_auth_type(struct
+ 
+ 	return hapd->driver->get_sta_auth_type(hapd->drv_priv, addr, data.key_mgmt, frame_type);
+ }
++
++u8 * hostapd_drv_eid_ap_channel_report(struct hostapd_data *hapd, u8 *eid)
++{ 
++    if (!hapd->driver || !hapd->driver->get_ap_channel_report_ie || !hapd->drv_priv)
++        return eid;
++    
++    return hapd->driver->get_ap_channel_report_ie(hapd->drv_priv, eid);
++}
+Index: git/source/hostap-2.10/src/ap/ap_drv_ops.h
+===================================================================
+--- git.orig/source/hostap-2.10/src/ap/ap_drv_ops.h
++++ git/source/hostap-2.10/src/ap/ap_drv_ops.h
+@@ -165,6 +165,8 @@ u8* hostapd_drv_mbssid_config(struct hos
+ int hostapd_drv_get_sta_auth_type(struct hostapd_data *hapd,
+ 					const u8 *addr, const u8 *ies, size_t ies_len, int frame_type);
+ 
++u8 * hostapd_drv_eid_ap_channel_report(struct hostapd_data *hapd, u8 *eid);
++
+ #include "drivers/driver.h"
+ 
+ int hostapd_drv_wnm_oper(struct hostapd_data *hapd,
+Index: git/source/hostap-2.10/src/ap/beacon.c
+===================================================================
+--- git.orig/source/hostap-2.10/src/ap/beacon.c
++++ git/source/hostap-2.10/src/ap/beacon.c
+@@ -743,6 +743,9 @@ static u8 * hostapd_gen_probe_resp(struc
+ 	os_memcpy(pos, hapd->conf->ssid.ssid, hapd->conf->ssid.ssid_len);
+ 	pos += hapd->conf->ssid.ssid_len;
+ 
++	pos = hostapd_eid_ap_channel_report(hapd, pos);
++
++
+ 	/* Supported rates */
+ 	pos = hostapd_eid_supp_rates(hapd, pos);
+ 
+@@ -1871,6 +1874,8 @@ int ieee802_11_build_ap_params(struct ho
+ 	/* Extended supported rates */
+ 	tailpos = hostapd_eid_ext_supp_rates(hapd, tailpos);
+ 
++    tailpos = hostapd_eid_ap_channel_report(hapd, tailpos);
++ 
+ 	tailpos = hostapd_get_rsne(hapd, tailpos, tailend - tailpos);
+ 	tailpos = hostapd_eid_bss_load(hapd, tailpos, tailend - tailpos);
+ 	tailpos = hostapd_eid_rm_enabled_capab(hapd, tailpos,
+Index: git/source/hostap-2.10/src/ap/ieee802_11.h
+===================================================================
+--- git.orig/source/hostap-2.10/src/ap/ieee802_11.h
++++ git/source/hostap-2.10/src/ap/ieee802_11.h
+@@ -221,4 +221,6 @@ u16 send_assoc_resp(struct hostapd_data
+ 			   const u8 *ies, size_t ies_len, int rssi,
+ 			   int omit_rsnxe);
+ 
++u8 * hostapd_eid_ap_channel_report(struct hostapd_data *hapd, u8 *eid);
++
+ #endif /* IEEE802_11_H */
+Index: git/source/hostap-2.10/src/ap/ieee802_11_shared.c
+===================================================================
+--- git.orig/source/hostap-2.10/src/ap/ieee802_11_shared.c
++++ git/source/hostap-2.10/src/ap/ieee802_11_shared.c
+@@ -1135,3 +1135,8 @@ u16 check_ext_capab(struct hostapd_data
+ 
+ 	return WLAN_STATUS_SUCCESS;
+ }
++
++u8 * hostapd_eid_ap_channel_report(struct hostapd_data *hapd, u8 *eid)
++{ 
++    return hostapd_drv_eid_ap_channel_report(hapd, eid);
++}
+Index: git/source/hostap-2.10/src/drivers/driver.h
+===================================================================
+--- git.orig/source/hostap-2.10/src/drivers/driver.h
++++ git/source/hostap-2.10/src/drivers/driver.h
+@@ -4753,6 +4753,7 @@ struct wpa_driver_ops {
+ 	 */
+ 	int (*get_sta_auth_type)(void *priv,
+ 					const u8 *addr, int key_mgmt, int frame_type);
++    u8* (*get_ap_channel_report_ie)(void *priv, u8 *eid);
+ };
+ 
+ /**
