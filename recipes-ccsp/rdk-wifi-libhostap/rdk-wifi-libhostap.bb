@@ -91,6 +91,7 @@ SRC_URI += " \
         file://${HOSTAPD_PV}/VENDOR_MLO_OUI_TYPE_2_11.patch \
         file://${HOSTAPD_PV}/mlo_workaround_wpa_auth_2_11.patch \
         file://${HOSTAPD_PV}/UAPSD_fixed_cap_2_11.patch \
+	file://${HOSTAPD_PV}/ext_mld_cap_2_11.patch \
     ','', d)} \
 "
 
