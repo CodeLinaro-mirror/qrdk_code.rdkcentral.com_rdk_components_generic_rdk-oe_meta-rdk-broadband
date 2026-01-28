@@ -1,6 +1,6 @@
 DESCRIPTION = "Wifi Emulator Application"
-LICENSE = "CLOSED"
-
+LICENSE = "Apache-2.0 & MIT"
+LIC_FILES_CHKSUM = "file://LICENSE;md5=4c1d813ba70804c4d1704ab772a2d0b1"
 
 DEPENDS = "rdk-wifi-emulator-hal rdk-wifi-libhostap ccsp-one-wifi rdk-wifi-halif linux-libc-headers libnl rbus libsyswrapper"
 
@@ -10,11 +10,13 @@ DEPENDS_remove_raspberrypi4-64-rdk-broadband = "rdk-wifi-emulator-hal"
 DEPENDS += "${@bb.utils.contains("MACHINE", "bananapi4-rdk-broadband", "rdk-wifi-hal", "", d)}"
 DEPENDS += "${@bb.utils.contains("MACHINE", "raspberrypi4-64-rdk-broadband", "rdk-wifi-hal", "", d)}"
 
-SRCREV_WifiEmulator = "${AUTOREV}"
 SRCREV_cpp-httplib =  "9bbb4741b4f7c8fc5083c8a56d8d301a8abc25a3"
 SRCREV_FORMAT = "WifiEmulator_cpp-httplib"
 
-SRC_URI = "${RDK_CPC_ROOT_GIT}/OneWifiTestSuite;protocol=${RDK_GIT_PROTOCOL};branch=${RDK_GIT_BRANCH};name=WifiEmulator"
+SRC_URI = "git://github.com/rdkcentral/OneWifiTestSuite.git;protocol=https;branch=main;name=WifiEmulator"
+SRCREV_WifiEmulator = "22ddc2ff7e037965a711412306d5a15f87aba4ef"
+SRCREV_FORMAT = "WifiEmulator"
+
 SRC_URI += "git://github.com/yhirose/cpp-httplib;protocol=https;branch=master;destsuffix=${S}/src/external_agent_cci/temp_http_server;name=cpp-httplib;subdir=cpp-httplib"
 
 S = "${WORKDIR}/git"
