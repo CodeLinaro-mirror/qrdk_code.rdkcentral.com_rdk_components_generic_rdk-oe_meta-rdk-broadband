@@ -159,3 +159,6 @@ PR_pn-test-and-diagnostic = "r0"
 
 PV_pn-utopia = "${@pv_for_branch(d, '2.0.0_stable2_20260220')}"
 PR_pn-utopia = "r0"
+
+PV_pn-sysint-broadband = "${@pv_for_branch(d, '1.0.0')}"
+PR_pn-sysint-broadband = "r0"

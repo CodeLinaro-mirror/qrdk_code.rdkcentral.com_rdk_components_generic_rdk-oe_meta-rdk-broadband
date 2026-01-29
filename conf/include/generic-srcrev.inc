@@ -49,6 +49,7 @@ SRCREV_rdk_cellularmanager = "856b20d928704aa4d15d64690098738e9d9a15e3"
 SRCREV_start_parodus = "cef021170cf9336db877e76d044961f8b83d3e98"
 SRCREV_test_and_diagnostic = "dd1f2f9a9d8753f602687cab0ef4706117990fc0"
 SRCREV_utopia = "c8a9d17dbc1e5f99c63b33b7847241c2fbb0efc4"
+SRCREV_sysint-broadband = "061ed28e290b107577f7130378308076c4b7aafd"
 
 def srcrev_for_branch(d, default_rev):
     branch = d.getVar('PROJECT_BRANCH', True) or ''
@@ -111,3 +112,4 @@ SRCREV_pn-rdk-cellularmanager = "${@srcrev_for_branch(d, '${SRCREV_rdk_cellularm
 SRCREV_pn-start-parodus = "${@srcrev_for_branch(d, '${SRCREV_start_parodus}')}"
 SRCREV_pn-test-and-diagnostic = "${@srcrev_for_branch(d, '${SRCREV_test_and_diagnostic}')}"
 SRCREV_pn-utopia = "${@srcrev_for_branch(d, '${SRCREV_utopia}')}"
+SRCREV_sysintbroadband_pn-sysint-broadband = "${@srcrev_for_branch(d, '${SRCREV_sysint-broadband}')}"

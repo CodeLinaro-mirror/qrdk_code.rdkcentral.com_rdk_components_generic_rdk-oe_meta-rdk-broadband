@@ -4,8 +4,6 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
-PV = "${RDK_RELEASE}"
-
 SYSINTB_DEVICE ??= "intel-x86-pc/rdk-broadband"
 HASBCI = "${@bb.utils.contains('DISTRO_FEATURES', 'bci', 'true', 'false', d)}"
 HASEPON = "${@bb.utils.contains('DISTRO_FEATURES', 'epon', 'true', 'false', d)}"
@@ -20,10 +18,9 @@ WPS_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'wps_not_supported'
 VOICE_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'voice_not_supported', 'true', 'false', d)}"
 REMOVE_DUMMY_WAN0 = "${@bb.utils.contains('DISTRO_FEATURES', 'remove_dummy_wan0', 'true', 'false', d)}"
 
-SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/sysint;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};name=sysintbroadband"
+SRC_URI = "${CMF_GITHUB_ROOT}/sysint-broadband;protocol=https;${BRANCH_sysint-broadband};name=sysintbroadband"
 SRC_URI += "${CMF_GIT_ROOT}/rdkb/devices/intel-x86-pc/emulator/sysint;module=.;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=git/device;name=sysintdevice"
 
-SRCREV_sysintbroadband = "${AUTOREV}"
 SRCREV_sysintdevice = "${AUTOREV}"
 SRCREV_FORMAT = "sysintbroadband_sysintdevice"
 
