@@ -1,5 +1,8 @@
 def pv_for_branch(d, default_pv):
     branch = d.getVar('PROJECT_BRANCH', True) or ''
+    distro_features = d.getVar('DISTRO_FEATURES', True) or ''
+    if 'custom_branch_verification' in distro_features:
+        return "{}+git${{SRCPV}}".format(default_pv)
     if 'sprint' in branch:
         return "{}+git${{SRCPV}}".format(default_pv)
     return default_pv

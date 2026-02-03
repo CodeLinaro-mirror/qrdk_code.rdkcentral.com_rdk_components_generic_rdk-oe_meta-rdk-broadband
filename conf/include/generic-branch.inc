@@ -6,9 +6,18 @@
 # (or)
 #     Update feature branch for specific component here,
 #         Example: BRANCH_ccsp_adv_security = "branch=feature/RDKB-12345"
+#
+# DISTRO_FEATURES must be set to custom_branch_verification
+# for topic verification builds.
+# It must remain empty for sprint and stable/release builds.
 
 def branch_update(d):
     branch = d.getVar('PROJECT_BRANCH', True) or ''
+    distro_features = d.getVar('DISTRO_FEATURES', True) or ''
+
+    if 'custom_branch_verification' in distro_features:
+        return 'branch=develop'
+
     if 'sprint' in branch:
         return 'branch=develop'
     return 'nobranch=1'

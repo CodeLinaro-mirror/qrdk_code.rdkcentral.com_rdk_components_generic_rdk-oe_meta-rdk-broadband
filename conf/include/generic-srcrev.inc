@@ -53,6 +53,10 @@ SRCREV_sysint-broadband = "061ed28e290b107577f7130378308076c4b7aafd"
 
 def srcrev_for_branch(d, default_rev):
     branch = d.getVar('PROJECT_BRANCH', True) or ''
+    distro_features = d.getVar('DISTRO_FEATURES', True) or ''
+
+    if 'custom_branch_verification' in distro_features:
+        return '${AUTOREV}'
     if 'sprint' in branch:
         return '${AUTOREV}'
     return default_rev
