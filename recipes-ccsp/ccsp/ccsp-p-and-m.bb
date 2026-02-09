@@ -80,6 +80,9 @@ EXTRA_OECONF_append += "${@bb.utils.contains("DISTRO_FEATURES", "SpeedBoostSuppo
 ENABLE_HOTSPOT ?= "yes"
 EXTRA_OECONF_append += " --enable-hotspotsupport=${ENABLE_HOTSPOT}"
 
+ENABLE_ONESTACK = "--enable-onestacksupport=${@bb.utils.contains('DISTRO_FEATURES', 'OneStack', 'yes', 'no', d)}"
+EXTRA_OECONF_append = " ${ENABLE_ONESTACK}"
+
 CFLAGS_append = " -DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_INTERNET2P0 -DUSE_REMOTE_DEBUGGER"
 CFLAGS_append = " ${@ '-DCONFIG_CISCO_HOTSPOT' if d.getVar('ENABLE_HOTSPOT', True) == 'yes' else '-DHOTSPOT_DISABLE'}"
 
@@ -141,6 +144,9 @@ do_compile_prepend () {
     fi
     if ${@bb.utils.contains('DISTRO_FEATURES', 'RadiusGreyList', 'true', 'false', d)}; then
     sed -i '2i <?define FEATURE_SUPPORT_RADIUSGREYLIST=True?>' ${S}/config-arm/TR181-USGv2.XML
+    fi
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'OneStack', 'true', 'false', d)}; then
+    sed -i '2i <?define ONESTACK_PRODUCT_REQ=True?>' ${S}/config-arm/TR181-USGv2.XML
     fi
     if ${@bb.utils.contains('DISTRO_FEATURES', 'wifimotion', 'true', 'false', d)}; then
     sed -i '2i <?define FEATURE_COGNITIVE_WIFIMOTION=True?>' ${S}/config-arm/TR181-USGv2.XML

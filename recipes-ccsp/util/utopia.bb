@@ -22,6 +22,8 @@ SRC_URI = "${CMF_GITHUB_ROOT}/utopia;protocol=https;${BRANCH_utopia};name=Utopia
 
 S = "${WORKDIR}/git"
 
+EXTRA_OECONF_append = " --with-machine=${MACHINE}"
+
 FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:"
 SRC_URI_append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','file://ApplySystemDefaults.service','',d)} \

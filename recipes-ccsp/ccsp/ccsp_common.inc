@@ -151,6 +151,10 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'AmenitiesNetworkSuppo
 # Adding flag for Lanmanager support
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'pm_lan_mgr', ' -DLAN_MGR_SUPPORT ', '', d)}"
 
+# Add OneStack-specific compile flag and configure option when 'OneStack' is enabled in DISTRO_FEATURES
+CFLAGS_append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneStack', ' -D_ONESTACK_PRODUCT_REQ_', '', d)}"
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneStack', 'ONESTACK_PRODUCT_REQ=true', '', d)}"
+
 CFLAGS_append =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DNO_MOCA_FEATURE_SUPPORT ', '', d)}"
 CFLAGS_remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DMOCA_DIAGONISTIC -DMOCA_HOME_ISOLATION -DCONFIG_SYSTEM_MOCA ', '', d)}"
 
