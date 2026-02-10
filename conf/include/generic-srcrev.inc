@@ -48,7 +48,7 @@ SRCREV_rdk_fwupgrade_manager = "4b97b49dce1c36eda0353be3a70510fc1abb2c69"
 SRCREV_rdk_cellularmanager = "856b20d928704aa4d15d64690098738e9d9a15e3"
 SRCREV_start_parodus = "cef021170cf9336db877e76d044961f8b83d3e98"
 SRCREV_test_and_diagnostic = "975f5a9083a09921c48b2d81987ca06a2dd0a5cf"
-SRCREV_utopia = "fdd40a9340613e630e5c28952634afccdf3d6486"
+SRCREV_utopia = "71bbb19cfdbc13893f4132c066c01488d016047e"
 
 def srcrev_for_branch(d, default_rev):
     branch = d.getVar('PROJECT_BRANCH', True) or ''
