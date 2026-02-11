@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 SRC_URI = "git://github.com/rdkcentral/rdkb-halif-mta.git;protocol=https;branch=main"
-SRCREV = "8a34fd2578e7921630222a4b50a418b378af15c3"
+SRCREV = "14cc1fe6491824a6c0ec06f587465a249395f162"
 
 S = "${WORKDIR}/git"
 
