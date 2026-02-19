@@ -1,0 +1,12 @@
+Index: git/source/hostap-2.10/src/common/ieee802_11_common.c
+===================================================================
+--- git.orig/source/hostap-2.10/src/common/ieee802_11_common.c
++++ git/source/hostap-2.10/src/common/ieee802_11_common.c
+@@ -1226,6 +1226,7 @@ static int ieee80211_chan_to_freq_us(u8
+ 		return 5000 + 5 * chan;
+ 	case 4: /* channels 100-144 */
+ 	case 24: /* channels 100-140; 40 MHz */
++	case 29: /* channels 100-140; 40 MHz */
+ 		if (chan < 100 || chan > 144)
+ 			return -1;
+ 		return 5000 + 5 * chan;
