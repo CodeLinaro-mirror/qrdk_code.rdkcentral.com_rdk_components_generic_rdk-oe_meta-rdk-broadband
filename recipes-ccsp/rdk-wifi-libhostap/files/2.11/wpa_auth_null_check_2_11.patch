@@ -1,0 +1,14 @@
+diff --git a/source/hostap-2.11/src/ap/wpa_auth.c b/source/hostap-2.11/src/ap/wpa_auth.c
+index 6a51b26db..556f88544 100644
+--- a/source/hostap-2.11/src/ap/wpa_auth.c
++++ b/source/hostap-2.11/src/ap/wpa_auth.c
+@@ -957,6 +957,9 @@ wpa_auth_sta_init(struct wpa_authenticator *wpa_auth, const u8 *addr,
+ {
+ 	struct wpa_state_machine *sm;
+ 
++    if(!wpa_auth)
++	    return NULL;
++
+ 	if (wpa_auth->group->wpa_group_state == WPA_GROUP_FATAL_FAILURE)
+ 		return NULL;
+ 

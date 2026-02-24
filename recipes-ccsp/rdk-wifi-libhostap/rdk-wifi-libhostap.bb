@@ -95,6 +95,7 @@ SRC_URI += " \
         file://${HOSTAPD_PV}/ap_channel_tag_2_11.patch \
         file://${HOSTAPD_PV}/wpa3_pcm_rsno_2_hostap_2_11_stable2.patch \
         file://${HOSTAPD_PV}/chan_to_freq_us_2_11.patch \
+        file://${HOSTAPD_PV}/wpa_auth_null_check_2_11.patch \
     ','', d)} \
 "
 
