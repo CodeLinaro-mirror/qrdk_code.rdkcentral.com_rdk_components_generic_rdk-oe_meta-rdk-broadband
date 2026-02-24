@@ -1,0 +1,117 @@
+From 81c879b1096f0f8491d84af1d26095163eda7ef3 Mon Sep 17 00:00:00 2001
+From: Ryan Shea <ryan.shea3@t-mobile.com>
+Date: Fri, 24 Oct 2025 08:56:35 -0600
+Subject: [PATCH] Update vendor_defs.h from usp-pa-vendor-rdk
+
+https://github.com/rdkcentral/usp-pa-vendor-rdk/blob/5746131c51a62372ab9a7211d08eda06a1befdba/src/vendor/vendor_defs.h
+---
+ src/vendor/vendor_defs.h | 28 ++++++++++++++--------------
+ 1 file changed, 14 insertions(+), 14 deletions(-)
+
+diff --git a/src/vendor/vendor_defs.h b/src/vendor/vendor_defs.h
+index c4d2426..6b4e658 100644
+--- a/src/vendor/vendor_defs.h
++++ b/src/vendor/vendor_defs.h
+@@ -76,7 +76,7 @@
+ 
+ // Uncomment and change the following define to override the severity level of messages sent to syslog.
+ // Refer to the syslog documentation and its priority argument to know the possible values.
+-//#define SYSLOG_SEVERITY_OVERRIDE LOG_ERR
++#define SYSLOG_SEVERITY_OVERRIDE LOG_ERR
+ 
+ // NB: If you change this, you must also change the SSL callback functions within mqtt.c
+ // This will compile fail if you do not
+@@ -97,7 +97,7 @@
+ 
+ // Location of the database file to use, if none is specified on the command line when invoking this executable
+ // NOTE: As the database needs to be stored persistently, this should be changed to a directory which is not cleared on boot up
+-#define DEFAULT_DATABASE_FILE               OBUSPA_LOCAL_STATE_DIR "/usp.db"
++#define DEFAULT_DATABASE_FILE               "/nvram/usp-pa.db"
+ 
+ // Location of unix domain stream file used for CLI communication between client and server
+ #define CLI_UNIX_DOMAIN_FILE                "/tmp/usp_cli"
+@@ -109,16 +109,16 @@
+ //-----------------------------------------------------------------------------------------
+ // Definitions associated with grouped parameter get/set
+ // Each group represents a software component that can set/get a list of data model parameters in a single operation via RPC/messaging
+-#define MAX_VENDOR_PARAM_GROUPS  MAX_USP_SERVICES+10 // Maximum number of software components that implement the data model
++#define MAX_VENDOR_PARAM_GROUPS  35 // Maximum number of software components that implement the data model
+ #define GROUP_GET_CHUNK_SIZE     500                 // Specifies the maximum number of parameters to get at one time from a data model provider component
+ 
+ // Uncomment the following define to perform each parameter set individually, rather than in a group
+ // This must be uncommented if the underlying data model implementation does not support commit/abort transactional semantics
+-//#define SET_GROUPED_PARAMETERS_INDIVIDUALLY
++#define SET_GROUPED_PARAMETERS_INDIVIDUALLY
+ 
+ // Uncomment the following define to perform each parameter get individually, rather than in a group
+ // Typically, this would only be used during development testing/debugging
+-//#define GET_GROUPED_PARAMETERS_INDIVIDUALLY
++#define GET_GROUPED_PARAMETERS_INDIVIDUALLY
+ 
+ //-----------------------------------------------------------------------------------------
+ // Defines associated with factory reset database
+@@ -131,8 +131,8 @@
+ 
+ //-----------------------------------------------------------------------------------------
+ // Uncomment the following to remove code and features from the standard build
+-//#define REMOVE_DEVICE_INFO               // Removes DeviceInfo from the core data model. It must instead be provided by the vendor.
+-//#define REMOVE_DEVICE_TIME               // Removes Device.Time from the core data model. It must instead be provided by the vendor.
++#define REMOVE_DEVICE_INFO               // Removes DeviceInfo from the core data model. It must instead be provided by the vendor.
++#define REMOVE_DEVICE_TIME               // Removes Device.Time from the core data model. It must instead be provided by the vendor.
+ //#define REMOVE_USP_BROKER                // Removes all USP Broker functionality, including Device.USPServices
+ //#define REMOVE_USP_SERVICE               // Removes all USP Service functionality
+ //#define REMOVE_DEVICE_REBOOT             // Removes Device.Reboot() from the core data model
+@@ -155,7 +155,7 @@
+ // Comment out the following define if you want to let the Linux routing tables decide which network interface to use for USP connections
+ // Letting the Linux routing tables decide is better for devices that can connect to the STOMP server through either
+ // WiFi or ethernet, and either of these interfaces could be down at any one time
+-#define CONNECT_ONLY_OVER_WAN_INTERFACE
++//#define CONNECT_ONLY_OVER_WAN_INTERFACE
+ 
+ //-----------------------------------------------------------------------------------------
+ // OUI (Organization Unique Identifier) to use for this CPE. This code will be unique to the manufacturer
+@@ -176,14 +176,14 @@
+ // This interface is used to get the serial number of the agent (as MAC address) for the endpoint_id string
+ // It is also the interface used for all USP communications
+ // This may be overridden using the '-i' option or by an environment variable. See nu_macaddr_wan_ifname().
+-#define DEFAULT_WAN_IFNAME "eth0"
++#define DEFAULT_WAN_IFNAME "erouter0"
+ 
+ // Key used to obfuscate (using XOR) all secure data model parameters stored in the USP Agent database (eg passwords)
+ #define PASSWORD_OBFUSCATION_KEY  "$%^&*()@~#/,?"
+ 
+ // Timeout (in seconds) when performing a connect to a STOMP or MQTT broker
+-#define STOMP_CONNECT_TIMEOUT 10
+-#define MQTT_CONNECT_TIMEOUT 10
++#define STOMP_CONNECT_TIMEOUT 30
++#define MQTT_CONNECT_TIMEOUT 30
+ 
+ // Number of seconds after a STOMP server heartbeat was expected, before retrying the connection
+ #define STOMP_SERVER_HEARTBEAT_GRACE_PERIOD 10
+@@ -194,12 +194,12 @@
+ // Comma separated list of network interface names on which CoAP should listen for USP messages
+ // An empty list or "any" indicates to listen on all interfaces
+ // This may be overridden using the '-i' option (only one interface name is supported, if using '-i')
+-#define COAP_LISTEN_INTERFACES    "eth0"  /* "lo, enp0s9" */
++#define COAP_LISTEN_INTERFACES    "erouter0"  /*"lo, enp0s9"*/
+ 
+ // Network interface name that USP Agent's websocket server listens on (only one interface is currently supported)
+ // An empty list or "any" indicates to listen on all interfaces
+ // This may be overridden using the '-i' option
+-#define WEBSOCKET_LISTEN_INTERFACE "eth0"  /*"lo"*/
++#define WEBSOCKET_LISTEN_INTERFACE "erouter0"  /*"lo"*/
+ 
+ // Fallback QoS value for MQTT messages when not configured by TR-369 parameters.
+ #define MQTT_FALLBACK_QOS 0 /* 0, 1, 2 */
+@@ -267,7 +267,7 @@
+ 
+ //-----------------------------------------------------------------------------------------
+ // Comment out the following line to remove the AddCertificate() and Delete() certificate support
+-#define ADD_CERT_SUPPORT
++//#define ADD_CERT_SUPPORT
+ 
+ // Location of directory used to store trust store certificates which are capable of being added/deleted by a USP Controller
+ // NOTE: As the certs need to be stored persistently, this should be changed to a directory which is not cleared on boot up
+-- 
+2.48.1
+
