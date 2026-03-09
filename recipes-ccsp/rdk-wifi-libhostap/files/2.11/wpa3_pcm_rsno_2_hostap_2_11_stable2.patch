@@ -399,3 +399,12 @@ index a8d8391..fe5e8f6 100644
 +	u8 version[2]; /* little endian */
 +}STRUCT_PACKED;
  #endif /* WPA_COMMON_H */
+diff --git a/source/hostap-2.11/src/ap/wpa_auth.c b/source/hostap-2.11/src/ap/wpa_auth.c
+index abc64c7cb..a8d83915f 100644
+--- a/source/hostap-2.11/src/ap/wpa_auth.c
++++ b/source/hostap-2.11/src/ap/wpa_auth.c
+@@ -4678,3 +4678,4 @@ SM_STATE(WPA_PTK, PTKINITNEGOTIATING)
+ 			WPA_RSNO_OUI_TYPE,
+ 			WPA_RSNXO_OUI_TYPE,
++			WPA_RSNO_II_OUI_TYPE,
+ 			0

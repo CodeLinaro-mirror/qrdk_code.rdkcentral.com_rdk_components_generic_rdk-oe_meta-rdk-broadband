@@ -488,3 +488,73 @@ index abc64c7cb..a8d83915f 100644
 +}STRUCT_PACKED;
 +
  #endif /* WPA_COMMON_H */
+diff --git a/source/hostap-2.11/src/common/wpa_common.h b/source/hostap-2.11/src/ap/wpa_auth.c
+index abc64c7cb..a8d83915f 100644
+--- a/source/hostap-2.11/src/ap/wpa_auth.c
++++ b/source/hostap-2.11/src/ap/wpa_auth.c
+@@ -4544,6 +4608,15 @@ static u8 * wpa_auth_ml_kdes(struct wpa_state_machine *sm, u8 *pos)
+ 	return pos;
+ }
+ 
++static bool rsn_is_snonce_cookie(const u8 *snonce)
++{
++	const u8 *pos;
++
++	pos = snonce + WPA_NONCE_LEN - 6;
++	return WPA_GET_BE24(pos) == OUI_WFA &&
++		WPA_GET_BE24(pos + 3) == 0x000029;
++}
++
+ 
+ SM_STATE(WPA_PTK, PTKINITNEGOTIATING)
+ {
+@@ -4552,7 +4625,7 @@ SM_STATE(WPA_PTK, PTKINITNEGOTIATING)
+ 	struct wpa_group *gsm = sm->group;
+ 	u8 *wpa_ie;
+ 	int secure, gtkidx, encr = 0;
+-	u8 *wpa_ie_buf = NULL, *wpa_ie_buf2 = NULL;
++	u8 *wpa_ie_buf = NULL, *wpa_ie_buf2 = NULL, *wpa_ie_buf3 = NULL;
+ 	u8 hdr[2];
+ 	struct wpa_auth_config *conf = &sm->wpa_auth->conf;
+ #ifdef CONFIG_IEEE80211BE
+@@ -4593,6 +4669,40 @@ SM_STATE(WPA_PTK, PTKINITNEGOTIATING)
+ 			wpa_ie = wpa_ie + wpa_ie[1] + 2;
+ 		wpa_ie_len = wpa_ie[1] + 2;
+ 	}
++
++	if ((conf->wpa_key_mgmt_rsno) &&
++	    !rsn_is_snonce_cookie(sm->SNonce)) {
++		u8 *ie;
++		size_t ie_len;
++		u32 ids[] = {
++			WPA_RSNO_OUI_TYPE,
++			WPA_RSNXO_OUI_TYPE,
++			0
++		};
++		int i;
++
++		wpa_printf(MSG_DEBUG,
++			   "RSN: Remove RSNE/RSNXE override elements");
++		wpa_hexdump(MSG_DEBUG, "EAPOL-Key msg 3/4 IEs before edits",
++			    wpa_ie, wpa_ie_len);
++		wpa_ie_buf3 = os_memdup(wpa_ie, wpa_ie_len);
++		if (!wpa_ie_buf3)
++			goto done;
++		wpa_ie = wpa_ie_buf3;
++
++		for (i = 0; ids[i]; i++) {
++			ie = (u8 *) get_vendor_ie(wpa_ie, wpa_ie_len, ids[i]);
++			if (ie) {
++				ie_len = 2 + ie[1];
++				os_memmove(ie, ie + ie_len,
++					   wpa_ie_len - (ie + ie_len - wpa_ie));
++				wpa_ie_len -= ie_len;
++			}
++		}
++		wpa_hexdump(MSG_DEBUG, "EAPOL-Key msg 3/4 IEs after edits",
++			    wpa_ie, wpa_ie_len);
++	}
++
+ #ifdef CONFIG_TESTING_OPTIONS
+ 	if (conf->rsne_override_eapol_set) {
+ 		wpa_ie_buf2 = replace_ie(
