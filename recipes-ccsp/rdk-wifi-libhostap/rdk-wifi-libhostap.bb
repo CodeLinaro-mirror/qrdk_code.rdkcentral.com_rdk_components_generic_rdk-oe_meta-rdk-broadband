@@ -100,6 +100,7 @@ SRC_URI += " \
         file://${HOSTAPD_PV}/xfi_tel_compete_2_11.patch \
         file://${HOSTAPD_PV}/ignite_sta_creds_for_comcast_only_2_11.patch \
 	file://${HOSTAPD_PV}/multi_rsn_key_mgmt.patch \
+        file://${HOSTAPD_PV}/MLO_Correct_PerStaProfile_rx_link_id.patch \
     ','', d)} \
 "
 
