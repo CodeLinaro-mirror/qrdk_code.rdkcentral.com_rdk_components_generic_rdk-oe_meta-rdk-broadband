@@ -79,12 +79,14 @@ do_install_append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/harvester
     install -m 664 ${S}/config-atom/InterfaceDevicesWifi.avsc -t ${D}/usr/ccsp/harvester
+    install -m 664 ${S}/config-atom/InterfaceDevicesWifiMLO.avsc -t ${D}/usr/ccsp/harvester
     install -m 664 ${S}/config-atom/RadioInterfacesStatistics.avsc -t ${D}/usr/ccsp/harvester
     install -m 664 ${S}/config-atom/GatewayAccessPointNeighborScanReport.avsc -t ${D}/usr/ccsp/harvester
 }
 
 FILES_${PN} += " \
     ${exec_prefix}/ccsp/harvester/InterfaceDevicesWifi.avsc \
+    ${exec_prefix}/ccsp/harvester/InterfaceDevicesWifiMLO.avsc \
     ${exec_prefix}/ccsp/harvester/RadioInterfacesStatistics.avsc \
     ${exec_prefix}/ccsp/harvester/GatewayAccessPointNeighborScanReport.avsc \
     ${libdir}/libwifi.so* \
