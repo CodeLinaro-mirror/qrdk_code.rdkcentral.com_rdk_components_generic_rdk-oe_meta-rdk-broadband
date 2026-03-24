@@ -1,0 +1,45 @@
+Index: git/source/hostap-2.10/src/ap/ap_config.h
+===================================================================
+--- git.orig/source/hostap-2.10/src/ap/ap_config.h
++++ git/source/hostap-2.10/src/ap/ap_config.h
+@@ -302,6 +302,7 @@ struct hostapd_bss_config {
+         int ap_vlan; /* vlan id */
+ #endif /* FEATURE_SUPPORT_RADIUSGREYLIST */
+ 	int eapol_version;
++	int min_adv_mcs;
+ 	int eap_server; /* Use internal EAP server instead of external
+ 			 * RADIUS server */
+ 	struct hostapd_eap_user *eap_user;
+Index: git/source/hostap-2.10/src/ap/ieee802_11_ht.c
+===================================================================
+--- git.orig/source/hostap-2.10/src/ap/ieee802_11_ht.c
++++ git/source/hostap-2.10/src/ap/ieee802_11_ht.c
+@@ -38,7 +38,13 @@ u8 * hostapd_eid_ht_capabilities(struct
+ 	cap->ht_capabilities_info = host_to_le16(hapd->iconf->ht_capab);
+ 	cap->a_mpdu_params = hapd->iface->current_mode->a_mpdu_params;
+ 	os_memcpy(cap->supported_mcs_set, hapd->iface->current_mode->mcs_set,
+-		  16);
++			16);
++	u8 *supp_mcs_set = cap->supported_mcs_set;
++	wpa_printf(MSG_DEBUG, "Enter %s %d and min_adv_mcs:%d for the interface:%s\n", __func__,__LINE__,hapd->conf->min_adv_mcs,hapd->conf->iface);
++	for(int i=0;i<hapd->conf->min_adv_mcs;i++) {
++		*supp_mcs_set &= ~(1<<i);
++	}
++	wpa_printf(MSG_DEBUG, "Enter %s %d and supp_mcs_set:%d\n", __func__,__LINE__,*supp_mcs_set);
+ 
+ 	/* TODO: ht_extended_capabilities (now fully disabled) */
+ 	/* TODO: tx_bf_capability_info (now fully disabled) */
+@@ -107,6 +113,13 @@ u8 * hostapd_eid_ht_operation(struct hos
+ 		oper->ht_param |= HT_INFO_HT_PARAM_SECONDARY_CHNL_BELOW |
+ 			HT_INFO_HT_PARAM_STA_CHNL_WIDTH;
+ 
++	u8 *basic_mcs_set = oper->basic_mcs_set;
++	wpa_printf(MSG_DEBUG, "Enter %s %d and min_adv_mcs:%d for the interface:%s\n", __func__,__LINE__,hapd->conf->min_adv_mcs,hapd->conf->iface);
++	for(int i=0;i<hapd->conf->min_adv_mcs;i++) {
++		*basic_mcs_set &= ~(1<<i);
++	}
++	wpa_printf(MSG_DEBUG, "Enter %s %d and basic_mcs_set:%d\n", __func__,__LINE__,*basic_mcs_set);
++
+ 	pos += sizeof(*oper);
+ 
+ 	return pos;
