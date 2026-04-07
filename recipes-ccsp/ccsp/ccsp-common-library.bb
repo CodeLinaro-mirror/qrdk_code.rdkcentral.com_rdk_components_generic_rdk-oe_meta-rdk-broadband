@@ -108,9 +108,14 @@ do_install:append_broadband() {
         install -d ${D}${systemd_unitdir}/system/CcspMtaAgentSsp.service.d
         install -D -m 644 ${S}/systemd_units/CcspMtaAgentSsp.conf ${D}${systemd_unitdir}/system/CcspMtaAgentSsp.service.d/CcspMtaAgentSsp.conf
         fi
+
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager', 'true', 'false', d)}; then
+        install -D -m 755 ${S}/systemd_units/scripts/DHCPMgrPSMValueCheck.sh ${D}/usr/ccsp/dhcpmgr/DHCPMgrPSMValueCheck.sh
+        fi
 }
 
 FILES:${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', '','${systemd_unitdir}/system/CcspMtaAgentSsp.service.d/CcspMtaAgentSsp.conf',d)}"
+FILES:${PN}:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'dhcp_manager', '/usr/ccsp/dhcpmgr/DHCPMgrPSMValueCheck.sh', '', d)}"
 
 PACKAGES =+ "ccsp-common-startup"
 

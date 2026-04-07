@@ -6,7 +6,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 RPROVIDES:${PN} = "ccsp-p-and-m"
 
 DEPENDS = "ccsp-common-library webconfig-framework ccsp-lm-lite telemetry ccsp-hotspot mountutils"
-DEPENDS:append = " utopia hal-cm hal-dhcpv4c hal-ethsw hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi curl ccsp-misc ccsp-hotspot cjson libsyswrapper cjson trower-base64 msgpack-c nanomsg wrp-c libparodus rbus"
+
+DEPENDS:append = " utopia hal-cm hal-dhcpv4c hal-ethsw hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi curl ccsp-misc ccsp-hotspot cjson libsyswrapper cjson trower-base64 msgpack-c nanomsg wrp-c libparodus rbus remotedebugger"
 DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'no_moca_support', '', 'hal-moca', d)}"
 DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
 DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'enable_rdkscheduler', 'rdk-scheduler', " ", d)}"
@@ -14,13 +15,6 @@ DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'enable_rdkschedu
 DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'fwupgrade_manager', ' hal-fwupgrade', '',d)}"
 
-# Add remotedebugger dependency
-DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'rrd', ' remotedebugger', " ", d)}"
-RDEPENDS:${PN}:append  = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'rrd',' remotedebugger', '',d)}"
-CFLAGS:append     = "${@bb.utils.contains_any('DISTRO_FEATURES', 'rrd', ' -I=${includedir}/rrd/', '', d)}"
-CFLAGS:append     = "${@bb.utils.contains_any('DISTRO_FEATURES', 'rrd', ' -DUSE_REMOTE_DEBUGGER', '', d)}"
- 
-RDEPENDS:${PN}:append = " cjson trower-base64 msgpack-c nanomsg wrp-c libparodus "
 
 RDEPENDS:${PN}-ccsp:append = " bash"
 RDEPENDS:${PN}-ccsp:remove_morty = "bash"
@@ -68,6 +62,7 @@ CFLAGS:append = " \
     -I${STAGING_INCDIR}/libparodus \
     -I${STAGING_INCDIR}/cjson \
     -I${STAGING_INCDIR}/rbus \
+    -I=${includedir}/rrd \
     "
 
 EXTRA_OECONF:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
@@ -86,7 +81,13 @@ EXTRA_OECONF:append += "${@bb.utils.contains_any("DISTRO_FEATURES", "SpeedBoostS
 ENABLE_HOTSPOT ?= "yes"
 EXTRA_OECONF:append += " --enable-hotspotsupport=${ENABLE_HOTSPOT}"
 
-CFLAGS:append = " -DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_INTERNET2P0"
+ENABLE_ONESTACK = "--enable-onestacksupport=${@bb.utils.contains('DISTRO_FEATURES', 'OneStack', 'yes', 'no', d)}"
+EXTRA_OECONF_append = " ${ENABLE_ONESTACK}"
+
+CFLAGS:append = " -DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_INTERNET2P0 -DUSE_REMOTE_DEBUGGER"
+ENABLE_MCAST_SERVICE = "${@bb.utils.contains('DISTRO_FEATURES', 'no_utopia_mcast', 'no', 'yes', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'no_utopia_mcast', '-DDISABLE_IGMPPROXY', '', d)}"
+
 CFLAGS:append = " ${@ '-DCONFIG_CISCO_HOTSPOT' if d.getVar('ENABLE_HOTSPOT', True) == 'yes' else '-DHOTSPOT_DISABLE'}"
 
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION -DCONFIG_CISCO_TRUE_STATIC_IP -D_BCI_FEATURE_REQ', '', d)}"
@@ -148,7 +149,10 @@ do_compile:prepend () {
     if ${@bb.utils.contains_any('DISTRO_FEATURES', 'RadiusGreyList', 'true', 'false', d)}; then
     sed -i '2i <?define FEATURE_SUPPORT_RADIUSGREYLIST=True?>' ${S}/config-arm/TR181-USGv2.XML
     fi
-    if ${@bb.utils.contains_any('DISTRO_FEATURES', 'wifimotion', 'true', 'false', d)}; then
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'OneStack', 'true', 'false', d)}; then
+    sed -i '2i <?define ONESTACK_PRODUCT_REQ=True?>' ${S}/config-arm/TR181-USGv2.XML
+    fi
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'wifimotion', 'true', 'false', d)}; then
     sed -i '2i <?define FEATURE_COGNITIVE_WIFIMOTION=True?>' ${S}/config-arm/TR181-USGv2.XML
     fi
     sed -i '2i <?define CONFIG_INTERNET2P0=True?>' ${S}/config-arm/TR181-USGv2.XML

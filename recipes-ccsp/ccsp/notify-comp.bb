@@ -53,11 +53,6 @@ do_install:append:mips () {
     install -d ${D}${exec_prefix}/ccsp/notify-comp
     install -m 644 ${S}/scripts/msg_daemon.cfg ${D}${exec_prefix}/ccsp/notify-comp/msg_daemon.cfg
 }
-do_install:append_bcm3390(){
-    # Config files and scripts
-    install -d ${D}${exec_prefix}/ccsp/notify-comp
-    install -m 644 ${S}/scripts/msg_daemon.cfg ${D}${exec_prefix}/ccsp/notify-comp/msg_daemon.cfg
-}
 
 FILES:${PN} += "${exec_prefix}/ccsp/notify-comp"
 

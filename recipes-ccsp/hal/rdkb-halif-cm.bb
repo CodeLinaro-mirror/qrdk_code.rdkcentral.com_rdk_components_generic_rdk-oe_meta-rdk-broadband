@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 SRC_URI = "git://github.com/rdkcentral/rdkb-halif-cm.git;protocol=https;branch=main"
-SRCREV = "53a0c610d31e54bdace412bcb941df6e86968108"
+SRCREV = "cc6892b0b563df36474180dcc4ec4e6b9a0ff602"
 
 S = "${UNPACKDIR}/${PN}-${PV}"
 

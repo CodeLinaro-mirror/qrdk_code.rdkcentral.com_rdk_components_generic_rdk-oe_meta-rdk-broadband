@@ -19,7 +19,7 @@ DEPENDS:remove_tchxb8 += "hal-platform"
 # To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where
 # the changes are merged before creating a pull request to github.com/rdkcentral/rdk-wifi-hal
 SRC_URI = "git://github.com/rdkcentral/rdk-wifi-hal.git;protocol=https;branch=main;name=rdk-wifi-hal"
-SRCREV = "dddcb709dc2e50bac991684867a319be3a321b1e"
+SRCREV = "28645c9250ec4a9b0ba86be9ffa2bd4aa0e932cc"
 
 ONEWIFI_CFLAGS = " -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/rdk-wifi-libhostap/src \
                   -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/libnl3 \
@@ -147,18 +147,10 @@ ONEWIFI_CONFIG_FLAGS:remove_tchxb7 = "-DCONFIG_WMM"
 ONEWIFI_CONFIG_FLAGS:append_tchxb8 = " -DTCXB8_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
 ONEWIFI_CONFIG_FLAGS:remove_xb10 = "-DTCXB7_PORT"
 ONEWIFI_CONFIG_FLAGS:append_xb10 = " -DXB10_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
-ONEWIFI_CONFIG_FLAGS:append_xb10 = " \
-    -DCONFIG_HW_CAPABILITIES \
-    -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/wifi \
-"
 ONEWIFI_CONFIG_FLAGS:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'CONFIG_IEEE80211BE', ' -DCONFIG_MLO', '', d)}"
 ONEWIFI_CONFIG_FLAGS:append_xer10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'CONFIG_IEEE80211BE', ' -DCONFIG_MLO', '', d)}"
 ONEWIFI_CONFIG_FLAGS:remove_vbvxb9 = "-DTCXB7_PORT"
 ONEWIFI_CONFIG_FLAGS:append_vbvxb9 = " -DXB10_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
-ONEWIFI_CONFIG_FLAGS:append_vbvxb9 = " \
-    -DCONFIG_HW_CAPABILITIES \
-    -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/wifi \
-"
 CFLAGS:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CONFIG_FLAGS}', '', d)}"
 inherit autotools
 

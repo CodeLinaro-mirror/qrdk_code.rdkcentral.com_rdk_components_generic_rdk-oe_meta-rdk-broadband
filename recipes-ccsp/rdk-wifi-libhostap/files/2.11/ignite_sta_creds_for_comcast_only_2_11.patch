@@ -1,0 +1,203 @@
+##########################################
+From: Srijeyarankesh_JS@comcast.com
+Date: Mar 17, 2026 10:35 PM
+Source: Comcast
+##########################################
+diff --git a/source/hostap-2.11/src/eap_peer/eap_config.h b/source/hostap-2.11/src/eap_peer/eap_config.h
+index 58d5a1359..e7d6fbc18 100644
+--- a/source/hostap-2.11/src/eap_peer/eap_config.h
++++ b/source/hostap-2.11/src/eap_peer/eap_config.h
+@@ -598,6 +598,15 @@ struct eap_peer_config {
+ 	 */
+ 	char *pending_req_otp;
+ 
++	/*
++	 * eap_ttls_ignite_mode - Whether EAP-TTLS Ignite mode is enabled
++	 *
++	 * This field should not be set in configuration step. It is only used
++	 * internally when control interface is used to request needed
++	 * information.
++	 */
++	bool eap_ttls_ignite_mode;
++
+ 	/**
+ 	 * pending_req_otp_len - Length of the pending OTP request
+ 	 */
+diff --git a/source/hostap-2.11/src/eapol_supp/eapol_supp_sm.c b/source/hostap-2.11/src/eapol_supp/eapol_supp_sm.c
+index abc1416a3..c339f8eb8 100644
+--- a/source/hostap-2.11/src/eapol_supp/eapol_supp_sm.c
++++ b/source/hostap-2.11/src/eapol_supp/eapol_supp_sm.c
+@@ -23,6 +23,11 @@
+ #define STATE_MACHINE_DATA struct eapol_sm
+ #define STATE_MACHINE_DEBUG_PREFIX "EAPOL"
+ 
++#define IGNITE_NVRAM_PATH   "/tmp/factory_nvram.data"
++#define IGNITE_ANON_ID      "anonymous@xfignite.com"
++#define IGNITE_ANON_ID_LEN  (sizeof(IGNITE_ANON_ID) - 1)
++#define IGNITE_CM_MAC_MAX   18
++#define IGNITE_SN_MAX       64
+ 
+ /* IEEE 802.1X-2004 - Supplicant - EAPOL state machines */
+ 
+@@ -142,6 +147,9 @@ struct eapol_sm {
+ 
+ 	bool force_authorized_update;
+ 
++	char ignite_cm_mac[IGNITE_CM_MAC_MAX];
++	char ignite_serial[IGNITE_SN_MAX];
++
+ #ifdef CONFIG_EAP_PROXY
+ 	bool use_eap_proxy;
+ 	struct eap_proxy_sm *eap_proxy;
+@@ -1538,6 +1546,103 @@ void eapol_sm_notify_eap_fail(struct eapol_sm *sm, bool fail)
+ 	eapol_sm_step(sm);
+ }
+ 
++static int get_ignite_configs_from_factory_nvram(const char *file,
++						 const char *pattern, char delim,
++						 int field_num, char *out,
++						 size_t out_size)
++{
++	FILE       *fp;
++	char        line[256];
++	int         found = 0;
++	int         ret   = -1;
++
++	if (!file || !pattern || !out || out_size == 0 || field_num < 1)
++		return -1;
++
++	out[0] = '\0';
++
++	fp = fopen(file, "r");
++	if (!fp) {
++		wpa_printf(MSG_ERROR,
++			   "EAP-TTLS-IGNITE: cannot open '%s': %s",
++			   file, strerror(errno));
++		return -1;
++	}
++
++	while (!found && fgets(line, sizeof(line), fp) != NULL) {
++		const char *p;
++		const char *field_start;
++		const char *field_end;
++		int         field_idx;
++		size_t      val_len;
++
++		if (os_strstr(line, pattern) == NULL)
++			continue;
++
++		p         = line;
++		field_idx = 1;
++
++		while (field_idx < field_num) {
++			p = os_strchr(p, delim);
++			if (!p) {
++				wpa_printf(MSG_ERROR,
++					   "EAP-TTLS-IGNITE: pattern '%s': "
++					   "field %d not found (delim='%c')",
++					   pattern, field_num, delim);
++				goto done;
++			}
++			p++;
++			field_idx++;
++		}
++
++		field_start = p;
++
++		while (*field_start == ' ' || *field_start == '\t')
++			field_start++;
++
++		field_end = field_start;
++		while (*field_end &&
++		       *field_end != delim &&
++		       *field_end != '\n' &&
++		       *field_end != '\r')
++			field_end++;
++
++		while (field_end > field_start &&
++		       (*(field_end - 1) == ' ' || *(field_end - 1) == '\t'))
++			field_end--;
++
++		val_len = (size_t)(field_end - field_start);
++
++		if (val_len == 0) {
++			wpa_printf(MSG_ERROR,
++				   "EAP-TTLS-IGNITE: pattern '%s': "
++				   "field %d is empty",
++				   pattern, field_num);
++			goto done;
++		}
++
++		if (val_len >= out_size) {
++			wpa_printf(MSG_ERROR,
++				   "EAP-TTLS-IGNITE: pattern '%s': "
++				   "field %d value too long (%zu >= %zu)",
++				   pattern, field_num, val_len, out_size);
++			goto done;
++		}
++
++		os_memcpy(out, field_start, val_len);
++		out[val_len] = '\0';
++		ret   = (int)val_len;
++		found = 1;
++	}
++
++	if (!found)
++		wpa_printf(MSG_ERROR,
++			   "EAP-TTLS-IGNITE: pattern '%s' not found in '%s'",
++			   pattern, file);
++	done:
++		fclose(fp);
++		return ret;
++}
+ 
+ /**
+  * eapol_sm_notify_config - Notification of EAPOL configuration change
+@@ -1557,7 +1662,47 @@ void eapol_sm_notify_config(struct eapol_sm *sm,
+ {
+ 	if (sm == NULL)
+ 		return;
++	
++	if (config && config->eap_ttls_ignite_mode) {
++		wpa_printf(MSG_DEBUG,
++			   "EAP-TTLS-IGNITE: fetching credentials for "
++			   "xfignite EAP-TTLS/MSCHAPv2");
++
++		if (get_ignite_configs_from_factory_nvram(IGNITE_NVRAM_PATH,
++				    "CM", ' ', 2,
++				    sm->ignite_cm_mac,
++				    sizeof(sm->ignite_cm_mac)) < 0) {
++			wpa_printf(MSG_ERROR,
++				   "EAP-TTLS-IGNITE: failed to read CM MAC");
++			goto skip_ignite;
++		}
++
++		if (get_ignite_configs_from_factory_nvram(IGNITE_NVRAM_PATH,
++				    "Serial", ' ', 2,
++				    sm->ignite_serial,
++				    sizeof(sm->ignite_serial)) < 0) {
++			wpa_printf(MSG_ERROR,
++				   "EAP-TTLS-IGNITE: failed to read Serial");
++			os_memset(sm->ignite_cm_mac, 0,
++				  sizeof(sm->ignite_cm_mac));
++			goto skip_ignite;
++		}
+ 
++		config->anonymous_identity = (u8 *)IGNITE_ANON_ID;
++		config->anonymous_identity_len = IGNITE_ANON_ID_LEN;
++		config->identity     = (u8 *)sm->ignite_cm_mac;
++		config->identity_len = os_strlen(sm->ignite_cm_mac);
++		config->password     = (u8 *)sm->ignite_serial;
++		config->password_len = os_strlen(sm->ignite_serial);
++
++		wpa_printf(MSG_DEBUG,
++			   "EAP-TTLS-IGNITE: fetch creds complete "
++			   "(anon_id_len=%zu id_len=%zu pw_len=%zu)",
++			   config->anonymous_identity_len,
++			   config->identity_len,
++			   config->password_len);
++	}
++skip_ignite:
+ 	sm->config = config;
+ #ifdef CONFIG_EAP_PROXY
+ 	sm->use_eap_proxy = eap_proxy_notify_config(sm->eap_proxy, config) > 0;

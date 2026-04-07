@@ -22,6 +22,8 @@ SRC_URI = "${CMF_GITHUB_ROOT}/utopia;protocol=https;${BRANCH_utopia};name=Utopia
 
 S = "${UNPACKDIR}/${PN}-${PV}"
 
+EXTRA_OECONF:append = " --with-machine=${MACHINE}"
+
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI:append = " \
     ${@bb.utils.contains('DISTRO_FEATURES', 'partner_default_ext','file://ApplySystemDefaults.service','',d)} \
@@ -51,6 +53,9 @@ CFLAGS:append = " \
 
 CFLAGS:append = " -I${STAGING_INCDIR}/tirpc "
 CFLAGS:remove_morty = " -I${STAGING_INCDIR}/tirpc "
+
+ENABLE_MCAST_SERVICE = "${@bb.utils.contains('DISTRO_FEATURES', 'no_utopia_mcast', 'no', 'yes', d)}"
+#EXTRA_OECONF_append = " --enable-igmpmld=${ENABLE_MCAST_SERVICE}"
 
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION', '', d)}"
 

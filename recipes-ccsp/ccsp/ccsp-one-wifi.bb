@@ -28,12 +28,15 @@ CFLAGS:append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-
 # To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where
 # the changes are merged before creating a pull request to github.com/rdkcentral/OneWifi
 SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;name=OneWifi"
+SRC_URI_append = " ${@bb.utils.contains('MACHINE', 'xe2-plume-rdk-extender-qsdk11', '', ' git://github.com/rdk-gdcs/lan_web.git;protocol=https;branch=main_branch_multiap_update;name=lan_web;destsuffix=lan_web', d)}"
 
 SRC_URI:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_OneWifi = "ef055d88d8d0dba9d9dc0f386c79dd9d0689a034"
+SRCREV_OneWifi = "d17bd2d25fc0728d130cbe84e3c0e90b3734a6bc"
+SRCREV_lan_web = "${AUTOREV}"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"
+SRCREV_FORMAT = "lan_web"
 
 SRC_URI:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'sta_manager', '${RDKB_CCSP_ROOT_GIT}/WiFiStaManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiStaManager;name=WiFiStaManager', " ", d)}"
 SRCREV_WiFiStaManager = "${AUTOREV}"
@@ -66,18 +69,20 @@ CFLAGS:append = " \
     -I=${includedir}/rbus \
 "
 
-CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
 CFLAGS:append = " -DWIFI_CAPTIVE_PORTAL"
-CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'halVersion3', ' -DWIFI_HAL_VERSION_3', '', d)}"
+CFLAGS:append = " -DONEWIFI_MULTIAP_APP_SUPPORT"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIFI_HAL_VERSION_3', '', d)}"
 CFLAGS:append = " -DWIFI_CAPTIVE_PORTAL"
-CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
-CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'cac', '-DONEWIFI_CAC_APP_SUPPORT', '', d)}"
-CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'wps_support', '-DFEATURE_SUPPORT_WPS', '', d)}"
-CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'dbus_support', '-DONEWIFI_DBUS_SUPPORT', '', d)}"
-CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'always_enable_ax_2g', '-DALWAYS_ENABLE_AX_2G', '', d)}" 
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '-DONEWIFI_CAC_APP_SUPPORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wps_support', '-DFEATURE_SUPPORT_WPS', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'dbus_support', '-DONEWIFI_DBUS_SUPPORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'always_enable_ax_2g', '-DALWAYS_ENABLE_AX_2G', '', d)}" 
 
-EXTRA_OECONF:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
-CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
+EXTRA_OECONF:append = " ONEWIFI_MULTIAP_APP_SUPPORT=true"
 
 #!FIXME!
 #Ensure proper propagation of CFLAGS and LIBS through the build system.
@@ -105,6 +110,10 @@ do_compile:prepend () {
     fi
     if ${@bb.utils.contains_any('DISTRO_FEATURES', 'sta_manager', 'true', 'false', d)}; then
         cp -rf ${S}/../WiFiStaManager/* ${S}/source/apps/sta_mgr/
+    fi
+    if ${@bb.utils.contains('MACHINE', 'xe2-plume-rdk-extender-qsdk11', 'false', 'true', d)}; then
+        mkdir -p ${S}/source/apps/multi_ap/
+        cp -rf ${S}/../lan_web/* ${S}/source/apps/multi_ap/
     fi
 }
 
@@ -207,6 +216,8 @@ FILES:${PN} = "\
     ${prefix}/ccsp/wifi/rdkb-wifi.ovsschema \
     ${prefix}/ccsp/wifi/wifi_db_ovsh \
     ${sbindir}/get_vlan.sh \
+    ${libdir}/libwifi_math_utils.so.* \
+    ${libdir}/libwifi_quality_manager.so.* \
 "
 FILES:${PN}:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'Memwrap_Tool', '${prefix}/ccsp/wifi/Heapwalkcheckrss.sh', '', d)}"
 FILES:${PN}:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'Memwrap_Tool', '${prefix}/ccsp/wifi/HeapwalkField.sh', '', d)}"

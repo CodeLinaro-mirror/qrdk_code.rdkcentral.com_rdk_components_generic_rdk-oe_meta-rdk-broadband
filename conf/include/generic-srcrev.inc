@@ -5,62 +5,59 @@
 # (or)
 #     Update feature branch for specific component in generic-branch.inc
 #         Example: BRANCH_ccsp_adv_security = "branch=feature/RDKB-12345"
-
 #######################################################################
 # Below mentioned SRCREV is not applicable for sprint builds
 #######################################################################
-SRCREV_ccsp_adv_security = "ebdd3ff628b9e8f4c1223a6065279cf9c1176e14"
-SRCREV_ccsp_cm_agent = "058ee3ae096e71d47cca72262fd83c17be8c4453"
-SRCREV_ccsp_common_library = "c483614694220b9aff95dea72ae62411d81d4837"
-SRCREV_ccsp_cr = "7397f714551d767c9c035655ad9f1910bac337a1"
-SRCREV_ccsp_dmcli = "f203bb731ea869409cdf83e7a7707c00dd321980"
-SRCREV_ccsp_eth_agent = "c1c1d4f3de408279f429b35bad814a5fdc68c6d7"
-SRCREV_ccsp_gwprovapp = "1af3b5ebec817b64c4e94c9c0bb60d6dc397a173"
+SRCREV_ccsp_adv_security = "3224178baa2d1cf3260ca5685eaca17a45a27e93"
+SRCREV_ccsp_cm_agent = "7ff251b0d81ab9900f0ab1f810d6b6ec4e9992cb"
+SRCREV_ccsp_common_library = "bdc6426ff7b35ee56257a7d25b0a929d8a599906"
+SRCREV_ccsp_cr = "a273737cf6a78bcd5c3dd2b95ae4cd1390ff29ff"
+SRCREV_ccsp_dmcli = "dab6771a738edd302d1627a53562aae5187cc1b4"
+SRCREV_ccsp_eth_agent = "c7125fe499a7f124e8fea1955407f47510d296b7"
+SRCREV_ccsp_gwprovapp = "1da3ecfa12febf7b9867a2492992b9b000599fb3"
 SRCREV_ccsp_gwprovapp_ethwan = "5133ed4745360a13261225eb244f04e647ccc2f0"
-SRCREV_ccsp_home_security = "17e08b7126fe41ed2730dd5b7d4ca5489df0f658"
-SRCREV_ccsp_hotspot = "a8bc9d66c4ada31ac3e2f60c7f0c7289c544072e"
-SRCREV_ccsp_hotspot_kmod = "6fde1011bfe31170bcab6a9c2eb78b7af0d764d3"
-SRCREV_ccsp_lm_lite = "845fe0221465e8e146a48512eecc6c5ac9f04337"
-SRCREV_ccsp_misc = "75bc528e8a6dc3ed8d77ee1bed4a5fa703293839"
-SRCREV_ccsp_moca = "d0b623a922299a08fed4ff854b28ac048ac27d5a"
-SRCREV_ccsp_mta_agent = "6b857b5f91e88df666a9db8e95d60d7ff6e43e4c"
-SRCREV_ccsp_p_and_m = "19aa42f467db14503182c15b3d64ffeef88ac9ee"
-SRCREV_ccsp_psm = "00859265411a6a764d83d8e8c7f3757c8d992f90"
-SRCREV_ccsp_snmp_pa = "4f2a396711cd871d08f2233cdda1e2a46b8b036c"
-SRCREV_ccsp_tr069_pa = "136db10cac8eb8c4253082cac2a8d297ec62a27d"
-SRCREV_ccsp_webui_bci_jst = "87ade3c41fed92f077b2675afd1e719e586afa01"
-SRCREV_ccsp_webui_bci_php = "87ade3c41fed92f077b2675afd1e719e586afa01"
-SRCREV_ccsp_webui_jst = "962874d2cae993e6b45425d8de194fcde3405971"
-SRCREV_ccsp_webui_php = "962874d2cae993e6b45425d8de194fcde3405971"
-SRCREV_ccsp_xconf = "50e24d1112440b5e1cf6a26c75be5df1a7134063"
-SRCREV_ccsp_xdns = "d53e6ff212cd2a7a0faabe3d18bf9fdb2d1300da"
-SRCREV_core_net_lib = "d1570227e209a1f509fdaa2276963e33a520e78f"
+SRCREV_ccsp_home_security = "1685fabcb18a549514740facc22499cdca59d5bf"
+SRCREV_ccsp_hotspot = "02729f1a529c69753230da0ff27ec14c4b7fb729"
+SRCREV_ccsp_hotspot_kmod = "2bc70e75caa2c4adea65e8122ea41276d514a95f"
+SRCREV_ccsp_lm_lite = "29386d0636cc92c52d7a44080c34025fcebbadae"
+SRCREV_ccsp_misc = "e0b4fbd854b2aeef5c0e6a359de4c5217bcbc06a"
+SRCREV_ccsp_moca = "0ef57b7f2e4da9c974d6bf7057bbe9e6e8ff9b78"
+SRCREV_ccsp_mta_agent = "62310b51b22964a35f950125077e4ad9f1a9a068"
+SRCREV_ccsp_p_and_m = "1e6ba005f21bfbf7acca1760865cd88f25be0afb"
+SRCREV_ccsp_psm = "6bf467a3b112e46ed232fbaed146cfeb54b0fab1"
+SRCREV_ccsp_snmp_pa = "d2cdcdd277948f7d63777187c2c5e0f766e9bf0a"
+SRCREV_ccsp_tr069_pa = "abd750e9f983952dd24cd52a19f317362253ad33"
+SRCREV_ccsp_webui_bci_jst = "9b97da0cc56c70e806cbb7018ec6cb0b41a5cd3d"
+SRCREV_ccsp_webui_bci_php = "9b97da0cc56c70e806cbb7018ec6cb0b41a5cd3d"
+SRCREV_ccsp_webui_jst = "2392b99658c5b64bceea5989ac9b6544af3d60b3"
+SRCREV_ccsp_webui_php = "2392b99658c5b64bceea5989ac9b6544af3d60b3"
+SRCREV_ccsp_xconf = "8d430d76f9d656be864bb855a2f107ad698a6b23"
+SRCREV_ccsp_xdns = "61b219efbe41d8a1536bd205fff15f524ff2e410"
+SRCREV_core_net_lib = "0c59c33a24eb1d7a46c07fb65a3ab034670957bf"
 SRCREV_halinterface = "56bb2bde5e702d45dac2ddca7e1711d6bc2e834a"
-SRCREV_hardware_abstraction_layer = "872e007b99c82418611445274e85780d27a0cb57"
-SRCREV_harvester = "fdf3b8d1f343e61a57a2b5d6312a5f37c1d4347a"
-SRCREV_json_hal_lib = "e723b0c8a8c7652fe65506676430bbd4a7d15579"
-SRCREV_jst = "13c953b8002c6c2d31246f9ecc9314201761d92c"
+SRCREV_hardware_abstraction_layer = "543b1edb7bfadf331347329bd54a811c0a4ee09d"
+SRCREV_harvester = "479558606dd0063e06c1d0052a03f59f0bae6c1f"
+SRCREV_json_hal_lib = "f25aa7981cd33a1aa7773e4079bb6f071bfa9bce"
+SRCREV_jst = "e5867cffa728231c79ca3dce1f9d36740a735bf2"
 SRCREV_lanmanager = "aa42d810ce60c80071eefbc9347e528f5f4589af"
-SRCREV_notify_comp = "3cb9874b8bb9bc654b984a538ce4cd0fa278e4b4"
-SRCREV_ovs_agent = "c99a379f7d4d4844c23f35073b32dae7018397c1"
-SRCREV_powermgr = "1217b920d99f9c1970ea03de9105ab7a096877d7"
-SRCREV_rdk_fwupgrade_manager = "eae8e768a83fe5ba88d33f2023c9d194e3c22353"
-SRCREV_rdk_cellularmanager = "856b20d928704aa4d15d64690098738e9d9a15e3"
-SRCREV_start_parodus = "cef021170cf9336db877e76d044961f8b83d3e98"
-SRCREV_test_and_diagnostic = "5658ca54fb1e67b1982b8945fbb11e6a8aa4d4e3"
-SRCREV_utopia = "e54b40ff5302a4378643382be27a5413bd9bd85b"
-SRCREV_sysint-broadband = "061ed28e290b107577f7130378308076c4b7aafd"
-
+SRCREV_notify_comp = "0285bfcb0879352f875f02ef9596417b859d5787"
+SRCREV_ovs_agent = "37478f5682ffa7dd49c2f94f6bfafa7bbb25c7db"
+SRCREV_powermgr = "6ae00b767f01e59e616459f3bf15c5a1c04855d9"
+SRCREV_rdk_fwupgrade_manager = "6f6f2770842651c0fa86108d160b4f11eafd5d42"
+SRCREV_rdk_cellularmanager = "b22775eb119e26f0997eda2ed4189f3a0f2ba814"
+SRCREV_start_parodus = "9581bdf7c291f51f993dbee46ba0bb266b493b0e"
+SRCREV_test_and_diagnostic = "23dbd4bcfcd5762ff449c6e0d9e68f425872ebd0"
+SRCREV_utopia = "c17c89e28c42050233b884ba268b772d52775031"
+SRCREV_sysint-broadband = "5522cda81f875ec5feca636a951d44ad08c646f2"
+SRCREV_ccsp-dhcp-mgr = "060d0b9f680b053b73d22ba4da4d192c49d871e9"
 def srcrev_for_branch(d, default_rev):
     branch = d.getVar('PROJECT_BRANCH', True) or ''
     distro_features = d.getVar('DISTRO_FEATURES', True) or ''
-
     if 'custom_branch_verification' in distro_features:
         return '${AUTOREV}'
     if 'sprint' in branch:
         return '${AUTOREV}'
     return default_rev
-
 #######################################################################
 # Update SRCREV_pn here for custom build verification in sprint
 #######################################################################
@@ -116,4 +113,5 @@ SRCREV:pn-rdk-cellularmanager = "${@srcrev_for_branch(d, '${SRCREV_rdk_cellularm
 SRCREV:pn-start-parodus = "${@srcrev_for_branch(d, '${SRCREV_start_parodus}')}"
 SRCREV:pn-test-and-diagnostic = "${@srcrev_for_branch(d, '${SRCREV_test_and_diagnostic}')}"
 SRCREV:pn-utopia = "${@srcrev_for_branch(d, '${SRCREV_utopia}')}"
+SRCREV:pn-ccsp-dhcp-mgr = "${@srcrev_for_branch(d, '${SRCREV_ccsp-dhcp-mgr}')}"
 SRCREV_sysintbroadband:pn-sysint-broadband = "${@srcrev_for_branch(d, '${SRCREV_sysint-broadband}')}"

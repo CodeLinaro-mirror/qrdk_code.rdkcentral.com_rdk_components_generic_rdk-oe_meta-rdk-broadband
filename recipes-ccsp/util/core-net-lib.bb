@@ -6,13 +6,13 @@ SRC_URI = "${CMF_GITHUB_ROOT}/core-net-library;protocol=https;${BRANCH_core_net_
 
 S = "${UNPACKDIR}/${PN}-${PV}"
 
-DEPENDS = " libnl ccsp-common-library "
+DEPENDS = " libnl ccsp-common-library libxml2 "
 
 inherit autotools pkgconfig
 
 do_install:append() {
-        install -d ${D}/usr/include/ccsp
-	install -m 0644 ${S}/source/libnet.h ${D}/usr/include/ccsp
+    install -d ${D}/usr/include/ccsp
+    install -m 0644 ${S}/source/libnet.h ${D}/usr/include/ccsp
 }
 
 DEPENDS:remove:class-native = " safec-native"

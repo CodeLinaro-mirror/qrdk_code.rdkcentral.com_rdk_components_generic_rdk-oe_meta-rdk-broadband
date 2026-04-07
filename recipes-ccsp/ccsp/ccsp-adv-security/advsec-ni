@@ -1,0 +1,9 @@
+/rdklogs/logs/cujo-ni.txt {
+    rotate 1
+    start 1
+    nodateext
+    copytruncate
+    missingok
+    notifempty
+    nocompress
+}

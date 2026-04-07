@@ -1,0 +1,189 @@
+diff --git a/source/hostap-2.11/src/ap/ieee802_11.c b/source/hostap-2.11/src/ap/ieee802_11.c
+index 3dcc332e7..fc2468ae0 100644
+--- a/source/hostap-2.11/src/ap/ieee802_11.c
++++ b/source/hostap-2.11/src/ap/ieee802_11.c
+@@ -3994,6 +3994,22 @@ static int __check_assoc_ies(struct hostapd_data *hapd, struct sta_info *sta,
+ 	const u8 *p2p_dev_addr = NULL;
+ 	struct hostapd_data *assoc_hapd;
+ 	struct sta_info *assoc_sta = NULL;
++	struct hostapd_data *wpa_hapd = hapd;
++
++#if defined(CONFIG_IEEE80211BE) && defined(CONFIG_DRIVER_BRCM)
++	/*
++	 * Use the MAP's wpa_auth for WPA/RSN operations(wpa_auth_sta_init, etc),
++	 * for SAE authentication ran on the MAP's hapd which stored the PMKSA there.
++	 */
++	if (hapd->conf->mld_ap &&
++	    sta->rx_link_id != (u8)-1 &&
++	    hapd->mld_link_id != sta->mld_assoc_link_id) {
++		struct hostapd_data *tmp =
++			hostapd_mld_get_link_bss(hapd, sta->mld_assoc_link_id);
++		if (tmp)
++			wpa_hapd = tmp;
++	}
++#endif /* CONFIG_IEEE80211BE && CONFIG_DRIVER_BRCM */
+ 
+ 	resp = check_ssid(hapd, sta, elems->ssid, elems->ssid_len);
+ 	if (resp != WLAN_STATUS_SUCCESS)
+@@ -4172,7 +4188,7 @@ static int __check_assoc_ies(struct hostapd_data *hapd, struct sta_info *sta,
+ 				assoc_sta = hostapd_ml_get_assoc_sta(
+ 					hapd, sta, &assoc_hapd);
+ 
+-			sta->wpa_sm = wpa_auth_sta_init(hapd->wpa_auth,
++			sta->wpa_sm = wpa_auth_sta_init(wpa_hapd->wpa_auth,
+ 							sta->addr,
+ 							p2p_dev_addr);
+ 
+@@ -4200,7 +4216,7 @@ static int __check_assoc_ies(struct hostapd_data *hapd, struct sta_info *sta,
+ #endif /* CONFIG_IEEE80211BE */
+ 
+ 		wpa_auth_set_auth_alg(sta->wpa_sm, sta->auth_alg);
+-		res = wpa_validate_wpa_ie(hapd->wpa_auth, sta->wpa_sm,
++		res = wpa_validate_wpa_ie(wpa_hapd->wpa_auth, sta->wpa_sm,
+ 					  hapd->iface->freq,
+ 					  wpa_ie, wpa_ie_len,
+ 					  elems->rsnxe ? elems->rsnxe - 2 :
+@@ -4349,14 +4365,14 @@ static int __check_assoc_ies(struct hostapd_data *hapd, struct sta_info *sta,
+ 
+ 		wpa_printf(MSG_DEBUG, "HS 2.0: OSEN association");
+ 		if (sta->wpa_sm == NULL)
+-			sta->wpa_sm = wpa_auth_sta_init(hapd->wpa_auth,
++			sta->wpa_sm = wpa_auth_sta_init(wpa_hapd->wpa_auth,
+ 							sta->addr, NULL);
+ 		if (sta->wpa_sm == NULL) {
+ 			wpa_printf(MSG_WARNING, "Failed to initialize WPA "
+ 				   "state machine");
+ 			return WLAN_STATUS_UNSPECIFIED_FAILURE;
+ 		}
+-		if (wpa_validate_osen(hapd->wpa_auth, sta->wpa_sm,
++		if (wpa_validate_osen(wpa_hapd->wpa_auth, sta->wpa_sm,
+ 				      elems->osen - 2, elems->osen_len + 2) < 0)
+ 			return WLAN_STATUS_INVALID_IE;
+ #endif /* CONFIG_HS20 */
+@@ -4502,6 +4518,21 @@ static int check_assoc_ies(struct hostapd_data *hapd, struct sta_info *sta,
+ 		return WLAN_STATUS_UNSPECIFIED_FAILURE;
+ 	}
+ 
++#if defined(CONFIG_IEEE80211BE) && defined(CONFIG_DRIVER_BRCM)
++	/*
++	 * Pass the receiving link's hapd to __check_assoc_ies to validate
++	 * PHY-layer IEs(rates, HT/VHT/HE/EHT caps, 6 GHz band caps).
++	 */
++	if (hapd->conf->mld_ap &&
++	    sta->rx_link_id != (u8)-1 &&
++	    sta->rx_link_id != sta->mld_assoc_link_id) {
++		struct hostapd_data *tmp =
++			hostapd_mld_get_link_bss(hapd, sta->rx_link_id);
++		if (tmp)
++			hapd = tmp;
++	}
++#endif /* CONFIG_IEEE80211BE && CONFIG_DRIVER_BRCM */
++
+ 	return __check_assoc_ies(hapd, sta, ies, ies_len, &elems, reassoc,
+ 				 false);
+ }
+@@ -4610,7 +4641,10 @@ static int ieee80211_ml_process_link(struct hostapd_data *hapd,
+ 	if (!mlbuf)
+ 		goto out;
+ 
+-#if !defined(CONFIG_DRIVER_BRCM)
++#if defined(CONFIG_DRIVER_BRCM)
++	/* Skip since no Per-STA profile of rx link in assoc_req */
++	if (hapd->mld_link_id != origin_sta->rx_link_id)
++#endif /* !CONFIG_DRIVER_BRCM*/
+ 	if (ieee802_11_parse_link_assoc_req(ies, ies_len, &elems, mlbuf,
+ 					    hapd->mld_link_id, true) ==
+ 	    ParseFailed) {
+@@ -4619,7 +4653,6 @@ static int ieee80211_ml_process_link(struct hostapd_data *hapd,
+ 		status = WLAN_STATUS_UNSPECIFIED_FAILURE;
+ 		goto out;
+ 	}
+-#endif /* !CONFIG_DRIVER_BRCM*/
+ 
+ 	sta->flags |= origin_sta->flags | WLAN_STA_ASSOC_REQ_OK;
+ 	sta->mld_assoc_link_id = origin_sta->mld_assoc_link_id;
+@@ -4747,6 +4780,7 @@ int hostapd_process_assoc_ml_info(struct hostapd_data *hapd,
+          */
+         if (link->valid &&
+                 i == sta->mld_assoc_link_id &&
++                sta->rx_link_id != (u8)-1 &&
+                 sta->rx_link_id != sta->mld_assoc_link_id &&
+                 tx_link_status == WLAN_STATUS_SUCCESS) {
+             wpa_printf(MSG_ERROR, "### %s: rx_link_id is not the mld_assoc_link_id", __func__);
+@@ -4952,6 +4986,24 @@ u16 send_assoc_resp(struct hostapd_data *hapd, struct sta_info *sta,
+ 	struct ieee80211_mgmt *reply;
+ 	u8 *p;
+ 	u16 res = WLAN_STATUS_SUCCESS;
++	struct hostapd_data *orig_hapd = hapd;
++
++#if defined(CONFIG_IEEE80211BE) && defined(CONFIG_DRIVER_BRCM)
++	/*
++	 * Switch to the AAP's hapd to write proper IEs(rates, HT/VHT/HE/EHT,
++	 * RSNXE, ...) in the Assoc Resp body of the TRANSMITTING link.
++	 * Restored to orig_hapd just before hostapd_drv_send_mlme() so
++	 * the resp is dispatched through MAP.
++	 */
++	if (sta && hapd->conf->mld_ap &&
++	    sta->rx_link_id != (u8)-1 &&
++	    sta->rx_link_id != sta->mld_assoc_link_id) {
++		struct hostapd_data *rx_hapd =
++			hostapd_mld_get_link_bss(hapd, sta->rx_link_id);
++		if (rx_hapd)
++			hapd = rx_hapd;
++	}
++#endif /* CONFIG_IEEE80211BE && CONFIG_DRIVER_BRCM */
+ 
+ 	buflen = sizeof(struct ieee80211_mgmt) + 1024;
+ #ifdef CONFIG_FILS
+@@ -5268,6 +5320,16 @@ rsnxe_done:
+ 	}
+ #endif /* CONFIG_FILS */
+ 
++#if defined(CONFIG_IEEE80211BE) && defined(CONFIG_DRIVER_BRCM)
++	/*
++	 * Restore hapd and SA/BSSID so the resp is sent via the MAP nl80211 IF.
++	 * The MAP driver will forward it to the AAP for over-the-air TX.
++	 */
++	hapd = orig_hapd;
++	os_memcpy(reply->sa, orig_hapd->own_addr, ETH_ALEN);
++	os_memcpy(reply->bssid, orig_hapd->own_addr, ETH_ALEN);
++#endif /* CONFIG_IEEE80211BE && CONFIG_DRIVER_BRCM */
++
+ 	if (hostapd_drv_send_mlme(hapd, reply, send_len, 0, NULL, 0, 0) < 0) {
+ 		wpa_printf(MSG_INFO, "Failed to send assoc resp: %s",
+ 			   strerror(errno));
+@@ -5529,15 +5591,21 @@ static void handle_assoc(struct hostapd_data *hapd,
+ 	}
+ 
+ #if defined(CONFIG_DRIVER_BRCM)
++	if (sta)
++		sta->rx_link_id = (u8)-1;
+ 	if (sta && ap_sta_is_mld(hapd, sta)) {
+ 		u8 i, link_map = 0, rx_link_id = 0xff, link_addr[ETH_ALEN];
+ 		struct ieee802_11_elems elems;
+ 
++		os_memset(link_addr, 0, ETH_ALEN);
+ 		if (ieee802_11_parse_elems(pos, left, &elems, 1) != ParseFailed &&
+ 		    elems.vendor_mlo && elems.vendor_mlo_len) {
+-			link_map = elems.vendor_mlo[BMP_OFFSET];
+-			rx_link_id = elems.vendor_mlo[ASSOC_LINK_ID_OFFSET];
+-			os_memcpy(link_addr, &elems.vendor_mlo[ASSOC_LINK_ADDR_OFFSET], sizeof(link_addr));
++			if (elems.vendor_mlo_len > BMP_OFFSET)
++				link_map = elems.vendor_mlo[BMP_OFFSET];
++			if (elems.vendor_mlo_len > ASSOC_LINK_ID_OFFSET)
++				rx_link_id = elems.vendor_mlo[ASSOC_LINK_ID_OFFSET];
++			if (elems.vendor_mlo_len >= ASSOC_LINK_ADDR_OFFSET + ETH_ALEN)
++				os_memcpy(link_addr, &elems.vendor_mlo[ASSOC_LINK_ADDR_OFFSET], ETH_ALEN);
+ 
+ 			wpa_printf(MSG_ERROR, "### %s: rx_link_id=%u link_addr="MACSTR" ###", __func__,
+ 				rx_link_id, MAC2STR(link_addr));
+@@ -5557,7 +5625,8 @@ static void handle_assoc(struct hostapd_data *hapd,
+ 					sta->mld_info.links[i].valid = 0;
+ 					continue;
+ 				}
+-				if (elems.vendor_mlo_len >= (LINK_ADDR_OFFSET + (i * ETH_ALEN))) {
++				/* Ensure enough bytes to read the full MAC address */
++				if (elems.vendor_mlo_len >= (LINK_ADDR_OFFSET + (i * ETH_ALEN) + ETH_ALEN)) {
+ 					os_memcpy(sta->mld_info.links[i].peer_addr, &elems.vendor_mlo[LINK_ADDR_OFFSET + i * ETH_ALEN], ETH_ALEN);
+ 					sta->mld_info.links[i].valid = 1;
+ 				}

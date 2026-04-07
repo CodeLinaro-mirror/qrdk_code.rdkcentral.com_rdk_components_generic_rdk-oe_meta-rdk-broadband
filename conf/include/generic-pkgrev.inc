@@ -6,162 +6,111 @@ def pv_for_branch(d, default_pv):
     if 'sprint' in branch:
         return "{}+git${{SRCPV}}".format(default_pv)
     return default_pv
-
-PV:pn-ccsp-adv-security = "${@pv_for_branch(d, '1.1.2_stable2_20260123')}"
+PV:pn-ccsp-adv-security = "${@pv_for_branch(d, '2.2.1_stable2_20260617')}"
 PR:pn-ccsp-adv-security = "r0"
-
-PV:pn-ccsp-cm-agent = "${@pv_for_branch(d, '1.3.0_stable2_20260306')}"
+PV:pn-ccsp-cm-agent = "${@pv_for_branch(d, '2.2.0_stable2_20260424')}"
 PR:pn-ccsp-cm-agent = "r0"
-
-PV:pn-ccsp-common-library = "${@pv_for_branch(d, '2.0.0_stable2_20260306')}"
+PV:pn-ccsp-common-library = "${@pv_for_branch(d, '2.3.0_stable2_20260724')}"
 PR:pn-ccsp-common-library = "r0"
-
-PV:pn-ccsp-common-library-native = "${@pv_for_branch(d, '2.0.0_stable2_20260220')}"
+PV:pn-ccsp-common-library-native = "${@pv_for_branch(d, '2.3.0_stable2_20260724')}"
 PR:pn-ccsp-common-library-native = "r0"
-
-PV:pn-ccsp-cr = "${@pv_for_branch(d, '1.1.0')}"
+PV:pn-ccsp-cr = "${@pv_for_branch(d, '1.2.1_stable2_20260508')}"
 PR:pn-ccsp-cr = "r0"
-
-PV:pn-ccsp-dmcli = "${@pv_for_branch(d, '2.0.0_stable2_20260306')}"
+PV:pn-ccsp-dmcli = "${@pv_for_branch(d, '2.1.0_stable2_20260522')}"
 PR:pn-ccsp-dmcli = "r0"
-
-PV:pn-ccsp-eth-agent = "${@pv_for_branch(d, '1.5.0_stable2_20260220')}"
+PV:pn-ccsp-eth-agent = "${@pv_for_branch(d, '2.1.0_stable2_20260605')}"
 PR:pn-ccsp-eth-agent = "r0"
-
-PV:pn-ccsp-gwprovapp = "${@pv_for_branch(d, '1.2.0_stable2_20260123')}"
+PV:pn-ccsp-gwprovapp = "${@pv_for_branch(d, '2.2.0')}"
 PR:pn-ccsp-gwprovapp = "r0"
-
 PV:pn-ccsp-gwprovapp-ethwan = "${@pv_for_branch(d, '1.0.0')}"
 PR:pn-ccsp-gwprovapp-ethwan = "r0"
-
 PV:pn-ccsp-home-security = "${@pv_for_branch(d, '1.2.0_stable2_20260109')}"
 PR:pn-ccsp-home-security = "r0"
-
-PV:pn-ccsp-hotspot = "${@pv_for_branch(d, '1.3.0_stable2_20260109')}"
+PV:pn-ccsp-hotspot = "${@pv_for_branch(d, '2.2.0_stable2_20260617')}"
 PR:pn-ccsp-hotspot = "r0"
-
 PV:pn-ccsp-hotspot-kmod = "${@pv_for_branch(d, '1.1.0_stable2_20260109')}"
 PR:pn-ccsp-hotspot-kmod = "r0"
-
-PV:pn-ccsp-lm-lite = "${@pv_for_branch(d, '2.0.0_stable2_20260306')}"
+PV:pn-ccsp-lm-lite = "${@pv_for_branch(d, '2.3.0_stable2_20260617')}"
 PR:pn-ccsp-lm-lite = "r0"
-
-PV:pn-ccsp-misc = "${@pv_for_branch(d, '1.4.0_stable2_20260306')}"
+PV:pn-ccsp-misc = "${@pv_for_branch(d, '2.1.1_stable2_20260424')}"
 PR:pn-ccsp-misc = "r0"
-
-PV:pn-ccsp-moca = "${@pv_for_branch(d, '2.0.0_stable2_20260306')}"
+PV:pn-ccsp-moca = "${@pv_for_branch(d, '2.2.0_stable2_20260724')}"
 PR:pn-ccsp-moca = "r0"
-
-PV:pn-ccsp-mta-agent = "${@pv_for_branch(d, '1.4.0_stable2_20260109')}"
+PV:pn-ccsp-mta-agent = "${@pv_for_branch(d, '2.1.1_stable2_20260508')}"
 PR:pn-ccsp-mta-agent = "r0"
-
-PV:pn-ccsp-p-and-m = "${@pv_for_branch(d, '2.0.0_stable2_20260306')}"
+PV:pn-ccsp-p-and-m = "${@pv_for_branch(d, '2.3.0_stable2_20260724')}"
 PR:pn-ccsp-p-and-m = "r0"
-
-PV:pn-ccsp-psm = "${@pv_for_branch(d, '2.0.0_stable2_20260306')}"
+PV:pn-ccsp-psm = "${@pv_for_branch(d, '2.0.0_stable2_20260605')}"
 PR:pn-ccsp-psm = "r0"
-
-PV:pn-ccsp-snmp-pa = "${@pv_for_branch(d, '1.1.1_stable2_20260109')}"
+PV:pn-ccsp-snmp-pa = "${@pv_for_branch(d, '2.0.0_stable2_20260617')}"
 PR:pn-ccsp-snmp-pa = "r0"
-
-PV:pn-ccsp-tr069-pa = "${@pv_for_branch(d, '2.0.0')}"
+PV:pn-ccsp-tr069-pa = "${@pv_for_branch(d, '2.3.0_stable2_20260617')}"
 PR:pn-ccsp-tr069-pa = "r0"
-
-PV:pn-ccsp-webui-bci-jst = "${@pv_for_branch(d, '1.3.0_stable2_20260220')}"
+PV:pn-ccsp-webui-bci-jst = "${@pv_for_branch(d, '2.2.0_stable2_20260724')}"
 PR:pn-ccsp-webui-bci-jst = "r0"
-
-PV:pn-ccsp-webui-bci-php = "${@pv_for_branch(d, '1.3.0_stable2_20260220')}"
+PV:pn-ccsp-webui-bci-php = "${@pv_for_branch(d, '2.2.0_stable2_20260724')}"
 PR:pn-ccsp-webui-bci-php = "r0"
-
-PV:pn-ccsp-webui-jst = "${@pv_for_branch(d, '2.0.0_stable2_20260220')}"
+PV:pn-ccsp-webui-jst = "${@pv_for_branch(d, '2.3.0_stable2_20260724')}"
 PR:pn-ccsp-webui-jst = "r0"
-
-PV:pn-ccsp-webui-php = "${@pv_for_branch(d, '2.0.0_stable2_20260220')}"
+PV:pn-ccsp-webui-php = "${@pv_for_branch(d, '2.3.0_stable2_20260724')}"
 PR:pn-ccsp-webui-php = "r0"
-
-PV:pn-ccsp-xconf = "${@pv_for_branch(d, '1.2.0_stable2_20260306')}"
+PV:pn-ccsp-xconf = "${@pv_for_branch(d, '2.0.0_stable2_20260724')}"
 PR:pn-ccsp-xconf = "r0"
-
-PV:pn-ccsp-xdns = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-ccsp-xdns = "${@pv_for_branch(d, '1.2.0_stable2_20260424')}"
 PR:pn-ccsp-xdns = "r0"
-
-PV:pn-core-net-lib = "${@pv_for_branch(d, '2.0.0_stable2_20260220')}"
+PV:pn-core-net-lib = "${@pv_for_branch(d, '2.2.0_stable2_20260617')}"
 PR:pn-core-net-lib = "r0"
-
-PV:pn-halinterface = "${@pv_for_branch(d, '1.1.0')}"
+PV:pn-halinterface = "${@pv_for_branch(d, '2.0.0')}"
 PR:pn-halinterface = "r0"
-
-PV:pn-hal-bridgeutil = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-bridgeutil = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-bridgeutil = "r0"
-
-PV:pn-hal-cm-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-cm-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-cm-generic = "r0"
-
-PV:pn-hal-dhcpv4c-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-dhcpv4c-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-dhcpv4c-generic = "r0"
-
-PV:pn-hal-epon-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-epon-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-epon-generic = "r0"
-
-PV:pn-hal-ethsw-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-ethsw-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-ethsw-generic = "r0"
-
-PV:pn-hal-firewall-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-firewall-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-firewall-generic = "r0"
-
-PV:pn-hal-moca-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-moca-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-moca-generic = "r0"
-
-PV:pn-hal-mso-mgmt-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-mso-mgmt-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-mso-mgmt-generic = "r0"
-
-PV:pn-hal-mta-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-mta-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-mta-generic = "r0"
-
-PV:pn-hal-platform-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-platform-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-platform-generic = "r0"
-
-PV:pn-hal-vlan-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-vlan-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-vlan-generic = "r0"
-
-PV:pn-hal-wifi-generic = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-hal-wifi-generic = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-hal-wifi-generic = "r0"
-
-PV:pn-harvester = "${@pv_for_branch(d, '1.1.1_stable2_20260311')}"
+PV:pn-harvester = "${@pv_for_branch(d, '2.1.0_stable2_20260605')}"
 PR:pn-harvester = "r0"
-
-PV:pn-json-hal-lib = "${@pv_for_branch(d, '2.0.0')}"
+PV:pn-json-hal-lib = "${@pv_for_branch(d, '2.1.0')}"
 PR:pn-json-hal-lib = "r0"
-
-PV:pn-jst = "${@pv_for_branch(d, '1.0.1')}"
+PV:pn-jst = "${@pv_for_branch(d, '2.0.0_stable2_20260617')}"
 PR:pn-jst = "r0"
-
 PV:pn-lanmanager = "${@pv_for_branch(d, '1.0.0')}"
 PR:pn-lanmanager = "r0"
-
-PV:pn-notify-comp = "${@pv_for_branch(d, '1.2.0')}"
+PV:pn-notify-comp = "${@pv_for_branch(d, '1.3.0_stable2_20260619')}"
 PR:pn-notify-comp = "r0"
-
-PV:pn-ovs-agent = "${@pv_for_branch(d, '1.1.0_stable2_20260213')}"
+PV:pn-ovs-agent = "${@pv_for_branch(d, '2.2.0_stable2_20260605')}"
 PR:pn-ovs-agent = "r0"
-
-PV:pn-powermgr = "${@pv_for_branch(d, '1.1.0_stable2_20260123')}"
+PV:pn-powermgr = "${@pv_for_branch(d, '2.1.0_stable2_20260605')}"
 PR:pn-powermgr = "r0"
-
-PV:pn-rdk-fwupgrade-manager = "${@pv_for_branch(d, '1.3.0')}"
+PV:pn-rdk-fwupgrade-manager = "${@pv_for_branch(d, '1.3.1_stable2_20260424')}"
 PR:pn-rdk-fwupgrade-manager = "r0"
-
-PV:pn-rdk-cellularmanager = "${@pv_for_branch(d, '2.0.0_stable2_20260109')}"
+PV:pn-rdk-cellularmanager = "${@pv_for_branch(d, '2.1.1_stable2_20260605')}"
 PR:pn-rdk-cellularmanager = "r0"
-
-PV:pn-start-parodus = "${@pv_for_branch(d, '2.0.0_stable2_20260109')}"
+PV:pn-start-parodus = "${@pv_for_branch(d, '2.0.0_stable2_20260709')}"
 PR:pn-start-parodus = "r0"
-
-PV:pn-test-and-diagnostic = "${@pv_for_branch(d, '2.0.0_stable2_20260306')}"
+PV:pn-test-and-diagnostic = "${@pv_for_branch(d, '2.3.0_stable2_20260724')}"
 PR:pn-test-and-diagnostic = "r0"
-
-PV:pn-utopia = "${@pv_for_branch(d, '2.0.0_stable2_20260306')}"
+PV:pn-utopia = "${@pv_for_branch(d, '2.3.0_stable2_20260724')}"
 PR:pn-utopia = "r0"
-
-PV:pn-sysint-broadband = "${@pv_for_branch(d, '1.0.0')}"
+PV:pn-sysint-broadband = "${@pv_for_branch(d, '1.2.0_stable2_20260709')}"
 PR:pn-sysint-broadband = "r0"
+PV:pn-ccsp-dhcp-mgr = "${@pv_for_branch(d, '1.3.0_stable2_20260724')}"
+PR:pn-ccsp-dhcp-mgr = "r0"

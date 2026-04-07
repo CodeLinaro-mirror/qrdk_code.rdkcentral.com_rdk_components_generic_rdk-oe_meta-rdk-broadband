@@ -57,6 +57,12 @@ CFLAGS:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'referencepltfm', '-D
 # Add flags to support DSLite Feature
 CFLAGS:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'dslite', '-DDSLITE_FEATURE_SUPPORT', '', d)}"
 
+# Add flags to support next generation DSLite Feature
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'dslite_v2', '-DFEATURE_DSLITE_V2', '', d)}"
+
+# Add flags to support Dual Stack mode for next generation DSLite Feature
+CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'dslite_v2_dualstack_support', '-DFEATURE_DSLITE_V2_DUALSTACK_SUPPORT', '', d)}"
+
 # Add flags to support the DDNS standard based on  Broadband forum - RDKBDEV-73
 CFLAGS:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'ddns_broadband', '-DDDNS_BROADBANDFORUM', '', d)}"
 
@@ -151,11 +157,20 @@ CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'AmenitiesNetworkSuppo
 # Adding flag for Lanmanager support
 CFLAGS:append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'pm_lan_mgr', ' -DLAN_MGR_SUPPORT ', '', d)}"
 
+# Add OneStack-specific compile flag and configure option when 'OneStack' is enabled in DISTRO_FEATURES
+CFLAGS:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneStack', ' -D_ONESTACK_PRODUCT_REQ_', '', d)}"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneStack', 'ONESTACK_PRODUCT_REQ=true', '', d)}"
+
 CFLAGS:append =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DNO_MOCA_FEATURE_SUPPORT ', '', d)}"
 CFLAGS:remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -DMOCA_DIAGONISTIC -DMOCA_HOME_ISOLATION -DCONFIG_SYSTEM_MOCA ', '', d)}"
 
 CFLAGS:append =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', ' -DNO_MTA_FEATURE_SUPPORT ', '', d)}"
 CFLAGS:remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', ' -DEROUTER_DHCP_OPTION_MTA ', '', d)}"
+
+#Adding flag for Voice Mta Support
+CFLAGS:append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'VoiceMtaSupportEnabled', ' -DVOICE_MTA_SUPPORT', '', d)}"
+# Adding flag for Thermal manager
+CFLAGS:append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_thermal_manager', '-DFEATURE_RDKB_THERMAL_MANAGER', '', d)}"
 
 FILES:${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""

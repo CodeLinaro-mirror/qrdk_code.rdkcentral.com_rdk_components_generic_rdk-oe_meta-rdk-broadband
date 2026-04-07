@@ -64,7 +64,7 @@ index aa7015af..921b3bab 100644
 +
 +$('#restore-default-settings-maintenancewindow').click(function () {
 +
-+    saveMaintenanceWindow('0','0','0','3','0','0');
++    saveMaintenanceWindow('2','0','0','4','0','0');
 +
 +});
 +

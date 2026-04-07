@@ -82,6 +82,7 @@ do_install:append () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/ccsp/gatewaymanager
     install -m 644 ${S}/config/GatewayManager.xml ${D}${exec_prefix}/ccsp/gatewaymanager/GatewayManager.xml
+    install -m 644 ${S}/config/gwmgr_sta_bridge.conf ${D}${exec_prefix}/ccsp/gatewaymanager/gwmgr_sta_bridge.conf
     install -m 775 ${S}/script/precheck.sh ${D}${exec_prefix}/bin/precheck.sh
     install -d ${D}${systemd_unitdir}/system
     install -D -m 0644 ${S}/config/GatewayManager.service ${D}${systemd_unitdir}/system/GatewayManager.service

@@ -8,9 +8,8 @@ DEPENDS:append = " hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta ha
 
 require ccsp_common.inc
 
-GIT_TAG = "v1.0.0"
-SRC_URI = "git://github.com/rdkcentral/dhcp-manager.git;branch=main;protocol=https;name=DhcpManager;tag=${GIT_TAG}"
-PV = "${GIT_TAG}+git${SRCPV}"
+SRC_URI = "${CMF_GITHUB_ROOT}/dhcp-manager;protocol=https;${BRANCH_ccsp-dhcp-mgr}"
+
 S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-shift-negative-value -Wno-attribute-warning"

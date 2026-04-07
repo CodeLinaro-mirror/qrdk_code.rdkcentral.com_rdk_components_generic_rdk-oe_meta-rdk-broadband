@@ -1,0 +1,264 @@
+diff --git a/source/hostap-2.11/src/ap/beacon.c b/source/hostap-2.11/src/ap/beacon.c
+index 8144fcc..297c39c 100644
+--- a/source/hostap-2.11/src/ap/beacon.c
++++ b/source/hostap-2.11/src/ap/beacon.c
+@@ -753,7 +753,7 @@ static void hostapd_free_probe_resp_params(struct probe_resp_params *params)
+ 
+ 
+ static size_t hostapd_probe_resp_elems_len(struct hostapd_data *hapd,
+-					   struct probe_resp_params *params)
++					   struct probe_resp_params *params, int mlmode)
+ {
+ 	size_t buflen = 0;
+ 
+@@ -789,7 +789,7 @@ static size_t hostapd_probe_resp_elems_len(struct hostapd_data *hapd,
+ 		if (hapd->iconf->punct_bitmap)
+ 			buflen += EHT_OPER_DISABLED_SUBCHAN_BITMAP_SIZE;
+ 
+-		if (!params->is_ml_sta_info && hapd->conf->mld_ap) {
++		if (mlmode == 0 && !params->is_ml_sta_info && hapd->conf->mld_ap) {
+ 			struct hostapd_data *ml_elem_ap =
+ 				params->mld_ap ? params->mld_ap : hapd;
+ 
+@@ -815,7 +815,7 @@ static size_t hostapd_probe_resp_elems_len(struct hostapd_data *hapd,
+ 
+ static u8 * hostapd_probe_resp_fill_elems(struct hostapd_data *hapd,
+ 					  struct probe_resp_params *params,
+-					  u8 *pos, size_t len)
++					  u8 *pos, size_t len, int mlmode)
+ {
+ 	u8 *csa_pos;
+ 	u8 *epos;
+@@ -968,7 +968,7 @@ static u8 * hostapd_probe_resp_fill_elems(struct hostapd_data *hapd,
+ 		struct hostapd_data *ml_elem_ap =
+ 			params->mld_ap ? params->mld_ap : hapd;
+ 
+-		if (ml_elem_ap->conf->mld_ap)
++		if (mlmode == 0 && ml_elem_ap->conf->mld_ap)
+ 			pos = hostapd_eid_eht_ml_beacon(
+ 				ml_elem_ap, params->mld_info,
+ 				pos, !!params->mld_ap);
+@@ -1065,7 +1065,7 @@ static void hostapd_gen_probe_resp(struct hostapd_data *hapd,
+ 
+ #define MAX_PROBERESP_LEN 768
+ 	buflen = MAX_PROBERESP_LEN;
+-	buflen += hostapd_probe_resp_elems_len(hapd, params);
++	buflen += hostapd_probe_resp_elems_len(hapd, params, 0);
+ 	params->resp = os_zalloc(buflen);
+ 	if (!params->resp) {
+ 		params->resp_len = 0;
+@@ -1097,7 +1097,7 @@ static void hostapd_gen_probe_resp(struct hostapd_data *hapd,
+ 
+ 	pos = hostapd_probe_resp_fill_elems(hapd, params,
+ 					    params->resp->u.probe_resp.variable,
+-					    buflen);
++					    buflen, 0);
+ 
+ 	params->resp_len = pos - (u8 *) params->resp;
+ }
+@@ -1121,6 +1121,9 @@ static void hostapd_fill_probe_resp_ml_params(struct hostapd_data *hapd,
+ 		   "MLD: Got ML probe request with AP MLD ID %d for links %04x",
+ 		   mld_id, links);
+ 
++#ifdef CONFIG_DRIVER_BRCM
++	params->mld_info->rx_link_id = (u8)-1;
++#endif /* CONFIG_DRIVER_BRCM */
+ 	for_each_mld_link(link, hapd) {
+ 		struct mld_link_info *link_info;
+ 		size_t buflen;
+@@ -1154,7 +1157,7 @@ static void hostapd_fill_probe_resp_ml_params(struct hostapd_data *hapd,
+ 		sta_info_params.mld_info = NULL;
+ 
+ 		buflen = MAX_PROBERESP_LEN;
+-		buflen += hostapd_probe_resp_elems_len(link, &sta_info_params);
++		buflen += hostapd_probe_resp_elems_len(link, &sta_info_params, 1);
+ 
+ 		if (buflen > EHT_ML_MAX_STA_PROF_LEN) {
+ 			wpa_printf(MSG_DEBUG,
+@@ -1176,7 +1179,7 @@ static void hostapd_fill_probe_resp_ml_params(struct hostapd_data *hapd,
+ 
+ 		epos = hostapd_probe_resp_fill_elems(
+ 			link, &sta_info_params, epos,
+-			EHT_ML_MAX_STA_PROF_LEN - 2);
++			EHT_ML_MAX_STA_PROF_LEN - 2, 1);
+ 		link_info->resp_sta_profile_len = epos - buf;
+ 		os_free(link_info->resp_sta_profile);
+ 		link_info->resp_sta_profile = os_memdup(
+@@ -1746,6 +1749,9 @@ void handle_probe_req(struct hostapd_data *hapd,
+ 	if (hapd->conf->mld_ap && elems.probe_req_mle &&
+ 	    parse_ml_probe_req((struct ieee80211_eht_ml *) elems.probe_req_mle,
+ 			       elems.probe_req_mle_len, &mld_id, &links)) {
++#ifdef CONFIG_DRIVER_BRCM	//Debug only.
++		wpa_hexdump(MSG_MSGDUMP, "MGMT_FRAME", mgmt, len);
++#endif /* CONFIG_DRIVER_BRCM */
+ 		hostapd_fill_probe_resp_ml_params(hapd, &params, mgmt,
+ 						  mld_id, links);
+ 	}
+diff --git a/source/hostap-2.11/src/ap/ieee802_11.c b/source/hostap-2.11/src/ap/ieee802_11.c
+index b01b0c3..3dcc332 100644
+--- a/source/hostap-2.11/src/ap/ieee802_11.c
++++ b/source/hostap-2.11/src/ap/ieee802_11.c
+@@ -4723,11 +4723,36 @@ int hostapd_process_assoc_ml_info(struct hostapd_data *hapd,
+ 	if (!hostapd_is_mld_ap(hapd))
+ 		return 0;
+ 
++#ifdef CONFIG_DRIVER_BRCM
++    /*
++     * From hostapd perspective the RX link will always be main link (e.g. 0).
++     * But BCM driver may have obtained the Assoc Req from the affiliated link (e.g. 1 or 2)
++     * and will send the Assoc Resp also on the affiliated link
++     * So, hapd->mld_link_id and sta->mld_assoc_link_id will always be 0, but the sta->rx_link_id may be 0, 1 or 2
++     * In order to have proper Assoc Resp Multi-Link IE Per-Sta profile filled, we have to explicitly
++     * build Per-Sta profile for the main link in case the Assoc Resp has actually been obtained on affiliated link
++    */
++    struct mld_link_info *rx_link_fake = NULL;
++#endif
++
+ 	for (i = 0; i < MAX_NUM_MLD_LINKS; i++) {
+ 		struct hostapd_data *bss = NULL;
+ 		struct mld_link_info *link = &sta->mld_info.links[i];
+ 		bool link_bss_found = false;
+ 
++#ifdef CONFIG_DRIVER_BRCM
++        /*
++         * Check if the Assoc Resp has been obtained in affiliated link_addr
++         * and store the fake mld_assoc_link_id to construct Per-Sta profile later
++         */
++        if (link->valid &&
++                i == sta->mld_assoc_link_id &&
++                sta->rx_link_id != sta->mld_assoc_link_id &&
++                tx_link_status == WLAN_STATUS_SUCCESS) {
++            wpa_printf(MSG_ERROR, "### %s: rx_link_id is not the mld_assoc_link_id", __func__);
++            rx_link_fake = link;
++        }
++#endif
+ 		if (!link->valid || i == sta->mld_assoc_link_id)
+ 			continue;
+ 
+@@ -4761,6 +4786,13 @@ int hostapd_process_assoc_ml_info(struct hostapd_data *hapd,
+ 				return -1;
+ 		}
+ 	}
++#ifdef CONFIG_DRIVER_BRCM
++    if (rx_link_fake && !offload) {
++        rx_link_fake->status = WLAN_STATUS_SUCCESS;
++        wpa_printf(MSG_ERROR, "### %s: build assoc resp for " MACSTR, __func__, MAC2STR(rx_link_fake->peer_addr));
++        ieee80211_ml_build_assoc_resp(hapd, rx_link_fake);
++    }
++#endif
+ #endif /* CONFIG_IEEE80211BE */
+ 
+ 	return 0;
+@@ -5511,6 +5543,7 @@ static void handle_assoc(struct hostapd_data *hapd,
+ 				rx_link_id, MAC2STR(link_addr));
+ 			if (rx_link_id < MAX_NUM_LINKS) {
+ 				sta->rx_link_id = rx_link_id;
++				sta->mld_info.rx_link_id = rx_link_id;
+ 				os_memcpy(sta->link_addr, link_addr, ETH_ALEN);
+ 				os_memcpy(sta->mld_info.links[rx_link_id].peer_addr, link_addr, ETH_ALEN);
+ 				sta->mld_info.links[rx_link_id].valid = 1;
+@@ -5518,8 +5551,12 @@ static void handle_assoc(struct hostapd_data *hapd,
+ 					rx_link_id, MAC2STR(sta->mld_info.links[rx_link_id].peer_addr), sta->mld_info.links[rx_link_id].valid);
+ 			}
+ 			for (i = 0; i < MAX_NUM_LINKS; i++) {
+-				if ((link_map & (1 << i)) == 0 || i == rx_link_id)
++				if (i == rx_link_id)
++					continue;
++				if ((link_map & (1 << i)) == 0) {
++					sta->mld_info.links[i].valid = 0;
+ 					continue;
++				}
+ 				if (elems.vendor_mlo_len >= (LINK_ADDR_OFFSET + (i * ETH_ALEN))) {
+ 					os_memcpy(sta->mld_info.links[i].peer_addr, &elems.vendor_mlo[LINK_ADDR_OFFSET + i * ETH_ALEN], ETH_ALEN);
+ 					sta->mld_info.links[i].valid = 1;
+@@ -6470,6 +6507,9 @@ int ieee802_11_mgmt(struct hostapd_data *hapd, const u8 *buf, size_t len,
+ 	if (hapd->conf->notify_mgmt_frames)
+ 		notify_mgmt_frame(hapd, buf, len);
+ 
++#ifdef CONFIG_DRIVER_BRCM	//Debug only.
++	wpa_hexdump(MSG_MSGDUMP, "MGMT_FRAME", buf, len);
++#endif /* CONFIG_DRIVER_BRCM */
+ 	switch (stype) {
+ 	case WLAN_FC_STYPE_AUTH:
+ 		wpa_printf(MSG_DEBUG, "mgmt::auth");
+diff --git a/source/hostap-2.11/src/ap/ieee802_11_eht.c b/source/hostap-2.11/src/ap/ieee802_11_eht.c
+index a6c2054..3cbb91b 100644
+--- a/source/hostap-2.11/src/ap/ieee802_11_eht.c
++++ b/source/hostap-2.11/src/ap/ieee802_11_eht.c
+@@ -452,6 +452,10 @@ static u8 * hostapd_eid_eht_basic_ml_common(struct hostapd_data *hapd,
+ 	u8 common_info_len;
+ 	u16 mld_cap;
+ 	u8 max_simul_links, active_links;
++#ifdef CONFIG_DRIVER_BRCM
++	/* For ProbeRsp, mld_info->rx_link_id is -1 */
++	u8 own_mld_id = (!mld_info || mld_info->rx_link_id == (u8)-1) ? hapd->mld_link_id : mld_info->rx_link_id;
++#endif /* CONFIG_DRIVER_BRCM */
+ 
+ 	/*
+ 	 * As the Multi-Link element can exceed the size of 255 bytes need to
+@@ -492,7 +496,7 @@ static u8 * hostapd_eid_eht_basic_ml_common(struct hostapd_data *hapd,
+ 	wpabuf_put_data(buf, hapd->mld->mld_addr, ETH_ALEN);
+ 
+ 	/* Own Link ID */
+-	wpabuf_put_u8(buf, hapd->mld_link_id);
++	wpabuf_put_u8(buf, own_mld_id);
+ 
+ 	/* Currently hard code the BSS Parameters Change Count to 0x1 */
+ 	wpabuf_put_u8(buf, 0x1);
+@@ -532,6 +536,10 @@ static u8 * hostapd_eid_eht_basic_ml_common(struct hostapd_data *hapd,
+ 	if (!mld_info)
+ 		goto out;
+ 
++#ifdef CONFIG_DRIVER_BRCM
++	wpa_printf(MSG_ERROR, "### %s: hapd->mld_link_id=%d mld_info->rx_link_id=%d own_mld_id=%d ###", __FUNCTION__,
++		hapd->mld_link_id, mld_info->rx_link_id, own_mld_id);
++#endif /* CONFIG_DRIVER_BRCM */
+ 	/* Add link info for the other links */
+ 	for (link_id = 0; link_id < MAX_NUM_MLD_LINKS; link_id++) {
+ 		struct mld_link_info *link = &mld_info->links[link_id];
+@@ -547,8 +555,17 @@ static u8 * hostapd_eid_eht_basic_ml_common(struct hostapd_data *hapd,
+ 			link->resp_sta_profile_len;
+ 
+ 		/* Skip the local one */
++#ifdef CONFIG_DRIVER_BRCM
++		if (!link->valid)
++			continue;
++		if (own_mld_id == link_id) {
++			wpa_printf(MSG_ERROR, "### %s: skip Per-STA link%d ###", __FUNCTION__, link_id);
++			continue;
++		}
++#else
+ 		if (link_id == hapd->mld_link_id || !link->valid)
+ 			continue;
++#endif /* CONFIG_DRIVER_BRCM */
+ 
+ 		link_bss = hostapd_mld_get_link_bss(hapd, link_id);
+ 		if (!link_bss) {
+@@ -556,6 +573,13 @@ static u8 * hostapd_eid_eht_basic_ml_common(struct hostapd_data *hapd,
+ 				   "MLD: Couldn't find link BSS - skip it");
+ 			continue;
+ 		}
++#ifdef CONFIG_DRIVER_BRCM
++		if (mld_info->rx_link_id == (u8)-1)
++			wpa_printf(MSG_ERROR, "### %s: add Per-STA link%d in ProbeRsp ###", __FUNCTION__, link_id);
++		else
++			wpa_printf(MSG_ERROR, "### %s: add Per-STA link%d in AssocRsp for "MACSTR" ###", __FUNCTION__,
++				link_id, MAC2STR(link->peer_addr));
++#endif /* CONFIG_DRIVER_BRCM */
+ 
+ 		/* Per-STA Profile subelement */
+ 		wpabuf_put_u8(buf, EHT_ML_SUB_ELEM_PER_STA_PROFILE);
+diff --git a/source/hostap-2.11/src/ap/sta_info.h b/source/hostap-2.11/src/ap/sta_info.h
+index c1b1c61..c48c1be 100644
+--- a/source/hostap-2.11/src/ap/sta_info.h
++++ b/source/hostap-2.11/src/ap/sta_info.h
+@@ -76,6 +76,9 @@ struct pending_eapol_rx {
+ #define EHT_ML_MAX_STA_PROF_LEN 1024
+ struct mld_info {
+ 	bool mld_sta;
++#ifdef CONFIG_DRIVER_BRCM
++	u8 rx_link_id;
++#endif /* CONFIG_DRIVER_BRCM */
+ 
+ 	struct ml_common_info {
+ 		u8 mld_addr[ETH_ALEN];

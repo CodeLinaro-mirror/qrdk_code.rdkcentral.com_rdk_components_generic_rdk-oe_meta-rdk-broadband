@@ -275,7 +275,7 @@
     <appender name="PPPMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="PPPMANAGERLog.txt" layout="comcast_dated" rollingpolicy="PPPMANAGER_rollingpolicy"/>
     <appender name="TELCOVOICEMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="TELCOVOICEMANAGERLog.txt" layout="comcast_dated" rollingpolicy="TELCOVOICEMANAGER_rollingpolicy"/>
     <appender name="RDKNFCMANAGERrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="NFCManagerLog.txt" layout="comcast_dated" rollingpolicy="NFCMANAGER_rollingpolicy"/>
-    <appender name="RDMAGENTrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="rdm-status.log" layout="comcast_dated" rollingpolicy="RDMAGENT_rollingpolicy"/>
+    <appender name="RDMAGENTrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="rdm_status.log" layout="comcast_dated" rollingpolicy="RDMAGENT_rollingpolicy"/>
     <appender name="IGNITErollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="ignite.log" layout="comcast_dated" rollingpolicy="IGNITE_rollingpolicy"/>
     <appender name="STAGErollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="stage_agent.log" layout="comcast_dated" rollingpolicy="STAGE_rollingpolicy"/>
     <appender name="stdout" type="stream_env" layout="comcast_dated"/>
