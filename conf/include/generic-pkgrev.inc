@@ -52,7 +52,7 @@ PR_pn-ccsp-misc = "r0"
 PV_pn-ccsp-moca = "${@pv_for_branch(d, '2.0.0_stable2_20260306')}"
 PR_pn-ccsp-moca = "r0"
 
-PV_pn-ccsp-mta-agent = "${@pv_for_branch(d, '1.4.0_stable2_20260109')}"
+PV_pn-ccsp-mta-agent = "${@pv_for_branch(d, '1.4.0_stable2_20260403')}"
 PR_pn-ccsp-mta-agent = "r0"
 
 PV_pn-ccsp-p-and-m = "${@pv_for_branch(d, '2.0.0_stable2_20260403')}"
