@@ -163,6 +163,10 @@ CFLAGS_remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', ' -D
 
 #Adding flag for Voice Mta Support
 CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'VoiceMtaSupportEnabled', ' -DVOICE_MTA_SUPPORT', '', d)}"
+
+# Adding flag for Thermal manager
+CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_thermal_manager', '-DFEATURE_RDKB_THERMAL_MANAGER', '', d)}"
+
 FILES_${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"
