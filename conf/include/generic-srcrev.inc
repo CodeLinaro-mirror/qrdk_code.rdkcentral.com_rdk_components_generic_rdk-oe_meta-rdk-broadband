@@ -51,6 +51,7 @@ SRCREV_test_and_diagnostic = "f8a712f4f6686d1976486a4d7969e1187b057224"
 SRCREV_utopia = "e28057a9eaab323fd8ca8e68b12cb4f585756fb7"
 SRCREV_sysint-broadband = "258bb5160036f99c02d7e9cf8cc040ccef455c99"
 SRCREV_ccsp-dhcp-mgr = "c58b30eacd778b5b9a688072ffb96d9d685cecd4"
+SRCREV_cpuprocanalyzer = "718897fdd0f89f1f50271e2ca6226507739ca461"
 
 def srcrev_for_branch(d, default_rev):
     branch = d.getVar('PROJECT_BRANCH', True) or ''
@@ -119,3 +120,4 @@ SRCREV_pn-test-and-diagnostic = "${@srcrev_for_branch(d, '${SRCREV_test_and_diag
 SRCREV_pn-utopia = "${@srcrev_for_branch(d, '${SRCREV_utopia}')}"
 SRCREV_pn-ccsp-dhcp-mgr = "${@srcrev_for_branch(d, '${SRCREV_ccsp-dhcp-mgr}')}"
 SRCREV_sysintbroadband_pn-sysint-broadband = "${@srcrev_for_branch(d, '${SRCREV_sysint-broadband}')}"
+SRCREV_pn-cpuprocanalyzer = "${@srcrev_for_branch(d, '${SRCREV_cpuprocanalyzer}')}"
