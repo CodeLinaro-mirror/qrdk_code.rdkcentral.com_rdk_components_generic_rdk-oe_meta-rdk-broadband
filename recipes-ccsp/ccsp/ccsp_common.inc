@@ -161,6 +161,8 @@ CFLAGS_remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', ' -
 CFLAGS_append =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', ' -DNO_MTA_FEATURE_SUPPORT ', '', d)}"
 CFLAGS_remove =  "${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', ' -DEROUTER_DHCP_OPTION_MTA ', '', d)}"
 
+#Adding flag for Voice Mta Support
+CFLAGS_append  += " ${@bb.utils.contains('DISTRO_FEATURES', 'VoiceMtaSupportEnabled', ' -DVOICE_MTA_SUPPORT', '', d)}"
 FILES_${PN} += "${libdir}/*.so"
 FILES_SOLIBSDEV = ""
 INSANE_SKIP_${PN} += "dev-so"
