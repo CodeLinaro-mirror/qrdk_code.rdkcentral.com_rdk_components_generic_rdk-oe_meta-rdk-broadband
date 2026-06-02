@@ -3,6 +3,7 @@
     start 1
     nodateext
     copytruncate
+    missingok
     notifempty
     nocompress
 }

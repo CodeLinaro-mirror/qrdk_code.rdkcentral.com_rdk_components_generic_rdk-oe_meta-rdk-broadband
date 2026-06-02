@@ -4,5 +4,6 @@
     nodateext
     copytruncate
     missingok
+    notifempty
     nocompress
 }
