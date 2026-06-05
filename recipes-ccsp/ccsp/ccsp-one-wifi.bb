@@ -134,14 +134,6 @@ do_install_append () {
     install -m 755 ${S}/scripts/aphealth.sh -t ${D}/usr/ccsp/wifi
     install -m 755 ${S}/scripts/aphealth_log.sh -t ${D}/usr/ccsp/wifi
     install -m 755 ${S}/scripts/wifivAPPercentage.sh -t ${D}/usr/ccsp/wifi
-    # Only install services if meshwifi has been defined.
-    if ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', 'true', 'false', d)}; then
-        install -m 755 ${S}/scripts/mesh_aclmac.sh -t ${D}/usr/ccsp/wifi
-        install -m 755 ${S}/scripts/mesh_setip.sh -t ${D}/usr/ccsp/wifi
-        install -m 755 ${S}/scripts/meshapcfg.sh -t ${D}/usr/ccsp/wifi
-        install -m 755 ${S}/scripts/handle_mesh -t ${D}/usr/ccsp/wifi
-        install -m 755 ${S}/scripts/mesh_status.sh -t ${D}/usr/ccsp/wifi
-    fi
 
     if ${@bb.utils.contains('DISTRO_FEATURES', 'Memwrap_Tool', 'true', 'false', d)}; then
 	install -m 755 ${S}/scripts/Heapwalkcheckrss.sh -t ${D}/usr/ccsp/wifi
@@ -203,11 +195,6 @@ FILES_${PN} = "\
     ${prefix}/ccsp/wifi/aphealth_log.sh \
     ${prefix}/ccsp/wifi/apshealth.sh \
     ${prefix}/ccsp/wifi/wifivAPPercentage.sh \
-    ${prefix}/ccsp/wifi/mesh_aclmac.sh \
-    ${prefix}/ccsp/wifi/mesh_setip.sh \
-    ${prefix}/ccsp/wifi/meshapcfg.sh \
-    ${prefix}/ccsp/wifi/handle_mesh \
-    ${prefix}/ccsp/wifi/mesh_status.sh \
     ${prefix}/ccsp/wifi/CcspWifi.cfg \
     ${prefix}/ccsp/wifi/CcspDmLib.cfg \
     ${prefix}/ccsp/wifi/WifiSingleClient.avsc \
