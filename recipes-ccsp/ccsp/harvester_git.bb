@@ -58,8 +58,10 @@ CFLAGS:append = "\
 
 inherit ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)}
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 LDFLAGS:append = "${@bb.utils.contains_any("DISTRO_FEATURES", "OneWifi", " -lrbus -lrbuscore -lrtMessage -lcjson", " ", d)}"
 CFLAGS:append = "${@bb.utils.contains_any("DISTRO_FEATURES", "OneWifi", " -I${STAGING_INCDIR}/rbus -I${STAGING_INCDIR}/rtmessage -I${STAGING_INCDIR}/cjson ", " ", d)}"

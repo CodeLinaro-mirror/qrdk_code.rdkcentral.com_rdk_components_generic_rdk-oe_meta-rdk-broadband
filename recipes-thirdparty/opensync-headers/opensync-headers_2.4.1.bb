@@ -12,7 +12,7 @@ OS_CORE_GIT_4.4.0="${RDK_COMPONENTS_ROOT_GIT}/generic/opensync-core/generic;prot
 SRC_URI = " ${@bb.utils.contains('DISTRO_FEATURES','Opensync_4.4.0', '${OS_CORE_GIT_4.4.0}', '${OS_CORE_GIT_2.4.1}', d)}"
 
 PV ?= "${RDK_RELEASE}+git${SRCPV}"
-S = "${WORKDIR}/git/os-headers"
+S = "${UNPACKDIR}/${PN}-${PV}/os-headers"
 
 SRCREV_FORMAT = "opensync-headers"
 SRCREV:pn-opensync-headers = "${AUTOREV}"

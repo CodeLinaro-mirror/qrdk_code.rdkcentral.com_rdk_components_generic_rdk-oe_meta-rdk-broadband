@@ -1,4 +1,5 @@
 DEPENDS:append = " libunpriv "
+FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 LDFLAGS:append = " \
                  -lprivilege \
                  "
@@ -17,6 +18,7 @@ CFLAGS:prepend += "-I${PKG_CONFIG_SYSROOT_DIR}/usr/include/libnl3 "
 CFLAGS:prepend += "-I${PKG_CONFIG_SYSROOT_DIR}/usr/include/ "
 CFLAGS:append = " \
     -I${STAGING_INCDIR}/trower-base64 \
+    -I${STAGING_INCDIR}/safeclib \
     "
 
 DEPENDS:append += " libunpriv"
@@ -40,7 +42,7 @@ SRCREV_FORMAT = "lan_web"
 
 SRC_URI:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'sta_manager', '${RDKB_CCSP_ROOT_GIT}/WiFiStaManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiStaManager;name=WiFiStaManager', " ", d)}"
 SRCREV_WiFiStaManager = "${AUTOREV}"
-
+SRC_URI:append:wrynose = " file://onewifi_wrynose_issues.patch"
 S = "${UNPACKDIR}/${PN}-${PV}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
@@ -48,12 +50,15 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 inherit autotools pkgconfig systemd ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 LDFLAGS:remove = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5 ', '', d)}"
 LDFLAGS:append_dunfell = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS:append_kirkstone = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 LDFLAGS:append_wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 EXTRA_OECONF:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'cac', 'ONEWIFI_CAC_APP_SUPPORT=true', 'ONEWIFI_CAC_APP_SUPPORT=false', d)}"
 EXTRA_OECONF:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'dbus_support', 'ONEWIFI_DBUS_SUPPORT=true', 'ONEWIFI_DBUS_SUPPORT=false', d)}"
@@ -70,6 +75,7 @@ CFLAGS:append = " \
 "
 
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
+CFLAGS:append:wrynose = " -Wno-incompatible-pointer-types -Wno-int-conversion -Wno-return-mismatch"
 CFLAGS:append = " -DWIFI_CAPTIVE_PORTAL"
 CFLAGS:append = " -DONEWIFI_MULTIAP_APP_SUPPORT"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIFI_HAL_VERSION_3', '', d)}"
@@ -93,6 +99,7 @@ EXTRA_OECONF:append = " ONEWIFI_MULTIAP_APP_SUPPORT=true"
 #target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
 #target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
 CFLAGS:append = " `pkg-config --exists libhostap && pkg-config --cflags libhostap`"
+CFLAGS:remove:wrynose = " `pkg-config --exists libhostap && pkg-config --cflags libhostap`"
 
 LDFLAGS:append = " \
     -ltelemetry_msgsender \
@@ -185,7 +192,6 @@ do_install:append_puma7 () {
 do_install:append_bcm3390() {
     rm ${D}/usr/ccsp/wifi/br0_ip.sh
 }
-
 FILES:${PN} = "\
     ${bindir}/OneWifi \
     ${bindir}/wifi_ctrl \

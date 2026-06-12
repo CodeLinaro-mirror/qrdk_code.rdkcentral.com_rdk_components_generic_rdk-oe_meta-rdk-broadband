@@ -23,7 +23,7 @@ SRC_URI:append = " \
 SRCREV_xb3 = "${AUTOREV}"
 SRCREV_FORMAT = "default_xb3"
 
-S = "${WORKDIR}/git/source/CcspPhpExtension"
+S = "${UNPACKDIR}/git/source/CcspPhpExtension"
 
 inherit autotools systemd
 

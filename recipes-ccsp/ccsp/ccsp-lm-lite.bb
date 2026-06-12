@@ -6,6 +6,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 
 DEPENDS = "ccsp-common-library utopia avro-c msgpack-c trower-base64 util-linux curl libxml2 wrp-c nanomsg libparodus telemetry libsyswrapper libunpriv hal-platform rbus"
 DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = "${@bb.utils.contains_any("DISTRO_FEATURES", "WanFailOverSupportEnable", " rbus ", " ", d)}"
 require ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/lan-manager-lite;protocol=https;${BRANCH_ccsp_lm_lite}"
@@ -49,13 +51,16 @@ CFLAGS:append = "${@bb.utils.contains_any("DISTRO_FEATURES", "mlt", " -DMLT_ENAB
 LDFLAGS:append = "${@bb.utils.contains_any("DISTRO_FEATURES", "mlt", " -lsysResource ", " ", d)}"
 
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 CFLAGS:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'wan-traffic-count', ' -DWAN_TRAFFIC_COUNT_SUPPORT', '', d)}"
 
 CFLAGS:append = " ${@bb.utils.contains("DISTRO_FEATURES", "WanFailOverSupportEnable", " -DWAN_FAILOVER_SUPPORTED ", " ", d)} "
+
 
 do_compile:prepend () {
 	if ${@bb.utils.contains_any('DISTRO_FEATURES', 'vendor_class_id_feature', 'true', 'false', d)}; then

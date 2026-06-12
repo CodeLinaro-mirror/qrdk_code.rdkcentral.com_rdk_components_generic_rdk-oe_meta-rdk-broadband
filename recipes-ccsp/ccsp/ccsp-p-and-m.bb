@@ -15,6 +15,7 @@ DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'enable_rdkschedu
 DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'fwupgrade_manager', ' hal-fwupgrade', '',d)}"
 
+RDEPENDS:${PN}:append = " cjson trower-base64 msgpack-c nanomsg wrp-c libparodus remotedebugger"
 
 RDEPENDS:${PN}-ccsp:append = " bash"
 RDEPENDS:${PN}-ccsp:remove_morty = "bash"
@@ -32,8 +33,10 @@ S = "${UNPACKDIR}/${PN}-${PV}"
 inherit autotools ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 LDFLAGS:remove = "${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
 LDFLAGS:append_dunfell = "${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS:append_kirkstone = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"

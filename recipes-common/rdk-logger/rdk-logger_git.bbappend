@@ -4,12 +4,12 @@ SRC_URI += " file://rdkb_log4crc "
 
 do_configure:append () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'true', 'false', d)}; then
-        sed -i '/mta/Id' ${WORKDIR}/rdkb_log4crc
+        sed -i '/mta/Id' ${UNPACKDIR}/rdkb_log4crc
     fi   
     if ${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support', 'true', 'false', d)}; then
-        sed -i '/moca/Id' ${WORKDIR}/rdkb_log4crc
+        sed -i '/moca/Id' ${UNPACKDIR}/rdkb_log4crc
     fi   
-    install -m 644 ${WORKDIR}/rdkb_log4crc ${S}/log4crc
+    install -m 644 ${UNPACKDIR}/rdkb_log4crc ${S}/log4crc
 }
 
 do_install:append () {

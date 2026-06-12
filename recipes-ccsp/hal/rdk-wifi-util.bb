@@ -16,7 +16,7 @@ SRCREV_rdk-wifi-util = "${AUTOREV}"
 SRCREV_FORMAT = "rdk-wifi-util"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
-S = "${WORKDIR}/git/util"
+S = "${UNPACKDIR}/${PN}-${PV}/util"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 

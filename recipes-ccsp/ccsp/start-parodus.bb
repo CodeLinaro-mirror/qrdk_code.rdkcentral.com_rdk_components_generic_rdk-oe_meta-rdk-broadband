@@ -26,8 +26,10 @@ RDEPENDS:${PN} += " cjson hal-platform hal-cm utopia "
 LDFLAGS:append = " -lbreakpadwrapper -lhal_platform -lcm_mgnt -lsyscfg -lcjson -lsysevent -lutapi -lutctx -lm "
 
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 CFLAGS:append = " -I${STAGING_INCDIR} -I${STAGING_INCDIR}/ccsp -I${STAGING_INCDIR}/syscfg -I${STAGING_INCDIR}/cjson -DFEATURE_DNS_QUERY"

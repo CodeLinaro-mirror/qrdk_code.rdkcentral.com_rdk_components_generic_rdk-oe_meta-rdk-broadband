@@ -34,7 +34,7 @@ CFLAGS:append = " \
     -I${STAGING_INCDIR}/libxml2 \
     "
 
-LDFLAGS += "-ldbus-1 -ltelemetry_msgsender -lprivilege -lutapi -lutctx -lsyscfg -lcjson -lmsgpackc"
+LDFLAGS += "-ldbus-1 -ltelemetry_msgsender -lprivilege -lutapi -lutctx -lsyscfg -lcjson ${@bb.utils.contains('DISTRO_FEATURES', 'wrynose', '-lmsgpack-c', '-lmsgpackc', d)}"
 
 do_install:append () {
     # Config files and scripts

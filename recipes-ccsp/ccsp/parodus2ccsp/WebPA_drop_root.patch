@@ -2,6 +2,7 @@ From 63d8a9538cc2e781524186eb95fd5a536c8d7c0b Mon Sep 17 00:00:00 2001
 From: ldonth501 <LasyaPrakarsha_DonthiVenkata@comcast.com>
 Date: Wed, 5 Mar 2025 11:33:52 +0000
 Subject: [PATCH] Remove rfc controlled code to switch back to root
+Upstream-Status: Pending
 
 ---
  source/app/main.c      | 7 +++++++

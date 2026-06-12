@@ -28,7 +28,7 @@ RDEPENDS:${PN} += " ${PN}-dl"
 do_install:append() {
     if [ "${ENABLE_RDM_VERSIONING}" = "true" ]; then
         install -d ${D}${sysconfdir}/apps
-        install -m 644 ${WORKDIR}/package.json ${D}${sysconfdir}/apps/${PKG_BUNDLE_NAME}_package.json
+        install -m 644 ${UNPACKDIR}/package.json ${D}${sysconfdir}/apps/${PKG_BUNDLE_NAME}_package.json
     fi
 }
 

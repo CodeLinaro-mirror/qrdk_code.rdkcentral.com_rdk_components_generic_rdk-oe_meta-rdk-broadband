@@ -12,8 +12,8 @@ DEPENDS += "rdkb-halif-mso"
 SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=msomgmthal"
 SRCREV_FORMAT = "msomgmthal"
 
-S = "${UNPACKDIR}/git/source/mso_mgmt"
+S = "${UNPACKDIR}/${PN}-${PV}/source/mso_mgmt"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 
-inherit autotools coverity
+inherit coverity
