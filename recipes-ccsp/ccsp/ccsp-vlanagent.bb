@@ -20,11 +20,11 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 S = "${WORKDIR}/git"
 B = "${WORKDIR}/build"
 
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 inherit autotools pkgconfig
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -41,12 +41,12 @@ do_install () {
     install -m 644 ${S}/config/VLANAgent.xml ${D}/usr/ccsp/vlanagent/
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${bindir}/vlanagent \
    ${prefix}/ccsp/vlanagent/VLANAgent.xml \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/vlanagent/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

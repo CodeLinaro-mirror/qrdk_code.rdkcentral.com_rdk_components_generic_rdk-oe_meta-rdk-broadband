@@ -1,4 +1,4 @@
-do_install_append() {
+do_install:append() {
 
         install -d ${D}${systemd_unitdir}/system
         install -m 0644 ${S}/coredump-upload.service ${D}${systemd_unitdir}/system/
@@ -14,7 +14,7 @@ do_install_append() {
         
 }
 
-SYSTEMD_SERVICE_${PN}_append = " coredump-upload.service \
+SYSTEMD_SERVICE:${PN}:append = " coredump-upload.service \
                                            coredump-upload.path \
                                            minidump-on-bootup-upload.service \
                                            minidump-on-bootup-upload.timer \

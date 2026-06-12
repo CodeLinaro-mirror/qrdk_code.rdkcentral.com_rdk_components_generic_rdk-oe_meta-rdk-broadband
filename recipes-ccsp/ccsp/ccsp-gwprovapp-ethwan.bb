@@ -5,8 +5,8 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 DEPENDS = "ccsp-common-library hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi ruli utopia"
-DEPENDS_append = " hal-gwprovappabs"
-DEPENDS_remove_morty = " hal-gwprovappabs"
+DEPENDS:append = " hal-gwprovappabs"
+DEPENDS:remove_morty = " hal-gwprovappabs"
 
 require ccsp_common.inc
 
@@ -14,16 +14,16 @@ SRC_URI = "${CMF_GITHUB_ROOT}/gw-provisioning-ethernet-wan;protocol=https;${BRAN
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION', '', d)}"
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-pointer-to-int-cast "
 
-LDFLAGS_append = " -lgwprovappabs"
-LDFLAGS_remove_morty = " -lgwprovappabs"
+LDFLAGS:append = " -lgwprovappabs"
+LDFLAGS:remove_morty = " -lgwprovappabs"
 
 inherit autotools
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/${STAGING_INCDIR}
     install -d ${D}/usr/ccsp/
@@ -32,19 +32,19 @@ do_install_append () {
 #    install -m 0644 ${S}/service/gwprovethwan.service ${D}${systemd_unitdir}/system
 }
 
-#SYSTEMD_SERVICE_${PN} = "gwprovethwan.service"
+#SYSTEMD_SERVICE:${PN} = "gwprovethwan.service"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${STAGING_INCDIR} \
     /usr/ccsp \
     /usr/ccsp/gw_prov_ethwan \
 "
 
-#FILES_${PN} += " \
+#FILES:${PN} += " \
 #     ${systemd_unitdir}/system/gwprovethwan.service \
 #"
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

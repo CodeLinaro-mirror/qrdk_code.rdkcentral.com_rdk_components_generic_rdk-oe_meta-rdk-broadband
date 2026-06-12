@@ -11,9 +11,9 @@ SRC_URI = "\
     ${CMF_GIT_ROOT}/rdkb/devices/rdkbemu/rdkbemu_xb3;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=xb3;name=xb3 \
     "
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/ccsp-webui-bci:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/ccsp-webui-bci:"
 
-SRC_URI_append = " \
+SRC_URI:append = " \
                  file://ajax_maintenance_window_conf.jst \
                  file://bci_maintenance_window_jst.patch;apply=no \
                  "
@@ -31,7 +31,7 @@ LXC_NAME = "webui"
 LXC_LOG_PATH = "/rdklogs/logs"
 LXC_LOG_LEVEL = "8"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
@@ -43,14 +43,14 @@ LDFLAGS += " \
      "
 
 EXTRA_OECONF = "CCSP_COMMON_LIB=${STAGING_LIBDIR}"
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 do_install() {
         install -d ${D}${base_libdir}/rdk
         install -d ${D}${systemd_unitdir}/system
 }
 
-do_install_append() {
+do_install:append() {
     # Config files and scripts
     install -d ${D}/usr/www2
     install -d ${D}/usr/www2/actionHandler
@@ -84,13 +84,13 @@ do_install_append() {
 }
 
 
-FILES_${PN} += "/fss/* /fss/gw/* /fss/gw/usr/* /fss/gw/usr/ccsp/* /opt/www2/* ${base_libdir}/rdk/* ${libdir}"
+FILES:${PN} += "/fss/* /fss/gw/* /fss/gw/usr/* /fss/gw/usr/ccsp/* /opt/www2/* ${base_libdir}/rdk/* ${libdir}"
 
-FILES_${PN} += "/usr/www2/*"
-FILES_${PN} += "/usr/www2/actionHandler/*"
-FILES_${PN} += "/usr/www2/cmn/*"
-FILES_${PN} += "/usr/www2/includes/*"
-FILES_${PN}-dbg += "${libdir}/extensions/*/.debug/* \
+FILES:${PN} += "/usr/www2/*"
+FILES:${PN} += "/usr/www2/actionHandler/*"
+FILES:${PN} += "/usr/www2/cmn/*"
+FILES:${PN} += "/usr/www2/includes/*"
+FILES:${PN}-dbg += "${libdir}/extensions/*/.debug/* \
                     /fss/gw/usr/ccsp/.debug/*"
 
 

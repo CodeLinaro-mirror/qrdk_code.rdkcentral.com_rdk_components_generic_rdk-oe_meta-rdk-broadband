@@ -6,8 +6,8 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 
 DEPENDS = "ccsp-common-library dbus rbus utopia libunpriv mountutils"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 require ccsp_common.inc
 
@@ -19,18 +19,18 @@ inherit autotools breakpad-logmapper
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-misleading-indentation"
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
-LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
-LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS:append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS:append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 LDFLAGS +=" -lprivilege -lsyscfg -lsecure_wrapper"
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I=${includedir}/dbus-1.0 \
     -I=${libdir}/dbus-1.0/include \
     -I=${includedir}/ccsp \
@@ -38,18 +38,18 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/syscfg \
     "
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     "
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp
     install -d ${D}/usr/ccsp/psm
     ln -sf /usr/bin/PsmSsp ${D}/usr/ccsp/PsmSsp
 }
 
-do_install_append_qemuarm () {
+do_install:append:qemuarm () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/config
     install -m 644 ${S}/config/bbhm_def_cfg_qemu.xml ${D}/usr/ccsp/config/bbhm_def_cfg.xml
@@ -57,13 +57,13 @@ do_install_append_qemuarm () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${prefix}/ccsp/psm \
     ${prefix}/ccsp/PsmSsp \
     ${prefix}/ccsp/config/bbhm_def_cfg.xml \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \
@@ -74,4 +74,4 @@ FILES_${PN}-dbg = " \
 BREAKPAD_LOGMAPPER_PROCLIST = "PsmSsp"
 BREAKPAD_LOGMAPPER_LOGLIST = "PSMlog.txt.0"
 
-EXTRA_OECONF_append += "${@bb.utils.contains("DISTRO_FEATURES", "MountUtils", "--enable-mountutils=yes", " ", d)}"
+EXTRA_OECONF:append += "${@bb.utils.contains("DISTRO_FEATURES", "MountUtils", "--enable-mountutils=yes", " ", d)}"

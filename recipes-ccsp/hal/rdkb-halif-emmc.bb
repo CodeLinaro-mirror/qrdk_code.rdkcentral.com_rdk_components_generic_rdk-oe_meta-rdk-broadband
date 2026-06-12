@@ -9,13 +9,13 @@ SRCREV = "5c2cdc21e8f3e8ffc87d50f9cd1aef0c06cc7e3f"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 
 do_install () {
    install -d ${D}/usr/include/ccsp
    install -m 0644 ${S}/include/ccsp_hal_emmc.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 /usr/include/ccsp \
 "

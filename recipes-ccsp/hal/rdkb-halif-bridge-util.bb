@@ -10,7 +10,7 @@ SRCREV = "15009f9e411ed6b0678254cffdb10919076d666d"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 
 do_install () {
    install -d ${D}/usr/include/ccsp
@@ -18,6 +18,6 @@ do_install () {
    install -m 0644 ${S}/include/network_interface.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 /usr/include/ccsp \
 "

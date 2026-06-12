@@ -170,18 +170,18 @@ do_install() {
    	install -m 755 ${S}/send-time-events.sh ${D}${base_libdir}/rdk
 }
 
-do_install_append_qemux86broadband() {
+do_install:append:qemux86broadband() {
 	install -d ${D}${systemd_unitdir}/system
         install -m 0755 ${S}/device/lib/rdk/* ${D}${base_libdir}/rdk
 	install -m 0755 ${S}/device/systemd_units/* ${D}${systemd_unitdir}/system/
 }
 
-do_install_append_arrisxb3atom () {
+do_install:append_arrisxb3atom () {
 # Config files and scripts
   install -m 0755 ${S}/flush_logs_atom.sh ${D}/rdklogger/flush_logs.sh
  install -m 0755 ${S}/atom_log_monitor.sh ${D}/rdklogger/atom_log_monitor.sh
 }
-do_install_append_container() {
+do_install:append_container() {
        echo "CONTAINER_SUPPORT=1" >> ${D}${sysconfdir}/device.properties
        echo "LXC_BRIDGE_NAME=lxclink0" >> ${D}${sysconfdir}/device.properties
        install -d ${D}${systemd_unitdir}/system/
@@ -193,7 +193,7 @@ do_install_append_container() {
        install -m 0755 ${S}/getipv6_container.sh ${D}${base_libdir}/rdk
 }
 
-do_install_append_rdkzram() {
+do_install:append_rdkzram() {
        echo "ZRAM_MEM_MAX_PERCENTAGE=50" >> ${D}${sysconfdir}/device.properties
        install -m 0755 ${S}/init-zram.sh ${D}${base_libdir}/rdk/
        #service for host side
@@ -205,37 +205,37 @@ do_install_append_rdkzram() {
 }
 
 
-SYSTEMD_SERVICE_${PN}_append_qemux86broadband = "  dropbear.service"
-SYSTEMD_SERVICE_${PN}_append_rdkzram = " rdkzram.service"
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'ocsp-support.service', '', d)}"
-SYSTEMD_SERVICE_${PN} += "ntp-data-collector.service"
+SYSTEMD_SERVICE:${PN}:append:qemux86broadband = "  dropbear.service"
+SYSTEMD_SERVICE:${PN}:append_rdkzram = " rdkzram.service"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'ocsp-support.service', '', d)}"
+SYSTEMD_SERVICE:${PN} += "ntp-data-collector.service"
 
 
-SYSTEMD_SERVICE_${PN} += "network-up.path"
-SYSTEMD_SERVICE_${PN} += "network-up.timer"
-SYSTEMD_SERVICE_${PN} += "system-time-set.path"
-SYSTEMD_SERVICE_${PN} += "system-time-event.service"
-SYSTEMD_SERVICE_${PN} += "ntp-time-sync-event.service"
+SYSTEMD_SERVICE:${PN} += "network-up.path"
+SYSTEMD_SERVICE:${PN} += "network-up.timer"
+SYSTEMD_SERVICE:${PN} += "system-time-set.path"
+SYSTEMD_SERVICE:${PN} += "system-time-event.service"
+SYSTEMD_SERVICE:${PN} += "ntp-time-sync-event.service"
 
-FILES_${PN} += "/bin/*"
-FILES_${PN} += "${sysconfdir}/*"
-FILES_${PN} += "rdklogger/*"
-FILES_${PN} += "${base_libdir}/rdk/*"
-FILES_${PN}_append_qemux86broadband += "${systemd_unitdir}/system/*"
-FILES_${PN} += "${systemd_unitdir}/system/ntp-data-collector.service"
-
-
+FILES:${PN} += "/bin/*"
+FILES:${PN} += "${sysconfdir}/*"
+FILES:${PN} += "rdklogger/*"
+FILES:${PN} += "${base_libdir}/rdk/*"
+FILES:${PN}:append:qemux86broadband += "${systemd_unitdir}/system/*"
+FILES:${PN} += "${systemd_unitdir}/system/ntp-data-collector.service"
 
 
-FILES_${PN} += "${systemd_unitdir}/system/*"
-FILES_${PN} += "${datadir}/dbus-1/system-services/org.freedesktop.nm_connectivity.service"
 
-FILES_${PN}_append_arrisxb3atom += " \
+
+FILES:${PN} += "${systemd_unitdir}/system/*"
+FILES:${PN} += "${datadir}/dbus-1/system-services/org.freedesktop.nm_connectivity.service"
+
+FILES:${PN}:append_arrisxb3atom += " \
           /rdklogger/atom_log_monitor.sh \
 	   /rdklogger/flush_logs_atom.sh \
          "
 
-FILES_${PN}_append_container = " \
+FILES:${PN}:append_container = " \
            ${systemd_unitdir}/system/iptables_lxc.service \
            ${systemd_unitdir}/system/iptables_lxc.path \
            ${base_libdir}/rdk/getip_file.sh \
@@ -243,7 +243,7 @@ FILES_${PN}_append_container = " \
            ${base_libdir}/rdk/iptables_container.sh \
          "
 
-SYSTEMD_SERVICE_${PN}_append_container = " iptables_lxc.path \
+SYSTEMD_SERVICE:${PN}:append_container = " iptables_lxc.path \
                                            lxc.path \
                                          "
 # Breakpad processname and logfile mapping

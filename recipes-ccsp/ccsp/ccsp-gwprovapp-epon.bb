@@ -15,13 +15,13 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION', '', d)}"
 
 inherit autotools
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/${STAGING_INCDIR}
     install -d ${D}/usr/ccsp/
@@ -31,19 +31,19 @@ do_install_append () {
     # install -m 644 ${S}/source/include/Tr69_Tlv.h -t ${D}/${STAGING_INCDIR}
 }
 
-SYSTEMD_SERVICE_${PN} = "gwprovepon.service"
+SYSTEMD_SERVICE:${PN} = "gwprovepon.service"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${STAGING_INCDIR} \
     /usr/ccsp \
     /usr/ccsp/gw_prov_epon \
 "
 
-FILES_${PN} += " \
+FILES:${PN} += " \
      ${systemd_unitdir}/system/gwprovepon.service \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

@@ -10,8 +10,8 @@ S = "${WORKDIR}/git"
 
 inherit cmake pkgconfig
 
-FILES_${PN} += "${libdir}/* \
+FILES:${PN} += "${libdir}/* \
                 ${bindir}/* "
 
 FILES_SOLIBSDEV = ""
-INSANE_SKIP_${PN} += "dev-so"
+INSANE_SKIP:${PN} += "dev-so"

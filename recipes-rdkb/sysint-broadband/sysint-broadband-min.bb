@@ -4,7 +4,7 @@ SECTION = "console/utils"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 PV = "${RDK_RELEASE}"
  
 SYSINTB_DEVICE ??= "intel-x86-pc/rdk-broadband"
@@ -57,15 +57,15 @@ do_install() {
 
 }
 
-do_install_append_qemux86broadband() {
+do_install:append:qemux86broadband() {
 	install -d ${D}${systemd_unitdir}/system
         install -m 0755 ${S}/device/lib/rdk/* ${D}${base_libdir}/rdk
 	install -m 0755 ${S}/device/systemd_units/* ${D}${systemd_unitdir}/system/
 }
  
  
-FILES_${PN} += "${sysconfdir}/*"
-FILES_${PN} += "rdklogger/*"
-FILES_${PN} += "${base_libdir}/rdk/*"
-FILES_${PN} += "${sbindir}/deviceinfo.sh"
-FILES_${PN}_append_qemux86broadband += "${systemd_unitdir}/system/*"
+FILES:${PN} += "${sysconfdir}/*"
+FILES:${PN} += "rdklogger/*"
+FILES:${PN} += "${base_libdir}/rdk/*"
+FILES:${PN} += "${sbindir}/deviceinfo.sh"
+FILES:${PN}:append:qemux86broadband += "${systemd_unitdir}/system/*"

@@ -50,13 +50,13 @@
 
          stream_env - file or stdout/stderr with env var replacement
 
-         stream_env_append - same as stream_env, but appends to file instead
+         stream_env:append - same as stream_env, but appends to file instead
                    of overwrite
 
          stream_env_plus_stdout - same as stream_env, with all messages
                    written to stdout as well
 
-         stream_env_append_plus_stdout - save stream_env_plus_stdout, but
+         stream_env:append_plus_stdout - save stream_env_plus_stdout, but
                    appends file instead of overwrite
 
          socket_env - TCP/IP socket

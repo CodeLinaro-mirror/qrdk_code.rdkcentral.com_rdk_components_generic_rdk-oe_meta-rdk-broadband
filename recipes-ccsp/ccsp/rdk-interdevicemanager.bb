@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 
 DEPENDS = "ccsp-common-library rdk-logger utopia libunpriv"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 SRC_URI = "git://github.com/rdkcentral/RdkInterDeviceManager.git;protocol=https;branch=main;name=InterDeviceManager"
 
@@ -26,7 +26,7 @@ require ccsp_common.inc
 
 inherit autotools pkgconfig systemd
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -34,24 +34,24 @@ CFLAGS_append = " \
     "
 
 LDFLAGS += " -lprivilege"
-LDFLAGS_append = " -ldbus-1"
-LDFLAGS_remove_morty = " -ldbus-1"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
-LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
-LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-CFLAGS_prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'IDM_DEBUG',' -DIDM_DEBUG','', d)}"
+LDFLAGS:append = " -ldbus-1"
+LDFLAGS:remove_morty = " -ldbus-1"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+LDFLAGS:append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS:append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+CFLAGS:prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'IDM_DEBUG',' -DIDM_DEBUG','', d)}"
 
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
-SYSTEMD_SERVICE_${PN} = "RdkInterDeviceManager.service"
+SYSTEMD_SERVICE:${PN} = "RdkInterDeviceManager.service"
 
-do_configure_prepend() {
+do_configure:prepend() {
     cp ${WORKDIR}/RdkInterDeviceManager.conf ${S}/systemd_units/
     cp ${WORKDIR}/idm_recovery.sh ${S}/source/InterDeviceManager/
 }
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/rdk/interdevicemanager
     ln -sf ${bindir}/interdevicemanager ${D}${exec_prefix}/rdk/interdevicemanager/interdevicemanager
@@ -65,7 +65,7 @@ do_install_append () {
 }
 
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${bindir}/* \
    ${exec_prefix}/rdk/interdevicemanager/* \
    ${systemd_unitdir}/system/RdkInterDeviceManager.service \
@@ -73,7 +73,7 @@ FILES_${PN} = " \
    ${sysconfdir}/idm/ssl.conf \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${exec_prefix}/rdk/rdkinterdevicemanager/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

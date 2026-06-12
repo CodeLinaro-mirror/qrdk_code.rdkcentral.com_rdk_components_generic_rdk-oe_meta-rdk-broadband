@@ -10,18 +10,18 @@ DEPENDS = " libnl ccsp-common-library "
 
 inherit autotools pkgconfig
 
-do_install_append() {
+do_install:append() {
         install -d ${D}/usr/include/ccsp
 	install -m 0644 ${S}/source/libnet.h ${D}/usr/include/ccsp
 }
 
-DEPENDS_remove_class-native = " safec-native"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
-CFLAGS_append = " -I${STAGING_INCDIR}/ -I${STAGING_INCDIR}/ccsp  -I${STAGING_INCDIR}/libsafec "
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+DEPENDS:remove:class-native = " safec-native"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append = " -I${STAGING_INCDIR}/ -I${STAGING_INCDIR}/ccsp  -I${STAGING_INCDIR}/libsafec "
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 
-CPPFLAGS_append = " -I${STAGING_INCDIR}/ -I${STAGING_INCDIR}/ccsp  -I${STAGING_INCDIR}/libsafec "
-CPPFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
-CPPFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CPPFLAGS:append = " -I${STAGING_INCDIR}/ -I${STAGING_INCDIR}/ccsp  -I${STAGING_INCDIR}/libsafec "
+CPPFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+CPPFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"

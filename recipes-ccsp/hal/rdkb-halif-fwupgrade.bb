@@ -9,13 +9,13 @@ SRCREV = "3c5dea46999eee137765496646cbd30271b7922d"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 
 do_install () {
    install -d ${D}/usr/include/ccsp
    install -m 0644 ${S}/include/fwupgrade_hal.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 /usr/include/ccsp \
 "

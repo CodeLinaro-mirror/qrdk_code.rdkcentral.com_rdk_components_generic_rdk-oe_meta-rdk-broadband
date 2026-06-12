@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 DEPENDS = "ccsp-common-library dbus telemetry"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 require ccsp_common.inc
 
@@ -13,17 +13,17 @@ SRC_URI = "${CMF_GITHUB_ROOT}/data-model-cli;protocol=https;${BRANCH_ccsp_dmcli}
 
 S = "${WORKDIR}/git"
 
-inherit autotools ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)}
+inherit autotools ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)}
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-LDFLAGS_remove = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
-LDFLAGS_append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
-LDFLAGS_append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove = "${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
+LDFLAGS:append_dunfell = "${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS:append_kirkstone = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
@@ -37,15 +37,15 @@ CPPLAGS += " -Wall -Werror -Wextra "
 # generating minidumps symbols
 inherit breakpad-wrapper
 DEPENDS += "breakpad breakpad-wrapper"
-BREAKPAD_BIN_append = " dmcli"
+BREAKPAD_BIN:append = " dmcli"
 
 LDFLAGS += "-lbreakpadwrapper -lpthread -lstdc++"
 CFLAGS += " -DINCLUDE_BREAKPAD"
 
-do_compile_prepend () {
+do_compile:prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/source/MsgBusTestServer/config/MsgBusTest.XML ${S}/source/MsgBusTestServer/dm_pack_datamodel.c)
 }
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/fss/gw/usr/ccsp
     install -d ${D}/usr/ccsp/MsgBusTestServer
@@ -53,7 +53,7 @@ do_install_append () {
     
 }
 
-do_install_append_mips () {
+do_install:append:mips () {
     # Config files and scripts
     install -d ${D}/usr/ccsp
     install -d ${D}/usr/ccsp/MsgBusTestServer
@@ -61,21 +61,21 @@ do_install_append_mips () {
    
 }
 
-do_install_append_puma7 () {
+do_install:append_puma7 () {
     # Config files and scripts
     ln -sf ${bindir}/dmcli ${D}${bindir}/ccsp_bus_client_tool
     install -d ${D}/usr/ccsp
     ln -sf ${bindir}/dmcli ${D}/usr/ccsp/ccsp_bus_client_tool
 }
 
-do_install_append_arrisxb3atom () {
+do_install:append_arrisxb3atom () {
     install -d ${D}/usr/ccsp
     install -d ${D}/usr/ccsp/MsgBusTestServer
     ln -sf ${bindir}/dmcli ${D}/usr/ccsp/ccsp_bus_client_tool
    
 }
 
-do_install_append_bcm3390 () {
+do_install:append_bcm3390 () {
     # Config files and scripts
     ln -sf ${bindir}/dmcli ${D}${bindir}/ccsp_bus_client_tool
     install -d ${D}/usr/ccsp
@@ -84,7 +84,7 @@ do_install_append_bcm3390 () {
   
 }
 
-do_install_append_xb10 () {
+do_install:append_xb10 () {
     # Config files and scripts
     ln -sf ${bindir}/dmcli ${D}${bindir}/ccsp_bus_client_tool
     install -d ${D}/usr/ccsp
@@ -92,7 +92,7 @@ do_install_append_xb10 () {
     ln -sf ${bindir}/dmcli ${D}/usr/ccsp/ccsp_bus_client_tool
 }
 
-do_install_append_vbvxb9 () {
+do_install:append_vbvxb9 () {
     # Config files and scripts
     ln -sf ${bindir}/dmcli ${D}${bindir}/ccsp_bus_client_tool
     install -d ${D}/usr/ccsp
@@ -100,7 +100,7 @@ do_install_append_vbvxb9 () {
     ln -sf ${bindir}/dmcli ${D}/usr/ccsp/ccsp_bus_client_tool
 }
 
-do_install_append_ciscoxb3atom () {
+do_install:append_ciscoxb3atom () {
     # Config files and scripts
     install -d ${D}/usr/ccsp
     install -d ${D}/usr/ccsp/MsgBusTestServer
@@ -109,22 +109,22 @@ do_install_append_ciscoxb3atom () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     /fss/gw/usr/ccsp/* \
     ${prefix}/ccsp/* \
 "
 
-FILES_${PN}_append_arrisxb3atom = " \
+FILES:${PN}:append_arrisxb3atom = " \
     /usr/ccsp/* \
     ${prefix}/ccsp/* \
 "
 
-FILES_${PN}_append_ciscoxb3atom = " \
+FILES:${PN}:append_ciscoxb3atom = " \
     /usr/ccsp/* \
     ${prefix}/ccsp/* \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

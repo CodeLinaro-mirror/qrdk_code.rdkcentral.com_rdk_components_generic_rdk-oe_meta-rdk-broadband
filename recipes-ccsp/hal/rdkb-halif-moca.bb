@@ -9,13 +9,13 @@ SRCREV = "48ff5d73312cf8fcc0e246c5e527d790035d8317"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 
 do_install () {
    install -d ${D}/usr/include/ccsp
    install -m 0644 ${S}/include/moca_hal.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 /usr/include/ccsp \
 "

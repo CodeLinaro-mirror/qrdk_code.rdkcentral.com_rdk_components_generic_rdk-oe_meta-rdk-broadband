@@ -9,7 +9,7 @@ SRCREV = "1b2260d58e140b7e4a84164b20fcfb445d463c24"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 CFLAGS += "${@bb.utils.contains('DISTRO_FEATURES','no_mta_support','-DNO_MTA_FEATURE_SUPPORT ','',d)}"
 
 do_install () {
@@ -18,6 +18,6 @@ do_install () {
    install -m 0644 ${S}/include/dhcpv4c_api.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 /usr/include/ccsp \
 "

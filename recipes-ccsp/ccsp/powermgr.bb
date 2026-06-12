@@ -8,13 +8,13 @@ require recipes-ccsp/ccsp/ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/power-manager;protocol=https;${BRANCH_powermgr}"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
     "
     
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lrdkloggers \
 "
@@ -25,12 +25,12 @@ inherit autotools systemd breakpad-logmapper
 
 # generating minidumps symbols
 inherit breakpad-wrapper
-BREAKPAD_BIN_append = " rdkbPowerMgr"
+BREAKPAD_BIN:append = " rdkbPowerMgr"
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-unused-parameter -DINCLUDE_BREAKPAD "
 LDFLAGS += "-lbreakpadwrapper -lpthread -lstdc++"
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/pwrMgr
     install -m 755 ${S}/scripts/rdkb_power_manager.sh ${D}/usr/ccsp/pwrMgr/rdkb_power_manager.sh
@@ -39,19 +39,19 @@ do_install_append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     /fss/gw/usr/ccsp/* \
     ${prefix}/ccsp/pwrMgr/* \
     ${prefix}/ccsp/* \
 "
 
-FILES_${PN} = " \
+FILES:${PN} = " \
     /usr/bin/rdkbPowerMgr \
     ${prefix}/ccsp/pwrMgr/rdkb_power_manager.sh \
     ${prefix}/ccsp/pwrMgr/rdkbPowerMgr \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

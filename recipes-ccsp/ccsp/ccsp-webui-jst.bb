@@ -26,7 +26,7 @@ LXC_LOG_PATH = "/rdklogs/logs"
 LXC_LOG_LEVEL = "8"
 
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
@@ -38,12 +38,12 @@ LDFLAGS += " \
      "
 
 EXTRA_OECONF = "CCSP_COMMON_LIB=${STAGING_LIBDIR}"
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
 EXTRANATIVEPATH += "chrpath-native"
 
 
-do_install_append() {
+do_install:append() {
     # Config files and scripts
     install -d ${D}${sysconfdir}
     install -m 755 ${S}/config/*.sh ${D}${sysconfdir}
@@ -74,13 +74,13 @@ do_install_append() {
     sed -i 's/usr\/www/usr\/www2/g' ${D}${sysconfdir}/webgui.sh
 }
 
-FILES_${PN} += "/fss/* /fss/gw/* /fss/gw/usr/*"
+FILES:${PN} += "/fss/* /fss/gw/* /fss/gw/usr/*"
 
-FILES_${PN} += "/usr/*"
-FILES_${PN} += "/usr/www2/actionHandler/*"
-FILES_${PN} += "/usr/www2/cgi-bin/*"
-FILES_${PN} += "/usr/www2/cmn/*"
-FILES_${PN} += "/usr/www2/CSRF-Protector-PHP/*"
-FILES_${PN} += "/usr/www2/includes/*"
-FILES_${PN} += "/usr/www2/includes/*"
+FILES:${PN} += "/usr/*"
+FILES:${PN} += "/usr/www2/actionHandler/*"
+FILES:${PN} += "/usr/www2/cgi-bin/*"
+FILES:${PN} += "/usr/www2/cmn/*"
+FILES:${PN} += "/usr/www2/CSRF-Protector-PHP/*"
+FILES:${PN} += "/usr/www2/includes/*"
+FILES:${PN} += "/usr/www2/includes/*"
 

@@ -5,61 +5,61 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=8da35c40378155af4c5404b8f72d1237"
 
 DEPENDS = "ccsp-common-library dbus rdk-logger utopia breakpad breakpad-wrapper"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/notify-component;protocol=https;${BRANCH_notify_comp}"
 
 S = "${WORKDIR}/git"
-inherit autotools pkgconfig breakpad-wrapper coverity ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
+inherit autotools pkgconfig breakpad-wrapper coverity ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
+LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-unused-parameter"
 
-BREAKPAD_BIN_append = " notify_comp"
+BREAKPAD_BIN:append = " notify_comp"
 
 LDFLAGS += "-lbreakpadwrapper -lpthread -lstdc++"
 
-LDFLAGS_append = " -lrt"
-LDFLAGS_remove_morty = " -lrt"
+LDFLAGS:append = " -lrt"
+LDFLAGS:remove_morty = " -lrt"
 
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I=${includedir}/ccsp \
     "
-do_compile_prepend () {
+do_compile:prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/scripts/NotifyComponent.xml ${S}/source/NotifyComponent/dm_pack_datamodel.c)
 }
 
-do_install_append_armeb () {
+do_install:append:armeb () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/ccsp/notify-comp
     install -m 644 ${S}/scripts/msg_daemon.cfg ${D}${exec_prefix}/ccsp/notify-comp/msg_daemon.cfg
 }
 
-do_install_append_puma7 () {
+do_install:append_puma7 () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/ccsp/notify-comp
     install -m 644 ${S}/scripts/msg_daemon.cfg ${D}${exec_prefix}/ccsp/notify-comp/msg_daemon.cfg
 }
 
-do_install_append_mips () {
+do_install:append:mips () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/ccsp/notify-comp
     install -m 644 ${S}/scripts/msg_daemon.cfg ${D}${exec_prefix}/ccsp/notify-comp/msg_daemon.cfg
 }
-do_install_append_bcm3390(){
+do_install:append_bcm3390(){
     # Config files and scripts
     install -d ${D}${exec_prefix}/ccsp/notify-comp
     install -m 644 ${S}/scripts/msg_daemon.cfg ${D}${exec_prefix}/ccsp/notify-comp/msg_daemon.cfg
 }
 
-FILES_${PN} += "${exec_prefix}/ccsp/notify-comp"
+FILES:${PN} += "${exec_prefix}/ccsp/notify-comp"
 
 # Breakpad processname and logfile mapping
 BREAKPAD_LOGMAPPER_PROCLIST = "notify_comp"

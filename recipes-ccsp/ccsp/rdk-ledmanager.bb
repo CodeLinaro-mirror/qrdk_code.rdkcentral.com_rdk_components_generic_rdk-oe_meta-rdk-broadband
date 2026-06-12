@@ -18,7 +18,7 @@ S = "${WORKDIR}/git"
 
 inherit autotools pkgconfig
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -26,27 +26,27 @@ CFLAGS_append = " \
     -I ${STAGING_INCDIR}/syscfg \
     -I ${STAGING_INCDIR}/sysevent \
     "
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfigled', ' --enable-webconfigled ', '', d)}"
-CFLAGS_append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfigled', '-DLEDMGR_WEBCONFIG', '', d)} "
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfigled', ' --enable-webconfigled ', '', d)}"
+CFLAGS:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'webconfigled', '-DLEDMGR_WEBCONFIG', '', d)} "
 
 LDFLAGS += " -lprivilege"
 
-LDFLAGS_append = " -ldbus-1"
-LDFLAGS_remove_morty = " -ldbus-1"
+LDFLAGS:append = " -ldbus-1"
+LDFLAGS:remove_morty = " -ldbus-1"
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/rdk/rdkledmanager
     ln -sf ${bindir}/rdkledmanager ${D}${exec_prefix}/rdk/rdkledmanager/rdkledmanager 
 }
 
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${exec_prefix}/rdk/rdkledmanager/rdkledmanager \
    ${bindir}/* \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${exec_prefix}/rdk/rdkledmanager/.debug \
     /usr/src/debug \
     ${bindir}/.debug \

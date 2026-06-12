@@ -1,6 +1,6 @@
 inherit breakpad-logmapper
 DEPENDS += " utopia "
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/syscfg \
     "
 LDFLAGS +=" -lsyscfg"

@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://../../LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 PROVIDES = "hal-mso_mgmt"
-RPROVIDES_${PN} = "hal-mso_mgmt"
+RPROVIDES:${PN} = "hal-mso_mgmt"
 
 DEPENDS += "rdkb-halif-mso"
 
@@ -14,6 +14,6 @@ SRCREV_FORMAT = "msomgmthal"
 
 S = "${WORKDIR}/git/source/mso_mgmt"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 
 inherit autotools coverity

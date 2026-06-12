@@ -27,8 +27,8 @@ do_install() {
 }
 
 PACKAGES = "${PN}"
-FILES_${PN} = "${datadir}"
-FILES_${PN} += "/usr/www2/cmn/js/lib"
+FILES:${PN} = "${datadir}"
+FILES:${PN} += "/usr/www2/cmn/js/lib"
 
 BBCLASSEXTEND += "native nativesdk"
 

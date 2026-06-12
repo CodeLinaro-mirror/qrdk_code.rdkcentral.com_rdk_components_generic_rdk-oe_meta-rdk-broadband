@@ -3,7 +3,7 @@ DESCRIPTION = "The portable SDK for UPnP* Devices (libupnp) provides developers 
 
 HOMEPAGE = "http://pupnp.sourceforge.net/"
 
-FILESEXTRAPATHS_prepend := "${THISDIR}/${PN}:" 
+FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:" 
 
 SRC_URI += "\
     file://01-ltmain.sh_${PV}.patch \

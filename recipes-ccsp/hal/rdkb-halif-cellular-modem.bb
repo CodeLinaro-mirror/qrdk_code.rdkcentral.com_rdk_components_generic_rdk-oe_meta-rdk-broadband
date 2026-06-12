@@ -9,13 +9,13 @@ SRCREV = "4422ee385c5bc5109e17d10904af3bc87a39fefc"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 
 do_install () {
    install -d ${D}/usr/include/ccsp
    install -m 0644 ${S}/include/cellular_modem_hal_api.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 /usr/include/ccsp \
 "

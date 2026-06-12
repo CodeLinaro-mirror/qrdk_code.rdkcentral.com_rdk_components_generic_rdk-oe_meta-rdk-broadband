@@ -9,13 +9,13 @@ SRCREV = "8ea2a3e51bcf1ce922925c2c15091731f034cbeb"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " -I=${includedir}/ccsp "
+CFLAGS:append = " -I=${includedir}/ccsp "
 
 do_install () {
    install -d ${D}/usr/include/ccsp
    install -m 0644 ${S}/include/wan_hal.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 /usr/include/ccsp \
 "

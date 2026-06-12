@@ -16,25 +16,25 @@ PV = "${RDK_RELEASE}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-inherit autotools pkgconfig ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)}
+inherit autotools pkgconfig ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)}
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
     -I${STAGING_INCDIR}/ccsp \
     "
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lsyscfg \
     "
 CFLAGS += " -Wall -Werror -Wextra "
 
-do_compile_prepend () {
+do_compile:prepend () {
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-EPON.XML ${S}/source/EPONAgentSsp/dm_pack_datamodel.c)
 }
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp/epon
     ln -sf /usr/bin/CcspEPONAgentSsp ${D}/usr/ccsp/epon/CcspEPONAgentSsp
@@ -42,14 +42,14 @@ do_install_append () {
     install -m 644 ${S}/config/CcspEPON.cfg ${D}/usr/ccsp/epon/CcspEPON.cfg
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     /usr/ccsp/epon/ \
     /usr/ccsp/epon/CcspEPONAgentSsp \
     /usr/ccsp/epon/CcspEPONDM.cfg \
     /usr/ccsp/epon/CcspEPON.cfg \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/epon/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \

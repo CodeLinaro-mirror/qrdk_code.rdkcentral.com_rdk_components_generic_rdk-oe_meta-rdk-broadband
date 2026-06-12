@@ -2,7 +2,7 @@
 # Usage Example:
 #     update BRANCH_ccsp_adv_security = "nobranch=1"
 #     and update commit ID of ccsp_adv_security in generic-srcrev.inc
-#         Example: SRCREV_pn-ccsp-adv-security = "1234abcd"
+#         Example: SRCREV:pn-ccsp-adv-security = "1234abcd"
 # (or)
 #     Update feature branch for specific component here,
 #         Example: BRANCH_ccsp_adv_security = "branch=feature/RDKB-12345"

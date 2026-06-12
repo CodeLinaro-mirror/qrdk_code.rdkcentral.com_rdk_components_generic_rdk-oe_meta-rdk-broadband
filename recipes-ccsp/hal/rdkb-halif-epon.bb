@@ -10,13 +10,13 @@ PV = "${GIT_TAG}+git${SRCPV}"
 
 S = "${WORKDIR}/git"
 
-CFLAGS_append = " -I=${includedir}/epon "
+CFLAGS:append = " -I=${includedir}/epon "
 
 do_install () {
    install -d ${D}/usr/include/epon
    install -m 0644 ${S}/epon_hal.h ${D}/usr/include/epon
 }
 
-FILES_${PN} = " \
+FILES:${PN} = " \
 /usr/include/epon \
 "

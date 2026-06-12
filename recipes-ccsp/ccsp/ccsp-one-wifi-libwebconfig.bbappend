@@ -1,6 +1,6 @@
-EXTRA_OECONF_append = " --enable-journalctl"
+EXTRA_OECONF:append = " --enable-journalctl"
 
-CFLAGS_append = " -DONEWIFI_OVSDB_TABLE_SUPPORT   \
+CFLAGS:append = " -DONEWIFI_OVSDB_TABLE_SUPPORT   \
                   -DONEWIFI_CSI_APP_SUPPORT       \
                   -DONEWIFI_CAC_APP_SUPPORT \
                   -DONEWIFI_MOTION_APP_SUPPORT \
@@ -13,16 +13,16 @@ CFLAGS_append = " -DONEWIFI_OVSDB_TABLE_SUPPORT   \
                   -DONEWIFI_DB_SUPPORT \
                   "
 
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_support', '-DONEWIFI_JSON_DML_SUPPORT', '-DONEWIFI_DML_SUPPORT -DONEWIFI_RDKB_CCSP_SUPPORT', d)}"
-CFLAGS_remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_support', '-DCCSP_SUPPORT_ENABLED', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_support', '-DONEWIFI_JSON_DML_SUPPORT', '-DONEWIFI_DML_SUPPORT -DONEWIFI_RDKB_CCSP_SUPPORT', d)}"
+CFLAGS:remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_support', '-DCCSP_SUPPORT_ENABLED', '', d)}"
 
-EXTRA_OECONF_append = "${@bb.utils.contains('DISTRO_FEATURES', 'sm_app', ' --enable-sm-app', '', d)}"
+EXTRA_OECONF:append = "${@bb.utils.contains('DISTRO_FEATURES', 'sm_app', ' --enable-sm-app', '', d)}"
 
-do_compile_append() {
+do_compile:append() {
     oe_runmake -C source/platform
 }
 
-do_install_append() {
+do_install:append() {
     oe_runmake -C source/platform DESTDIR=${D} install
     if "${@bb.utils.contains('DISTRO_FEATURES', 'dbus_support', 'true', 'false', d)}"; then
         install -m 644 ${S}/source/platform/dbus/bus.h ${D}/usr/include/ccsp
@@ -36,6 +36,6 @@ do_install_append() {
     install -m 644 ${S}/source/ccsp/ccsp.h ${D}/usr/include/ccsp
 }
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${libdir}/libwifi_bus.so* \
 "

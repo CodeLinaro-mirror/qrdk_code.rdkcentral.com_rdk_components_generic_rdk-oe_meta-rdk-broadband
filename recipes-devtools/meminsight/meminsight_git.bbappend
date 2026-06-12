@@ -8,13 +8,13 @@ DOWNLOAD_ON_DEMAND = "yes"
 DOWNLOAD_METHOD_CONTROLLER = "RFC"
 
 PACKAGE_BEFORE_PN += "${PN}-dl "
-RDEPENDS_${PN} += " ${PN}-dl"
+RDEPENDS:${PN} += " ${PN}-dl"
 
-FILES_${PN}-dl += "${bindir}/meminsight \
+FILES:${PN}-dl += "${bindir}/meminsight \
                   /etc/rdm/post-services/start_meminsight.sh \
                   "
 
-pkg_postinst_${PN}-dl () {
+pkg_postinst:${PN}-dl () {
     if ${@bb.utils.contains('DOWNLOAD_APPS', 'meminsight', 'true', 'false', d)}; then
         if [ -n "$D" -a -d "$D" ]; then
             echo "Removing meminsight binary & meminsight start script from rootfs"

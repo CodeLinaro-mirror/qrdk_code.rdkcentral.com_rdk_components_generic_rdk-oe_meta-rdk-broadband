@@ -26,9 +26,9 @@ S = "${WORKDIR}/git"
 # inherit cmake pkgconfig
 inherit autotools pkgconfig systemd
 
-EXTRA_OECONF_append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
+EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -36,7 +36,7 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/libubox \
 "
 
-LDFLAGS_append = " \
+LDFLAGS:append = " \
     -ldbus-1 \
     -lrdkloggers \
     -ljson-c \
@@ -47,7 +47,7 @@ LDFLAGS_append = " \
 "
 ISSYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}"
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/ccsp/easymesh
     ln -sf ${bindir}/em-ctl ${D}${exec_prefix}/ccsp/easymesh/em-ctl
@@ -62,14 +62,14 @@ do_install_append () {
 # This will automatically start the service on boot up on platforms that use systemd init system.
 # The .service systemd unit shouldn't start automatically upon bootup, but rather wait for
 # CcspWiFiAgent to finish initializing. It will be started by the .path unit.
-#SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'RdkEasyMeshController.service', '', d)}"
-SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'RdkEasyMeshController.path', '', d)}"
+#SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'RdkEasyMeshController.service', '', d)}"
+SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'RdkEasyMeshController.path', '', d)}"
 
-FILES_${PN} += " \
+FILES:${PN} += " \
     ${exec_prefix}/ccsp/easymesh/em-ctl \
     ${exec_prefix}/ccsp/easymesh/RdkEasyMeshController.xml \
     ${bindir}/* \
 "
 
-FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.service', '', d)}"
-FILES_${PN}_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.path', '', d)}"
+FILES:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.service', '', d)}"
+FILES:${PN}:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '${systemd_unitdir}/system/RdkEasyMeshController.path', '', d)}"

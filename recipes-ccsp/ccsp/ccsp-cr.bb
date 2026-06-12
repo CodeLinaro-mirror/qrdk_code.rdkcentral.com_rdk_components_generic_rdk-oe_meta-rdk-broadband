@@ -5,7 +5,7 @@ LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 DEPENDS = "ccsp-common-library dbus telemetry utopia libunpriv rbus libxml2"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'systemd', '', d)}"
 
 require ccsp_common.inc
 
@@ -17,11 +17,11 @@ S = "${WORKDIR}/git"
 
 inherit autotools breakpad-logmapper
 
-EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
+EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 
-SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', 'file://Add_WanManager_Ready_Event.patch', '', d)}"
+SRC_URI:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', 'file://Add_WanManager_Ready_Event.patch', '', d)}"
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I=${includedir}/dbus-1.0 \
     -I=${libdir}/dbus-1.0/include \
     -I=${includedir}/ccsp \
@@ -36,7 +36,7 @@ CFLAGS_append = " \
 
 LDFLAGS += "-ldbus-1 -ltelemetry_msgsender -lprivilege -lutapi -lutctx -lsyscfg -lcjson -lmsgpackc"
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}/usr/ccsp
     ln -sf /usr/bin/CcspCrSsp ${D}/usr/ccsp/CcspCrSsp
@@ -54,13 +54,13 @@ do_install_append () {
 
 PACKAGES += "${PN}-ccsp"
 
-FILES_${PN}-ccsp = " \
+FILES:${PN}-ccsp = " \
     ${prefix}/ccsp/CcspCrSsp \
     ${prefix}/ccsp/cr-deviceprofile.xml \
     ${prefix}/ccsp/cr-ethwan-deviceprofile.xml \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${prefix}/ccsp/.debug \
     ${prefix}/src/debug \
     ${bindir}/.debug \
