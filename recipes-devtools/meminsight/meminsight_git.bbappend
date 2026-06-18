@@ -1,5 +1,6 @@
-
-inherit comcast-package-deploy
+# Generate RDM package only when 'meminsight' is passed to GENERATE_RDM_CERTS
+# GENERATE_RDM_CERTS can be passed through jenkins or can be set locally in auto.conf
+inherit ${@bb.utils.contains('GENERATE_RDM_CERTS', '${BPN}', 'comcast-package-deploy', '', d)}
 
 DOWNLOAD_APPS= "${@bb.utils.contains('DISTRO_FEATURES', 'rdm', bb.utils.contains('DISTRO_FEATURES', 'enable_xmeminsight', '', '${BPN}', d), '', d)}"
 CUSTOM_PKG_EXTNS = "dl"
@@ -10,8 +11,8 @@ ENABLE_RDM_VERSIONING="${@bb.utils.contains('DISTRO_FEATURES', 'rdm rdm-versioni
 PKG_FIRMWARE_DECOUPLED="true"
 
 PKG_BUNDLE_NAME="${MACHINE_IMAGE_NAME}-meminsight"
-PKG_BUNDLE_MAJOR_VERSION="0"
-PKG_BUNDLE_MINOR_VERSION="1"
+PKG_BUNDLE_MAJOR_VERSION="1"
+PKG_BUNDLE_MINOR_VERSION="0"
 
 DOWNLOADABLE_FILES = "${@bb.utils.contains('DOWNLOAD_APPS', '${PKG_BUNDLE_NAME}', '\
                              ${bindir}/meminsight \
