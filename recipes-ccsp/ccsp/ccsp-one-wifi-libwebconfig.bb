@@ -10,7 +10,7 @@ SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;na
 
 SRC_URI:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_libwebconfig = "02cc1aaa2fc85597b8e671c885e13a2a16648cc2"
+SRCREV_libwebconfig = "0f1df7e403d8e6ceb2e83cc1af90a243f4f0e4d7"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "libwebconfig"
 PV = "${RDK_RELEASE}+git${SRCPV}"
@@ -60,6 +60,7 @@ EXTRA_OECONF:append = " --enable-libwebconfig"
 EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 ISSYSTEMD = "${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}"
 EXTRA_OECONF:append = " ONEWIFI_MULTIAP_APP_SUPPORT=true"
+MATH_UTILS_COMPILE = "${@bb.utils.contains('MACHINE', 'xe2-plume-rdk-extender-qsdk11', '0', '1', d)}"
 
 do_configure:append:wrynose() {
       sed -i 's/msgpackc/msgpack-c/g' ${S}/source/webconfig/Makefile.am
@@ -78,12 +79,21 @@ do_compile:prepend () {
 
 do_compile() {
     oe_runmake -C source/webconfig
+    if [ "${MATH_UTILS_COMPILE}" = "1" ]; then
+        oe_runmake -C source/utils/math_utils
+    fi
 }
 
 do_install() {
     oe_runmake -C source/webconfig DESTDIR=${D} install
 
     install -d ${D}/usr/include/ccsp
+    if [ "${MATH_UTILS_COMPILE}" = "1" ]; then
+        oe_runmake -C source/utils/math_utils DESTDIR=${D} install
+        install -d ${D}/usr/include/ccsp/math_utils
+        install -m 644 ${S}/include/run_qmgr.h       ${D}/usr/include/ccsp
+        cp -r ${S}/source/utils/math_utils/inc/* ${D}/usr/include/ccsp/math_utils/
+    fi
     install -m 644 ${S}/include/webconfig_external_proto_ovsdb.h  ${D}/usr/include/ccsp
     install -m 644 ${S}/include/webconfig_external_proto.h  ${D}/usr/include/ccsp
     install -m 644 ${S}/include/webconfig_external_proto_tr181.h  ${D}/usr/include/ccsp
