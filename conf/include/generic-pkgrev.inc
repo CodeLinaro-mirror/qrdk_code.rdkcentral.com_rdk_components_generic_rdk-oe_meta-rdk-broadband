@@ -166,5 +166,5 @@ PR_pn-utopia = "r0"
 PV_pn-sysint-broadband = "${@pv_for_branch(d, '1.2.0_stable2_20260617')}"
 PR_pn-sysint-broadband = "r0"
 
-PV_pn-ccsp-dhcp-mgr = "${@pv_for_branch(d, '1.3.0_stable2_20260605')}"
+PV_pn-ccsp-dhcp-mgr = "${@pv_for_branch(d, '1.3.0_stable2_20260617')}"
 PR_pn-ccsp-dhcp-mgr = "r0"
