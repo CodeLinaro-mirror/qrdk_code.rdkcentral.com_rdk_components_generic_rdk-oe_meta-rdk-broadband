@@ -11,6 +11,7 @@ DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'core-net-lib', '
 require ccsp_common.inc
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare "
 CFLAGS:append_kirkstone = " -Wno-array-bounds -Wno-stringop-overflow "
+CFLAGS:append_wrynose = " -Wno-array-bounds -Wno-stringop-overflow "
 
 SRC_URI = "${CMF_GITHUB_ROOT}/hotspot;protocol=https;${BRANCH_ccsp_hotspot}"
 
@@ -24,6 +25,7 @@ LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-c
 LDFLAGS:remove = "${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
 LDFLAGS:append_dunfell = "${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS:append_kirkstone = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append_wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'OneWifi', '-DRDK_ONEWIFI', '', d)}"
 CFLAGS:append  = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'core-net-lib', ' -DCORE_NET_LIB', '', d)}"

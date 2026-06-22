@@ -10,7 +10,7 @@ SRC_URI = "${CMF_GITHUB_ROOT}/platform-manager;protocol=https;${BRANCH_rdk_fwupg
 
 S = "${WORKDIR}/git"
 
-EXTRA_OECONF:append  = " ${@bb.utils.contains('DISTRO_FEATURES','kirkstone','','--with-ccsp-platform=bcm --with-ccsp-arch=arm',d)} "
+EXTRA_OECONF:append  = " ${@bb.utils.contains_any('DISTRO_FEATURES','kirkstone wrynose','','--with-ccsp-platform=bcm --with-ccsp-arch=arm',d)} "
 
 inherit autotools pkgconfig
 

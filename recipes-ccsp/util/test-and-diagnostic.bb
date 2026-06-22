@@ -18,6 +18,7 @@ S = "${WORKDIR}/git"
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-type-limits -Wno-unused-parameter -Wno-format -Wno-misleading-indentation"
 
 CFLAGS:append_kirkstone = " -fcommon"
+CFLAGS:append_wrynose = " -fcommon"
 
 RDEPENDS:${PN} += "libpcap"
 RDEPENDS:${PN}:append = " bash"

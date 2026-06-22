@@ -27,6 +27,7 @@ CFLAGS:append = " \
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-enum-conversion -Wno-stringop-overflow -Wno-array-parameter"
 CFLAGS:append_kirkstone = " -Wno-format-truncation"
+CFLAGS:append_wrynose = " -Wno-format-truncation"
 
 
 LDFLAGS:append = " \

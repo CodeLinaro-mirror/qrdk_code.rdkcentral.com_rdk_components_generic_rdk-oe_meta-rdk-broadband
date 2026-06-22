@@ -44,12 +44,14 @@ CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'cac', '-DONEWIFI_
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'wps_support', '-DFEATURE_SUPPORT_WPS', '', d)}"
 EXTRA_OECONF:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'sta_manager', 'ONEWIFI_STA_MGR_APP_SUPPORT=true', 'ONEWIFI_STA_MGR_APP_SUPPORT=false', d)}"
 CFLAGS:append_kirkstone = " -Wno-deprecated-declarations"
+CFLAGS:append_wrynose = " -Wno-deprecated-declarations"
 
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'dbus_support', '-ldbus-1', '-lrbus', d)} "
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 LDFLAGS:remove = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5 ', '', d)}"
 LDFLAGS:append_dunfell = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS:append_kirkstone = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append_wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 
 EXTRA_OECONF:append = " --enable-libwebconfig"
 EXTRA_OECONF:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"

@@ -36,6 +36,7 @@ CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '', ' -DS
 LDFLAGS:remove = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5 ', '', d)}"
 LDFLAGS:append_dunfell = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS:append_kirkstone = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append_wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 
 EXTRA_OECONF:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 ISSYSTEMD = "${@bb.utils.contains_any('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}"

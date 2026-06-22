@@ -39,7 +39,7 @@ LDFLAGS += " ${@bb.utils.contains_any('DISTRO_FEATURES', 'cellular_libqmi_suppor
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'cellular_mgr_lite', '-DCELLULAR_MGR_LITE ', '', d)}"
 LDFLAGS:append_dunfell = "${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
-LDFLAGS:append_kirkstone = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append_wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 
 do_compile:prepend () {
     if ${@bb.utils.contains_any('DISTRO_FEATURES', 'WanFailOverSupportEnable', 'true', 'false', d)}; then
