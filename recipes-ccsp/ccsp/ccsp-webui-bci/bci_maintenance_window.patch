@@ -69,7 +69,7 @@ Index: git/source/Styles/xb3/code/software.php
 +
 +$('#restore-default-settings-maintenancewindow').click(function () {
 +
-+    saveMaintenanceWindow('0','0','0','3','0','0');
++    saveMaintenanceWindow('2','0','0','4','0','0');
 +
 +});
 +
