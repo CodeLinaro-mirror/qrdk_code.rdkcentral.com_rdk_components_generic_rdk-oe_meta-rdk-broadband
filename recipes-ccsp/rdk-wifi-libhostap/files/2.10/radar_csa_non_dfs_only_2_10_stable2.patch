@@ -1,0 +1,89 @@
+diff --git a/source/hostap-2.10/src/ap/dfs.c b/source/hostap-2.10/src/ap/dfs.c
+index de86407..6c394f0 100644
+--- a/source/hostap-2.10/src/ap/dfs.c
++++ b/source/hostap-2.10/src/ap/dfs.c
+@@ -69,6 +69,19 @@ static int dfs_get_used_n_chans(struct hostapd_iface *iface, int *seg1)
+ static int dfs_channel_available(struct hostapd_channel_data *chan,
+ 				 enum dfs_channel_type type)
+ {
++    /*
++     * DFS_NON_DFS_ONLY: used on radar-triggered CSA to guarantee we never
++     * land on another DFS channel (even a CAC-cleared one). Reject any
++     * channel that carries the RADAR flag.
++     */
++    if (type == DFS_NON_DFS_ONLY) {
++        if (chan->flag & HOSTAPD_CHAN_RADAR) {
++            wpa_printf(MSG_INFO,
++                "%s DFS: skipping DFS channel %d (non-DFS-only mode)", __func__, chan->chan);
++            return 0;   /* ← rejected */
++        }
++    }
++
+ 	if (type == DFS_NO_CAC_YET) {
+ 		/* Select only radar channel where CAC has not been
+ 		 * performed yet
+@@ -1233,11 +1246,16 @@ static int hostapd_dfs_start_channel_switch_cac(struct hostapd_iface *iface)
+ 	int secondary_channel;
+ 	u8 oper_centr_freq_seg0_idx = 0;
+ 	u8 oper_centr_freq_seg1_idx = 0;
+-	enum dfs_channel_type channel_type = DFS_ANY_CHANNEL;
++	/* DFS_NON_DFS_ONLY: radar was detected during active CAC — must not
++	 * switch to another DFS channel. Only non-radar channels are allowed.
++	 */
++	enum dfs_channel_type channel_type = DFS_NON_DFS_ONLY;   /* non-DFS only */	
+ 	int err = 1;
+ 
+ 	/* Radar detected during active CAC */
+ 	iface->cac_started = 0;
++	wpa_printf(MSG_INFO,
++		   "%s DFS: radar during CAC — selecting non-DFS-only fallback channel", __func__);
+ 	channel = dfs_get_valid_channel(iface, &secondary_channel,
+ 					&oper_centr_freq_seg0_idx,
+ 					&oper_centr_freq_seg1_idx,
+@@ -1342,19 +1360,21 @@ static int hostapd_dfs_start_channel_switch(struct hostapd_iface *iface)
+ 	if (iface->cac_started)
+ 		return hostapd_dfs_start_channel_switch_cac(iface);
+ 
+-	/*
+-	 * Allow selection of DFS channel in ETSI to comply with
+-	 * uniform spreading.
+-	 */
+-	if (iface->dfs_domain == HOSTAPD_DFS_REGION_ETSI)
+-		channel_type = DFS_ANY_CHANNEL;
+-
+-	/* Perform channel switch/CSA */
+-	channel = dfs_get_valid_channel(iface, &secondary_channel,
+-					&oper_centr_freq_seg0_idx,
+-					&oper_centr_freq_seg1_idx,
+-					channel_type);
+-
++    /*
++     * Radar detected: always move to a strictly non-DFS channel.
++     * DFS_NON_DFS_ONLY rejects any channel with HOSTAPD_CHAN_RADAR flag,
++     * including CAC-cleared DFS channels, ensuring we never CSA onto
++     * another DFS channel after a radar event.
++     */
++    wpa_printf(MSG_INFO,
++               " %s DFS: radar detected — selecting non-DFS-only fallback channel", __func__);
++    channel_type = DFS_NON_DFS_ONLY;
++
++    /* Perform channel switch/CSA */
++    channel = dfs_get_valid_channel(iface, &secondary_channel,
++                                    &oper_centr_freq_seg0_idx,
++                                    &oper_centr_freq_seg1_idx,
++                                    channel_type);    /* ← non-DFS only */
+ 	if (!channel) {
+ 		/*
+ 		 * If there is no channel to switch immediately to, check if
+diff --git a/source/hostap-2.10/src/ap/dfs.h b/source/hostap-2.10/src/ap/dfs.h
+index f737367..89e45cc 100644
+--- a/source/hostap-2.10/src/ap/dfs.h
++++ b/source/hostap-2.10/src/ap/dfs.h
+@@ -13,6 +13,7 @@ enum dfs_channel_type {
+ 	DFS_ANY_CHANNEL,
+ 	DFS_AVAILABLE, /* non-radar or radar-available */
+ 	DFS_NO_CAC_YET, /* radar-not-yet-available */
++	DFS_NON_DFS_ONLY, /* strictly non-radar channels only, used on radar-triggered CSA */	
+ };
+ 
+ int hostapd_handle_dfs(struct hostapd_iface *iface);
