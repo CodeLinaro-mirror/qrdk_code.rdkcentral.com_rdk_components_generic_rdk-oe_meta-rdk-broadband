@@ -106,18 +106,6 @@ if [ -z "$ADDRESS" ]; then
     exit 0
 fi
 
-ACCOUNT_ID=$(dmcli eRT getv Device.DeviceInfo.X_RDKCENTRAL-COM_RFC.Feature.AccountInfo.AccountID | grep value: | awk -F: '{print $3}' | tr -d ' ')
-
-if [ "$ACCOUNT_ID" = "Unknown" ]; then
-    REASON_ACCOUNT=$(grep "reason=invalid_account_id" $RESTART_FILE)
-    if [ -z "$REASON_ACCOUNT" ]; then
-        echo "reason=invalid_account_id" >> $RESTART_FILE
-    fi
-    exit 0
-else
-    sed -i '/reason=invalid_account_id/d' $RESTART_FILE
-fi
-
 #At this point mesh is up. Check if the connection was established initially by IDM
 
 if [ ! -f "/tmp/idm_established" ]; then

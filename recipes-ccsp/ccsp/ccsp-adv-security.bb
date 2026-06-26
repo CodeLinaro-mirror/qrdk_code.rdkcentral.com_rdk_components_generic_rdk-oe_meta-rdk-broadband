@@ -6,6 +6,8 @@ DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/advanced-security;protocol=https;${BRANCH_ccsp_adv_security}"
+SRC_URI += "file://advsec-agent"
+SRC_URI += "file://advsec-ni"
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
@@ -48,6 +50,10 @@ do_install_append () {
     install -m 0755 ${S}/scripts/advsec_cpu_mem_recovery.sh -t ${D}/usr/ccsp/advsec
     ln -sf ../../../usr/bin/CcspAdvSecuritySsp ${D}/usr/ccsp/advsec/CcspAdvSecuritySsp
     install -m 755 ${S}/scripts/advsec.sh -t ${D}/usr/ccsp/advsec
+    # Install logrotate configuration
+    install -d ${D}${sysconfdir}/logrotate.d
+    install -m 644 ${WORKDIR}/advsec-agent ${D}${sysconfdir}/logrotate.d/advsec-agent
+    install -m 644 ${WORKDIR}/advsec-ni ${D}${sysconfdir}/logrotate.d/advsec-ni
 }
 
 PACKAGES += "${PN}-ccsp"
@@ -61,6 +67,8 @@ FILES_${PN} += " \
     ${prefix}/ccsp/advsec/advsec_log_fp_status.sh \
     ${prefix}/ccsp/advsec/advsec_cpu_mem_recovery.sh \
     ${prefix}/ccsp/advsec/advsec.sh \
+    ${sysconfdir}/logrotate.d/advsec-agent \
+    ${sysconfdir}/logrotate.d/advsec-ni \
 "
 
 FILES_${PN}-dbg += " \
