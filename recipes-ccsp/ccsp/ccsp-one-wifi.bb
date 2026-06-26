@@ -28,12 +28,15 @@ CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-
 # To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where
 # the changes are merged before creating a pull request to github.com/rdkcentral/OneWifi
 SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;name=OneWifi"
+SRC_URI_append = " ${@bb.utils.contains('MACHINE', 'xe2-plume-rdk-extender-qsdk11', '', ' git://github.com/rdk-gdcs/lan_web.git;protocol=https;branch=main_branch_multiap_update;name=lan_web;destsuffix=lan_web', d)}"
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_OneWifi = "c733955352c6fc078f3dd8d8b3f4146b5f6a0482"
+SRCREV_OneWifi = "e0508d93ca342be7edea355baa55011f5fc7cc6b"
+SRCREV_lan_web = "${AUTOREV}"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"
+SRCREV_FORMAT = "lan_web"
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'sta_manager', '${RDKB_CCSP_ROOT_GIT}/WiFiStaManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiStaManager;name=WiFiStaManager', " ", d)}"
 SRCREV_WiFiStaManager = "${AUTOREV}"
@@ -67,6 +70,7 @@ CFLAGS_append = " \
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
 CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
+CFLAGS_append = " -DONEWIFI_MULTIAP_APP_SUPPORT"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIFI_HAL_VERSION_3', '', d)}"
 CFLAGS_append = " -DWIFI_CAPTIVE_PORTAL"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
@@ -77,6 +81,7 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'always_enable_ax_2g',
 
 EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', 'HAL_IPC=true', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC', '', d)}"
+EXTRA_OECONF_append = " ONEWIFI_MULTIAP_APP_SUPPORT=true"
 
 #!FIXME!
 #Ensure proper propagation of CFLAGS and LIBS through the build system.
@@ -104,6 +109,10 @@ do_compile_prepend () {
     fi
     if ${@bb.utils.contains('DISTRO_FEATURES', 'sta_manager', 'true', 'false', d)}; then
         cp -rf ${S}/../WiFiStaManager/* ${S}/source/apps/sta_mgr/
+    fi
+    if ${@bb.utils.contains('MACHINE', 'xe2-plume-rdk-extender-qsdk11', 'false', 'true', d)}; then
+        mkdir -p ${S}/source/apps/multi_ap/
+        cp -rf ${S}/../lan_web/* ${S}/source/apps/multi_ap/
     fi
 }
 
