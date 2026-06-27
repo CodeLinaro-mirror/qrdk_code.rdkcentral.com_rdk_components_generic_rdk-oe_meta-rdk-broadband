@@ -47,11 +47,11 @@ SRCREV_powermgr = "6ae00b767f01e59e616459f3bf15c5a1c04855d9"
 SRCREV_rdk_fwupgrade_manager = "6f6f2770842651c0fa86108d160b4f11eafd5d42"
 SRCREV_rdk_cellularmanager = "b22775eb119e26f0997eda2ed4189f3a0f2ba814"
 SRCREV_start_parodus = "d0a21616a7ae6fb0d419756fcb26e28174215cea"
-SRCREV_test_and_diagnostic = "1be40050879e617765e19266e6d9bf52aebf3b2f"
+SRCREV_test_and_diagnostic = "e796fcc4352b4c2788118a4b4e7bcd243fd24c79"
 SRCREV_utopia = "9b2c46e8f33bd71b320343dd9691180162e1da92"
 SRCREV_sysint-broadband = "258bb5160036f99c02d7e9cf8cc040ccef455c99"
-SRCREV_cpuprocanalyzer = "718897fdd0f89f1f50271e2ca6226507739ca461"
 SRCREV_ccsp-dhcp-mgr = "15eb5579d34f9ef1e93c9950bffeb71a2fe66356"
+SRCREV_cpuprocanalyzer = "718897fdd0f89f1f50271e2ca6226507739ca461"
 
 def srcrev_for_branch(d, default_rev):
     branch = d.getVar('PROJECT_BRANCH', True) or ''
