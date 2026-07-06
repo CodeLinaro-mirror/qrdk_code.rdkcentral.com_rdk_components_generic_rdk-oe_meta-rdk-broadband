@@ -26,7 +26,7 @@ SRC_URI = "\
     file://WebPA_getValues.patch \
     "
 PV = "git+${SRCPV}"
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 require ccsp_common.inc
 
 # generating minidumps symbols

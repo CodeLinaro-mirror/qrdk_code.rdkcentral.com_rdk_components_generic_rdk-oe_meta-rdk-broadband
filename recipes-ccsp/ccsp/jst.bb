@@ -6,7 +6,7 @@ DEPENDS = "ccsp-common-library ${@bb.utils.contains('DISTRO_FEATURES', 'rbus', '
 
 SRC_URI = "${CMF_GITHUB_ROOT}/javascript-templates;protocol=https;${BRANCH_jst}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit cmake
 

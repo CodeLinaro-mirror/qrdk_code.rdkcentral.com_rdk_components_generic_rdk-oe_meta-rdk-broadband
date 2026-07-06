@@ -16,7 +16,7 @@ require ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/cable-modem-agent;protocol=https;${BRANCH_ccsp_cm_agent}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 

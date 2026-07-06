@@ -8,7 +8,7 @@ require ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/platform-manager;protocol=https;${BRANCH_rdk_fwupgrade_manager}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF:append  = " ${@bb.utils.contains_any('DISTRO_FEATURES','kirkstone wrynose','','--with-ccsp-platform=bcm --with-ccsp-arch=arm',d)} "
 

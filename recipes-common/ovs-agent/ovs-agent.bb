@@ -29,7 +29,7 @@ LDFLAGS:append = " \
     -lrdkloggers \
 "
 LDFLAGS:append = " -ltelemetry_msgsender -lsecure_wrapper"
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit pkgconfig autotools systemd
 

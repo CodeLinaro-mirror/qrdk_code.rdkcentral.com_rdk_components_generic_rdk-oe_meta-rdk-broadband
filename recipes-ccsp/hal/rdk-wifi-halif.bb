@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/rdkcentral/rdkb-halif-wifi.git;protocol=https;branch
 
 SRCREV = "7fc33cfdcc60ac394a71cb79bf2553f0fcfcb799"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 

@@ -11,7 +11,7 @@ require ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/tr069-protocol-agent;protocol=https;${BRANCH_ccsp_tr069_pa}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools breakpad-logmapper
 

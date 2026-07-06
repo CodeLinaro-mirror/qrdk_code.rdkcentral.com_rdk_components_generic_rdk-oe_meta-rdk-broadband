@@ -15,7 +15,7 @@ CFLAGS += " -Wall -Werror -Wextra "
 
 SRC_URI = "${CMF_GITHUB_ROOT}/start-parodus;protocol=https;${BRANCH_start_parodus}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF:append  = " --with-ccsp-arch=arm "
 

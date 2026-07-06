@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 SRC_URI = "git://github.com/rdkcentral/rdkb-halif-emmc.git;protocol=https;branch=main"
 SRCREV = "5c2cdc21e8f3e8ffc87d50f9cd1aef0c06cc7e3f"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 

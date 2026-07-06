@@ -13,7 +13,7 @@ CFLAGS += " -Wall -Werror -Wextra -Wno-address -Wno-enum-conversion"
 
 SRC_URI = "${CMF_GITHUB_ROOT}/moca-agent;protocol=https;${BRANCH_ccsp_moca}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 

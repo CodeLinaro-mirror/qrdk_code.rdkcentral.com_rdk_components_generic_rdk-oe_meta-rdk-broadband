@@ -10,7 +10,7 @@ SRCREV_FORMAT = "hwselftest"
 require recipes-ccsp/ccsp/ccsp_common.inc
 
 SRC_URI = "${RDK_GENERIC_ROOT_GIT}/hwselftest-rdkb/generic;protocol=${RDK_GIT_PROTOCOL};branch=${RDK_GIT_BRANCH};name=hwselftest"
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS += " -I=${includedir}/dbus-1.0 -I=${libdir}/dbus-1.0/include -I=${includedir}/ccsp -I=${includedir}/syscfg"
 

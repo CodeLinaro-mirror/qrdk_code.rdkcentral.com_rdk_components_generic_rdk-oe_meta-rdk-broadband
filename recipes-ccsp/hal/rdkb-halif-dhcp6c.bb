@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 SRC_URI = "git://github.com/rdkcentral/rdkb-halif-dhcp6c.git;protocol=https;branch=main"
 SRCREV = "4cdc21e58e9871bd63381eaeedd0df79726b97ab"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 

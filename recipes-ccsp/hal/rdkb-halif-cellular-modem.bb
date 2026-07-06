@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 SRC_URI = "git://github.com/rdkcentral/rdkb-halif-cellular-modem.git;protocol=https;branch=main"
 SRCREV = "4422ee385c5bc5109e17d10904af3bc87a39fefc"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 

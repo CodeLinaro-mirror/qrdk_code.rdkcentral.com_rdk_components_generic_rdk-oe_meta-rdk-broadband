@@ -14,7 +14,7 @@ SRCREV_CcspEPONAgent = "${AUTOREV}"
 SRCREV_FORMAT = "CcspEPONAgent"
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)}
 

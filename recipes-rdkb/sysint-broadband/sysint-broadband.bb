@@ -26,7 +26,7 @@ SRCREV_FORMAT = "sysintbroadband_sysintdevice"
 
 #SRCREV = "${AUTOREV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit systemd breakpad-logmapper
 

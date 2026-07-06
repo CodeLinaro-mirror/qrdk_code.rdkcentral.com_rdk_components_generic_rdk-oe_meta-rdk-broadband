@@ -33,7 +33,7 @@ CFLAGS:append = " -Wno-deprecated-declarations -Wno-stringop-overflow -Wno-forma
 
 SRC_URI = "${CMF_GITHUB_ROOT}/provisioning-and-management;protocol=https;${BRANCH_ccsp_p_and_m}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 

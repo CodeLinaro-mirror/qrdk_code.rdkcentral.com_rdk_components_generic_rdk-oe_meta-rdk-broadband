@@ -25,7 +25,7 @@ SRCREV_CcspWifiAgent = "${AUTOREV}"
 SRCREV_FORMAT = "CcspWifiAgent"
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig systemd ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 

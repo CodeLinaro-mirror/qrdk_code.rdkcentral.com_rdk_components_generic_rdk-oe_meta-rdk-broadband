@@ -13,7 +13,7 @@ CFLAGS += " -Wall -Werror -Wextra -Wno-enum-conversion"
 
 SRC_URI = "${CMF_GITHUB_ROOT}/component-registry;protocol=https;${BRANCH_ccsp_cr}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools breakpad-logmapper
 

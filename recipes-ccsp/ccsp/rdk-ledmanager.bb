@@ -14,7 +14,7 @@ SRCREV_FORMAT = "LedManager"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig
 

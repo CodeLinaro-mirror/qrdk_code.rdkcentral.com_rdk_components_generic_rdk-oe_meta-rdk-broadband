@@ -27,7 +27,7 @@ LDFLAGS:append = " \
 RDEPENDS:${PN}:append = " bash"
 RDEPENDS:${PN}:remove_morty = "bash"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS += " -Wall -Werror -Wextra "
 

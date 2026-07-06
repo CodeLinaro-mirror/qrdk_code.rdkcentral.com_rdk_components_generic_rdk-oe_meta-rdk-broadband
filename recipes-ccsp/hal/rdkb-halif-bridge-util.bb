@@ -8,7 +8,7 @@ SRC_URI = "git://github.com/rdkcentral/rdkb-halif-bridge-util.git;protocol=https
 
 SRCREV = "15009f9e411ed6b0678254cffdb10919076d666d"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 

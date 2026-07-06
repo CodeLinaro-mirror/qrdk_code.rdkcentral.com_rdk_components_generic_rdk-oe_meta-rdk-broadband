@@ -18,7 +18,7 @@ SRC_URI = "${CMF_GITHUB_ROOT}/common-library;protocol=https;${BRANCH_ccsp_common
 SRC_URI:append = " file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"
 SRC_URI:remove_morty = " file://0001-DBusLoop-SSL_state-TLS_ST_OK.patch"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools systemd pkgconfig
 

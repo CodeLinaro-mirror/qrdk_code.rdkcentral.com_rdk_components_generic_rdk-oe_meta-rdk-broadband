@@ -8,7 +8,7 @@ GIT_TAG = "v1.0.0"
 SRC_URI := "git://github.com/rdkcentral/rdkb-halif-epon.git;protocol=https;branch=main;tag=${GIT_TAG}"
 PV = "${GIT_TAG}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS:append = " -I=${includedir}/epon "
 

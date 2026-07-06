@@ -7,7 +7,7 @@ SRC_URI = "${CMF_GIT_ROOT}/rdk/components/generic/rdm;protocol=${CMF_GIT_PROTOCO
 PV = "${RDK_RELEASE}+git${SRCPV}"
 SRCREV_rdmgeneric = "${AUTOREV}"
 SRCREV_FORMAT = "rdmgeneric"
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools coverity systemd syslog-ng-config-gen logrotate
 SYSLOG-NG_FILTER = "apps-rdm"

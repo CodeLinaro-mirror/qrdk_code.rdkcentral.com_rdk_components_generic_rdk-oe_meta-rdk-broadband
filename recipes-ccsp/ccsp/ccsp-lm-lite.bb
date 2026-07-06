@@ -11,7 +11,7 @@ require ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/lan-manager-lite;protocol=https;${BRANCH_ccsp_lm_lite}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 

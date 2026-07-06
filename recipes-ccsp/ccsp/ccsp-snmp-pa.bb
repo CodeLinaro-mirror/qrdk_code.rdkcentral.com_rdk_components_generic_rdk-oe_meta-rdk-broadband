@@ -13,7 +13,7 @@ SRC_URI = "${CMF_GITHUB_ROOT}/snmp-protocol-agent;protocol=https;${BRANCH_ccsp_s
 
 CFLAGS += " -Wall -Werror -Wextra "
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools breakpad-logmapper
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"

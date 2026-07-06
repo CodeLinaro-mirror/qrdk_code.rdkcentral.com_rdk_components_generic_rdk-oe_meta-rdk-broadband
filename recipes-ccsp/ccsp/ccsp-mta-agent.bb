@@ -13,7 +13,7 @@ CFLAGS += " -Wall -Werror -Wextra -Wno-free-nonheap-object -Wno-array-bounds -Wn
 
 SRC_URI = "${CMF_GITHUB_ROOT}/media-terminal-adapter-agent;protocol=https;${BRANCH_ccsp_mta_agent}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 

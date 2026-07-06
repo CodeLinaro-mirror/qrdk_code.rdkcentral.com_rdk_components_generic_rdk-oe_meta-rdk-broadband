@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
 SRC_URI = "git://github.com/rdkcentral/rdkb-halif-ethsw.git;protocol=https;branch=main"
 SRCREV = "0ad8eee7a163bddfbe86a52134d3d59fa40573f9"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 

@@ -12,7 +12,7 @@ PV = "${GIT_TAG}+git${SRCPV}"
 
 SRCREV_FORMAT = "TelcoVOICEManager"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF:append  = " ${@bb.utils.contains_any('DISTRO_FEATURES','kirkstone wrynose','','--with-ccsp-platform=bcm --with-ccsp-arch=arm',d)} "
 

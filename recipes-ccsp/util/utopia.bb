@@ -20,7 +20,7 @@ require recipes-ccsp/ccsp/ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/utopia;protocol=https;${BRANCH_utopia};name=Utopia"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 SRC_URI:append = " \

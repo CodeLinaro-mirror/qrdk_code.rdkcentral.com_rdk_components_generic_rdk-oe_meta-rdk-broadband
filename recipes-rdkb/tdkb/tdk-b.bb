@@ -10,7 +10,7 @@ SRC_URI = "${CMF_GITHUB_ROOT}/tdk-broadband;protocol=${CMF_GIT_PROTOCOL};branch=
 SRCREV_tdkb = "${AUTOREV}"
 SRCREV_FORMAT = "tdkb"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 DEPENDS += "jsoncpp jsonrpc ccsp-common-library ccsp-lm-lite hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi ccsp-cm-agent ccsp-mta-agent ccsp-p-and-m test-and-diagnostic trower-base64 rbus rdkb-halif-fwupgrade"
 

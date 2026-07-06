@@ -10,7 +10,7 @@ SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/opensource/ccsp/BatteryManager;protoc
 SRCREV = "${AUTOREV}"
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 DEPENDS += "glib-2.0"
 

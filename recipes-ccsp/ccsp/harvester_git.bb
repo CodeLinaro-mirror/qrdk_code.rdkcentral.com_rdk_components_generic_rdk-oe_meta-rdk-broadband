@@ -24,7 +24,7 @@ CFLAGS:append = " \
     -DFEATURE_SUPPORT_RDKLOG \
     "
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools breakpad-logmapper
 

@@ -30,7 +30,7 @@ SRC_URI ="${RDKB_CCSP_ROOT_GIT}/GatewayManager/generic;protocol=${RDK_GIT_PROTOC
 SRCREV_GatewayManager = "${AUTOREV}"
 SRCREV_FORMAT = "GatewayManager"
 PV = "${RDK_RELEASE}+git${SRCPV}"
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools systemd breakpad-logmapper
 

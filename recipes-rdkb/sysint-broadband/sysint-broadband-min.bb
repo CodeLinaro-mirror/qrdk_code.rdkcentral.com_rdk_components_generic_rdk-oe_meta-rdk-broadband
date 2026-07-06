@@ -19,7 +19,7 @@ SRCREV_sysintbroadband = "${AUTOREV}"
 SRCREV_sysintdevice = "${AUTOREV}"
 SRCREV_FORMAT = "sysintbroadband_sysintdevice"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit systemd 
 

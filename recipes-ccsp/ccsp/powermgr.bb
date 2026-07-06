@@ -19,7 +19,7 @@ LDFLAGS:append = " \
     -lrdkloggers \
 "
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools systemd breakpad-logmapper
 

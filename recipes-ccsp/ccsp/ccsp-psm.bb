@@ -13,7 +13,7 @@ require ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/persistent-storage-manager;protocol=https;${BRANCH_ccsp_psm};name=CcspPsm"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools breakpad-logmapper
 

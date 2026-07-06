@@ -13,7 +13,7 @@ SRCREV_GwProvApp = "${AUTOREV}"
 SRCREV_FORMAT = "GwProvApp"
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 

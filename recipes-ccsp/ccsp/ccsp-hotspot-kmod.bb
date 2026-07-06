@@ -10,7 +10,7 @@ CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare "
 
 do_compile[lockfiles] = "${TMPDIR}/kernel-scripts.lock"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit module
 

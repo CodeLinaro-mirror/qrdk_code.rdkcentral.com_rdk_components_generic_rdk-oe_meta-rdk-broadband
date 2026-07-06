@@ -12,7 +12,7 @@ SRC_URI = "${RDK_GENERIC_ROOT_GIT}/rfc-agent/generic;protocol=${RDK_GIT_PROTOCOL
 SRCREV_rfc-agent = "${AUTOREV}"
 SRCREV_FORMAT = "rfc-agent"
 PV = "${RDK_RELEASE}+git${SRCPV}"
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 
 inherit autotools systemd pkgconfig

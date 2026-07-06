@@ -13,7 +13,7 @@ PV = "10.0.11+git${SRCPV}"
 # This may need to be updated with new versions of obuspa
 SRC_URI += "file://0001-Update-vendor_defs.h-from-usp-pa-vendor-rdk.patch"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 # Configure options for OBUSPA
 PACKAGECONFIG ??= "bulkdata coap mqtt stomp uds"

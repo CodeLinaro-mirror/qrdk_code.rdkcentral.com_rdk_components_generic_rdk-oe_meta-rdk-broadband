@@ -17,7 +17,7 @@ SRCREV_FORMAT = "XTMAgent"
 #PV = "${RDK_RELEASE}"
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 B = "${WORKDIR}/build"
 
 EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "

@@ -16,7 +16,7 @@ SRC_URI = "${CMF_GIT_ROOT}/rdkb/components/generic/CcspLogAgent;protocol=${CMF_G
 SRCREV_LogAgent = "${AUTOREV}"
 SRCREV_FORMAT = "LogAgent"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig coverity ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)}
 

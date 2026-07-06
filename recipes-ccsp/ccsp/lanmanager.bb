@@ -10,7 +10,7 @@ require recipes-ccsp/ccsp/ccsp_common.inc
 
 SRC_URI = "${CMF_GITHUB_ROOT}/lan-manager;protocol=https;${BRANCH_lanmanager}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools systemd
 

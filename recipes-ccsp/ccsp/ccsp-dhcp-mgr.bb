@@ -11,7 +11,7 @@ require ccsp_common.inc
 GIT_TAG = "v1.0.0"
 SRC_URI = "git://github.com/rdkcentral/dhcp-manager.git;branch=main;protocol=https;name=DhcpManager;tag=${GIT_TAG}"
 PV = "${GIT_TAG}+git${SRCPV}"
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-shift-negative-value -Wno-attribute-warning"
 CFLAGS:append = " -Wno-format-truncation -Wno-incompatible-pointer-types -Wno-format-overflow -Wno-deprecated-declarations -Wno-sizeof-pointer-memaccess -Wno-memset-elt-size -Wno-maybe-uninitialized "

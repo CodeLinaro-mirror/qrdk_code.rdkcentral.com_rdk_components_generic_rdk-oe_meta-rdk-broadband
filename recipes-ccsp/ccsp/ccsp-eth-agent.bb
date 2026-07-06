@@ -14,7 +14,7 @@ SRC_URI = "${CMF_GITHUB_ROOT}/ethernet-agent;protocol=https;${BRANCH_ccsp_eth_ag
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-format-overflow -Wno-format-truncation -Wno-array-bounds"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 

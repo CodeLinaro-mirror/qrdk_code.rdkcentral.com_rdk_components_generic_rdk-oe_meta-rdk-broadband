@@ -14,7 +14,7 @@ DEPENDS += " trower-base64"
 
 SRC_URI = "${CMF_GITHUB_ROOT}/xdns;protocol=https;${BRANCH_ccsp_xdns}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)} breakpad-logmapper
 

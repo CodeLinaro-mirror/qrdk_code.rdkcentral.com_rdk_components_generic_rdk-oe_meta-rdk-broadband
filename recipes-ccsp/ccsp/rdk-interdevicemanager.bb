@@ -20,7 +20,7 @@ SRCREV_FORMAT = "InterDeviceManager"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 require ccsp_common.inc
 

@@ -6,7 +6,7 @@ DEPENDS += " json-c json-schema-validator"
 
 SRC_URI = "${CMF_GITHUB_ROOT}/json-hal-library;protocol=https;${BRANCH_json_hal_lib}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit cmake pkgconfig
 

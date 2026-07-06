@@ -15,7 +15,7 @@ CFLAGS:append_wrynose = " -Wno-array-bounds -Wno-stringop-overflow "
 
 SRC_URI = "${CMF_GITHUB_ROOT}/hotspot;protocol=https;${BRANCH_ccsp_hotspot}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools pkgconfig ${@bb.utils.contains_any("DISTRO_FEATURES", "kirkstone wrynose", "python3native", "pythonnative", d)}
 

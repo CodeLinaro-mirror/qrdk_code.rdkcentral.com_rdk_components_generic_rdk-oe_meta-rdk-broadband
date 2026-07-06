@@ -13,7 +13,7 @@ SRC_URI ="${RDKB_CCSP_ROOT_GIT}/PlatformManager/generic;protocol=${RDK_GIT_PROTO
 SRCREV_PlatformManager = "${AUTOREV}"
 SRCREV_FORMAT = "PlatformManager"
 PV = "${RDK_RELEASE}+git${SRCPV}"
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit autotools systemd
 

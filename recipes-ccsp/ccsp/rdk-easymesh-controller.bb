@@ -21,7 +21,7 @@ SRCREV_FORMAT = "RdkEasyMeshController"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 # inherit cmake pkgconfig
 inherit autotools pkgconfig systemd

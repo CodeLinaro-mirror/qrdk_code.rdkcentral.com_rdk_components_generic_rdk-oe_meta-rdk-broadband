@@ -19,7 +19,7 @@ SRCREV_FORMAT = "WifiEmulator"
 
 SRC_URI += "git://github.com/yhirose/cpp-httplib;protocol=https;branch=master;destsuffix=${S}/src/external_agent_cci/temp_http_server;name=cpp-httplib;subdir=cpp-httplib"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 LDFLAGS += " -L ${STAGING_LIBDIR}"
 
 LDFLAGS:append = " -lcjson -lcurl -lrbus -lsyscfg -lsecure_wrapper"

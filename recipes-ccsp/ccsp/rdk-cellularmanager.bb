@@ -9,7 +9,7 @@ DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' safec'
 
 SRC_URI = "${CMF_GITHUB_ROOT}/cellular-manager;protocol=https;${BRANCH_rdk_cellularmanager}"
 
-S = "${WORKDIR}/git"
+S = "${UNPACKDIR}/${PN}-${PV}"
 
 require ccsp_common.inc
 
