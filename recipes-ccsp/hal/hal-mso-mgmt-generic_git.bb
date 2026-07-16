@@ -12,7 +12,7 @@ DEPENDS += "rdkb-halif-mso"
 SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=msomgmthal"
 SRCREV_FORMAT = "msomgmthal"
 
-S = "${WORKDIR}/git/source/mso_mgmt"
+S = "${UNPACKDIR}/git/source/mso_mgmt"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 

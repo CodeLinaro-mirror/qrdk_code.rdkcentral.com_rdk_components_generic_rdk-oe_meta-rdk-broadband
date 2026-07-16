@@ -13,7 +13,7 @@ DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=cmhal"
 SRCREV_FORMAT = "cmhal"
 
-S = "${WORKDIR}/git/source/cm"
+S = "${UNPACKDIR}/git/source/cm"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
