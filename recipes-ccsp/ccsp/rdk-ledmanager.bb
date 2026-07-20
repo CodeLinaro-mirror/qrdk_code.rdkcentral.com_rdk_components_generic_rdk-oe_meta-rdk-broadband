@@ -9,7 +9,7 @@ require ccsp_common.inc
 
 SRC_URI = "git://github.com/rdkcentral/RdkLedManager.git;protocol=https;branch=main;name=LedManager"
 
-SRCREV_LedManager = "v2.0.0"
+SRCREV_LedManager = "v2.1.0"
 SRCREV_FORMAT = "LedManager"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
