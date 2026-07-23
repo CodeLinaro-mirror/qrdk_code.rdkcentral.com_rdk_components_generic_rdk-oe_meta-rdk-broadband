@@ -27,12 +27,12 @@ CFLAGS_append = " -Wno-format-overflow -Wno-format-truncation -Wno-tautological-
 
 # To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where
 # the changes are merged before creating a pull request to github.com/rdkcentral/OneWifi
-SRC_URI = "git://github.com/DharmalakshmiA/OneWifi.git;protocol=https;branch=LTE-2973-main;name=OneWifi"
+SRC_URI = "git://github.com/rdkcentral/OneWifi.git;protocol=https;branch=main;name=OneWifi"
 SRC_URI_append = " ${@bb.utils.contains('MACHINE', 'xe2-plume-rdk-extender-qsdk11', '', ' git://github.com/rdk-gdcs/lan_web.git;protocol=https;branch=main_branch_multiap_update;name=lan_web;destsuffix=lan_web', d)}"
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_OneWifi = "5535b10e0143e78d129d436231e9929984c30172"
+SRCREV_OneWifi = "d99a6334402fb379558c2dcb7f8ff1b27315c495"
 SRCREV_lan_web = "${AUTOREV}"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"
