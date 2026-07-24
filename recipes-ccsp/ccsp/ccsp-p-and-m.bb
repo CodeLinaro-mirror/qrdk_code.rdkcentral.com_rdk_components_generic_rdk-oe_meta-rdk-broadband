@@ -84,6 +84,9 @@ ENABLE_ONESTACK = "--enable-onestacksupport=${@bb.utils.contains('DISTRO_FEATURE
 EXTRA_OECONF_append = " ${ENABLE_ONESTACK}"
 
 CFLAGS_append = " -DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_INTERNET2P0 -DUSE_REMOTE_DEBUGGER"
+ENABLE_MCAST_SERVICE = "${@bb.utils.contains('DISTRO_FEATURES', 'no_utopia_mcast', 'no', 'yes', d)}"
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'no_utopia_mcast', '-DDISABLE_IGMPPROXY', '', d)}"
+
 CFLAGS_append = " ${@ '-DCONFIG_CISCO_HOTSPOT' if d.getVar('ENABLE_HOTSPOT', True) == 'yes' else '-DHOTSPOT_DISABLE'}"
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION -DCONFIG_CISCO_TRUE_STATIC_IP -D_BCI_FEATURE_REQ', '', d)}"

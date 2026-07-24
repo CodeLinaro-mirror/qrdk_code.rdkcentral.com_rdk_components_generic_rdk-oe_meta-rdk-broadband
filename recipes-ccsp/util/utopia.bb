@@ -54,6 +54,9 @@ CFLAGS_append = " \
 CFLAGS_append = " -I${STAGING_INCDIR}/tirpc "
 CFLAGS_remove_morty = " -I${STAGING_INCDIR}/tirpc "
 
+ENABLE_MCAST_SERVICE = "${@bb.utils.contains('DISTRO_FEATURES', 'no_utopia_mcast', 'no', 'yes', d)}"
+#EXTRA_OECONF_append = " --enable-igmpmld=${ENABLE_MCAST_SERVICE}"
+
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'bci', '-DCISCO_CONFIG_TRUE_STATIC_IP -DCISCO_CONFIG_DHCPV6_PREFIX_DELEGATION', '', d)}"
 
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
