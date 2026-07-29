@@ -103,6 +103,7 @@ SRC_URI += " \
         file://${HOSTAPD_PV}/MLO_Correct_PerStaProfile_rx_link_id.patch \
         file://${HOSTAPD_PV}/iPhone17_connection_fix.patch \
 	file://${HOSTAPD_PV}/radar_csa_non_dfs_only_2_11_stable2.patch \
+        file://${HOSTAPD_PV}/mlo_rx_link_id_fix.patch \
     ','', d)} \
 "
 
