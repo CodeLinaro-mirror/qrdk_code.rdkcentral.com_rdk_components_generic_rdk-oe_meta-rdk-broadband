@@ -7,7 +7,7 @@ LIC_FILES_CHKSUM = "file://../LICENSE;md5=5d50b1d1fb741ca457897f9e370bc747"
 PROVIDES = "rdk-wifi-hal"
 RPROVIDES:${PN} = "rdk-wifi-hal"
 
-DEPENDS += " openssl rdk-wifi-halif rdk-wifi-util cjson libpcap pkgconfig-native hal-platform mountutils"
+DEPENDS += " openssl rdk-wifi-halif rdk-wifi-util cjson libpcap hal-platform mountutils"
 DEPENDS += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' rdk-wifi-libhostap libnl ', '', d)} "
 DEPENDS:append_tchxb7 += "broadcom-wifi"
 DEPENDS:append_tchxb8 += "broadcom-wifi"
@@ -45,18 +45,26 @@ EXTRA_OECONF:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 
 EXTRA_OECONF:append_vbvxb9 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'XB10_PORT=true', '', d)}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
-S = "${WORKDIR}/git/src"
-PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/git/util_crypto,${WORKDIR}/git/platform"
+S = "${UNPACKDIR}/${PN}-${PV}/src"
+PSEUDO_IGNORE_PATHS .= ",${UNPACKDIR}/${PN}-${PV}/util_crypto,${UNPACKDIR}/${PN}-${PV}/platform"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'passpoint', '-DFEATURE_SUPPORT_PASSPOINT', '', d)}"
 CFLAGS:append_kirkstone = " -Wno-deprecated-declarations -Wno-enum-conversion -fcommon"
-CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', '-DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
-CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', '-DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
+CFLAGS:append:wrynose = " -Wno-deprecated-declarations \
+    -Wno-enum-conversion \
+    -fcommon \
+    -Wno-implicit-function-declaration \
+    -Wno-error=unused-but-set-variable \
+    -Wno-error=address \
+    -DCONFIG_WEP -DCONFIG_IEEE80211BE \
+    -Wno-error=unused-function "
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', ' -DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
 CFLAGS:append_kirkstone = " -Wno-deprecated-declarations "
-CFLAGS:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
-CFLAGS:append_vbvxb9 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
-CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostap_mgmt_frame_control', '-DFEATURE_HOSTAP_MGMT_FRAME_CTRL', '', d)}"
+CFLAGS:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', ' -DNEWPLATFORM_PORT', '', d)}"
+CFLAGS:append_vbvxb9 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', ' -DNEWPLATFORM_PORT', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostap_mgmt_frame_control', ' -DFEATURE_HOSTAP_MGMT_FRAME_CTRL', '', d)}"
 ###########################LEGACY#####################
 #This should be removed after you implement the propagation of additional definitions via pkg-config
 #for the ALL transitive targets for the ALL platform
@@ -141,6 +149,7 @@ ONEWIFI_CONFIG_FLAGS = " \
 #target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
 #target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' `pkg-config --exists libhostap && pkg-config --cflags libhostap`', '', d)}"
+CFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' `pkg-config --exists libhostap && pkg-config --cflags libhostap` ', '', d)}"
 ONEWIFI_CONFIG_FLAGS:append_tchxb7 = "-DTCXB7_PORT -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
 ONEWIFI_CONFIG_FLAGS:remove_tchxb8 = "-DTCXB7_PORT -DCONFIG_WMM"
 ONEWIFI_CONFIG_FLAGS:remove_tchxb7 = "-DCONFIG_WMM"
@@ -149,7 +158,7 @@ ONEWIFI_CONFIG_FLAGS:remove_xb10 = "-DTCXB7_PORT"
 ONEWIFI_CONFIG_FLAGS:append_xb10 = " -DXB10_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
 ONEWIFI_CONFIG_FLAGS:append_xb10 = " \
     -DCONFIG_HW_CAPABILITIES \
-    -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/wifi \
+    -I${PKG_CONFIG_STAGING_INCDIR}/usr/include/wifi \
 "
 ONEWIFI_CONFIG_FLAGS:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'CONFIG_IEEE80211BE', ' -DCONFIG_MLO', '', d)}"
 ONEWIFI_CONFIG_FLAGS:append_xer10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'CONFIG_IEEE80211BE', ' -DCONFIG_MLO', '', d)}"
@@ -157,8 +166,8 @@ ONEWIFI_CONFIG_FLAGS:remove_vbvxb9 = "-DTCXB7_PORT"
 ONEWIFI_CONFIG_FLAGS:append_vbvxb9 = " -DXB10_PORT -DCONFIG_OWE -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
 ONEWIFI_CONFIG_FLAGS:append_vbvxb9 = " \
     -DCONFIG_HW_CAPABILITIES \
-    -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/wifi \
+    -I${PKG_CONFIG_STAGING_INCDIR}/usr/include/wifi \
 "
 CFLAGS:append += " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', '${ONEWIFI_CONFIG_FLAGS}', '', d)}"
-inherit autotools
+inherit autotools pkgconfig
 

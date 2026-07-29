@@ -12,7 +12,8 @@ DEPENDS += "rdkb-halif-ethsw"
 SRC_URI = "${CMF_GITHUB_ROOT}/hardware-abstraction-layer;protocol=https;${BRANCH_hardware_abstraction_layer};name=ethswhal"
 SRCREV_FORMAT = "ethswhal"
 
-S = "${UNPACKDIR}/git/source/ethsw"
+#S = "${UNPACKDIR}/git/source/ethsw"
+S = "${UNPACKDIR}/${PN}-${PV}/source/ethsw"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 

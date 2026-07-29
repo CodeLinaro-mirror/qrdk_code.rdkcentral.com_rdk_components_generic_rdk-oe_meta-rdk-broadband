@@ -25,12 +25,14 @@ CFLAGS:append = " \
     -I=${includedir}/../lib/dbus-1.0/include \
     "
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 LDFLAGS:append = " -ltelemetry_msgsender -lsecure_wrapper"
 LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' -lfw_upgrade', '', d)}"
 LDFLAGS:remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' -lcm_mgnt', '', d)}"
 LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 
 do_install:append () {
     install -d ${D}${sysconfdir}

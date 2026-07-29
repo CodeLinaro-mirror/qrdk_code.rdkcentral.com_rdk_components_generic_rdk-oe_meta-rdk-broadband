@@ -18,9 +18,14 @@ DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " 
 
 CFLAGS:append = " -I${STAGING_INCDIR}/ccsp "
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 
+CFLAGS:append:wrynose = " \
+    -Wno-discarded-qualifiers \
+"
 do_compile:prepend () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_support', 'false', 'true', d)}; then
         (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-T2-USGv2.XML ${S}/source/t2ssp/dm_pack_datamodel.c)
@@ -44,3 +49,12 @@ EXTRA_OECONF += " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_supp
 EXTRA_OECONF += " --enable-libsyswrapper"
 EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '--enable-gtestapp', '', d)}"
 EXTRA_OECONF += " --enable-mountutils --enable-rdkcertselector"
+
+EXTRA_OECMAKE += "\
+    -Dmsgpack_DIR=${RECIPE_SYSROOT}${libdir}/cmake/msgpack-c \
+"
+EXTRA_OECMAKE += " \
+    -DMSGPACK_LIBRARIES=${RECIPE_SYSROOT}${libdir}/libmsgpack-c.so \
+    -DMSGPACK_INCLUDE_DIRS=${RECIPE_SYSROOT}${includedir} \
+"
+

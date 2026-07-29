@@ -26,6 +26,10 @@ inherit autotools systemd pkgconfig
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 
 LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+
+CFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+LDFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 CFLAGS:append = " -Wno-enum-conversion -Wno-deprecated-declarations "
@@ -91,8 +95,8 @@ do_install:append:class-target () {
     install -D -m 755 ${S}/scripts/cosa ${D}${sysconfdir}/ccsp/cosa
 
     # RBUS related scripts
-    install -d ${D}/lib/rdk
-    install -m 777 ${S}/scripts/rbus_termination_handler.sh ${D}/lib/rdk/rbus_termination_handler.sh
+    install -d ${D}${libdir}/rdk
+    install -m 777 ${S}/scripts/rbus_termination_handler.sh ${D}${libdir}/rdk/rbus_termination_handler.sh
     install -m 777 ${S}/systemd_units/scripts/parodusStartCheck.sh ${D}/usr/ccsp/parodusStartCheck.sh
 
     # gw_prov app sync check
@@ -135,7 +139,7 @@ FILES:${PN}-dbg = " \
 "
 
 FILES:${PN}:append = " \
-                     /lib/rdk/rbus_termination_handler.sh \
+                     ${libdir}/rdk/rbus_termination_handler.sh \
 		     /usr/ccsp/parodusStartCheck.sh \
                      /usr/ccsp/pam/GwProvCheck.sh \
                       "
