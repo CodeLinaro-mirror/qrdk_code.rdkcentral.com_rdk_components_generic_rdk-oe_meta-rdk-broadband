@@ -1,0 +1,242 @@
+diff --git a/source/hostap-2.11/src/ap/hostapd.c b/source/hostap-2.11/src/ap/hostapd.c
+index 29e695665..d01e6e4ff 100644
+--- a/source/hostap-2.11/src/ap/hostapd.c
++++ b/source/hostap-2.11/src/ap/hostapd.c
+@@ -175,6 +175,9 @@ static void hostapd_reload_bss(struct hostapd_data *hapd)
+ 			wpa_printf(MSG_ERROR, "Failed to configure WPA IE for "
+ 				   "the kernel driver.");
+ 	} else if (hapd->wpa_auth) {
++#ifdef CONFIG_IEEE80211BE
++		wpa_auth_ml_clear_sm_refs(hapd->wpa_auth);
++#endif /* CONFIG_IEEE80211BE */
+ 		wpa_deinit(hapd->wpa_auth);
+ 		hapd->wpa_auth = NULL;
+ 		hostapd_set_privacy(hapd, 0);
+diff --git a/source/hostap-2.11/src/ap/ieee802_11.c b/source/hostap-2.11/src/ap/ieee802_11.c
+index fc2468ae0..1aebcf002 100644
+--- a/source/hostap-2.11/src/ap/ieee802_11.c
++++ b/source/hostap-2.11/src/ap/ieee802_11.c
+@@ -3226,6 +3226,16 @@ static void handle_auth(struct hostapd_data *hapd,
+ 			os_memcpy(sta->mld_info.links[link_id].local_addr,
+ 				  hapd->own_addr, ETH_ALEN);
+ 		}
++
++		if ((!(sta->flags & WLAN_STA_MFP) ||
++		     !ap_sta_is_authorized(sta)) && sta->wpa_sm) {
++			struct wpa_state_machine *sm = sta->wpa_sm;
++
++			clear_wpa_sm_for_all_sta(hapd, sm);
++			wpa_auth_sta_deinit(sm);
++			sta->wpa_sm = NULL;
++			clear_wpa_sm_for_each_partner_link(hapd, sta);
++		}
+ 	}
+ #endif /* CONFIG_IEEE80211BE */
+ 
+@@ -4693,8 +4703,15 @@ static int ieee80211_ml_process_link(struct hostapd_data *hapd,
+ 	/* Maintain state machine reference on all link STAs, this is needed
+ 	 * during group rekey handling.
+ 	 */
+-	wpa_auth_sta_deinit(sta->wpa_sm);
++	/* Avoid deinitializing an SM that will be reused by the origin STA. */
++	if (sta->wpa_sm && sta->wpa_sm != origin_sta->wpa_sm) {
++#ifdef CONFIG_IEEE80211BE
++		clear_wpa_sm_for_all_sta(hapd, sta->wpa_sm);
++#endif /* CONFIG_IEEE80211BE */
++		wpa_auth_sta_deinit(sta->wpa_sm);
++	}
+ 	sta->wpa_sm = origin_sta->wpa_sm;
++	set_wpa_sm_for_each_partner_link(hapd, sta, origin_sta->wpa_sm);
+ 
+ 	/*
+ 	 * Do not initialize the EAPOL state machine.
+diff --git a/source/hostap-2.11/src/ap/sta_info.c b/source/hostap-2.11/src/ap/sta_info.c
+index 591e8550c..9099f6067 100644
+--- a/source/hostap-2.11/src/ap/sta_info.c
++++ b/source/hostap-2.11/src/ap/sta_info.c
+@@ -201,8 +201,8 @@ static void __ap_free_sta(struct hostapd_data *hapd, struct sta_info *sta)
+ 
+ 
+ #ifdef CONFIG_IEEE80211BE
+-static void clear_wpa_sm_for_each_partner_link(struct hostapd_data *hapd,
+-					       struct sta_info *psta)
++void set_wpa_sm_for_each_partner_link(struct hostapd_data *hapd,
++				      struct sta_info *psta, struct wpa_state_machine *wpa_sm)
+ {
+ 	struct sta_info *lsta;
+ 	struct hostapd_data *lhapd;
+@@ -216,7 +216,33 @@ static void clear_wpa_sm_for_each_partner_link(struct hostapd_data *hapd,
+ 
+ 		lsta = ap_get_sta(lhapd, psta->addr);
+ 		if (lsta)
+-			lsta->wpa_sm = NULL;
++			lsta->wpa_sm = wpa_sm;
++	}
++}
++
++
++void clear_wpa_sm_for_each_partner_link(struct hostapd_data *hapd,
++					struct sta_info *psta)
++{
++	set_wpa_sm_for_each_partner_link(hapd, psta, NULL);
++}
++
++
++void clear_wpa_sm_for_all_sta(struct hostapd_data *hapd,
++			      struct wpa_state_machine *wpa_sm)
++{
++	struct hostapd_data *lhapd;
++
++	if (!hapd->mld)
++		return;
++
++	for_each_mld_link(lhapd, hapd) {
++		struct sta_info *sta;
++
++		for (sta = lhapd->sta_list; sta; sta = sta->next) {
++			if (sta->wpa_sm == wpa_sm)
++				sta->wpa_sm = NULL;
++		}
+ 	}
+ }
+ #endif /* CONFIG_IEEE80211BE */
+@@ -358,7 +384,12 @@ void ap_free_sta(struct hostapd_data *hapd, struct sta_info *sta)
+ #ifdef CONFIG_IEEE80211BE
+ 	if (!ap_sta_is_mld(hapd, sta) ||
+ 	    hapd->mld_link_id == sta->mld_assoc_link_id) {
+-		wpa_auth_sta_deinit(sta->wpa_sm);
++		struct wpa_state_machine *sm = sta->wpa_sm;
++
++		/* Make sure no other link STA keeps a stale pointer to the
++		 * wpa_sm that is about to be freed. */
++		clear_wpa_sm_for_all_sta(hapd, sm);
++		wpa_auth_sta_deinit(sm);
+ 		/* Remove references from partner links. */
+ 		clear_wpa_sm_for_each_partner_link(hapd, sta);
+ 	}
+@@ -972,7 +1003,10 @@ static void ap_sta_disconnect_common(struct hostapd_data *hapd,
+ #ifdef CONFIG_IEEE80211BE
+ 	if (!hapd->conf->mld_ap ||
+ 	    hapd->mld_link_id == sta->mld_assoc_link_id) {
+-		wpa_auth_sta_deinit(sta->wpa_sm);
++		struct wpa_state_machine *sm = sta->wpa_sm;
++
++		clear_wpa_sm_for_all_sta(hapd, sm);
++		wpa_auth_sta_deinit(sm);
+ 		clear_wpa_sm_for_each_partner_link(hapd, sta);
+ 	}
+ #else /* CONFIG_IEEE80211BE */
+diff --git a/source/hostap-2.11/src/ap/sta_info.h b/source/hostap-2.11/src/ap/sta_info.h
+index c48c1be1e..c321680a3 100644
+--- a/source/hostap-2.11/src/ap/sta_info.h
++++ b/source/hostap-2.11/src/ap/sta_info.h
+@@ -455,5 +455,10 @@ static inline void ap_sta_set_mld(struct sta_info *sta, bool mld)
+ void ap_sta_free_sta_profile(struct mld_info *info);
+ 
+ void hostapd_free_link_stas(struct hostapd_data *hapd);
+-
++void set_wpa_sm_for_each_partner_link(struct hostapd_data *hapd,
++				      struct sta_info *psta, struct wpa_state_machine *wpa_sm);
++void clear_wpa_sm_for_each_partner_link(struct hostapd_data *hapd,
++					struct sta_info *psta);
++void clear_wpa_sm_for_all_sta(struct hostapd_data *hapd,
++			      struct wpa_state_machine *wpa_sm);
+ #endif /* STA_INFO_H */
+diff --git a/source/hostap-2.11/src/ap/wpa_auth.c b/source/hostap-2.11/src/ap/wpa_auth.c
+index 02436e544..a07bc9963 100644
+--- a/source/hostap-2.11/src/ap/wpa_auth.c
++++ b/source/hostap-2.11/src/ap/wpa_auth.c
+@@ -151,6 +151,7 @@ void wpa_release_link_auth_ref(struct wpa_state_machine *sm,
+ 			wpa_group_put(sm->mld_links[link_id].wpa_auth,
+ 				      sm->mld_links[link_id].wpa_auth->group);
+ 			sm->mld_links[link_id].wpa_auth = NULL;
++			sm->mld_links[link_id].valid = false;
+ 		}
+ 	}
+ }
+@@ -236,6 +237,51 @@ wpa_get_primary_auth(struct wpa_authenticator *wpa_auth)
+ }
+ 
+ 
++#ifdef CONFIG_IEEE80211BE
++struct wpa_auth_ml_clear_refs_ctx {
++	struct wpa_authenticator *dying_auth;
++	int link_id;
++};
++
++
++static int wpa_auth_ml_clear_sm_refs_cb(struct wpa_state_machine *sm, void *ctx)
++{
++	struct wpa_auth_ml_clear_refs_ctx *c = ctx;
++
++	if (!sm)
++		return 0;
++
++	if (c->link_id < MAX_NUM_MLD_LINKS &&
++	    sm->mld_links[c->link_id].wpa_auth == c->dying_auth) {
++		sm->mld_links[c->link_id].wpa_auth = NULL;
++		sm->mld_links[c->link_id].valid = false;
++	}
++
++	return 0;
++}
++
++
++static int wpa_auth_ml_clear_sm_refs_auth_cb(struct wpa_authenticator *auth,
++					     void *ctx)
++{
++	wpa_auth_for_each_sta(auth, wpa_auth_ml_clear_sm_refs_cb, ctx);
++	return 0;
++}
++
++void wpa_auth_ml_clear_sm_refs(struct wpa_authenticator *wpa_auth)
++{
++	struct wpa_auth_ml_clear_refs_ctx ctx;
++
++	if (!wpa_auth || !wpa_auth->is_ml)
++		return;
++
++	ctx.dying_auth = wpa_auth;
++	ctx.link_id = wpa_auth->link_id;
++
++	wpa_auth_for_each_auth(wpa_auth, wpa_auth_ml_clear_sm_refs_auth_cb, &ctx);
++}
++#endif /* CONFIG_IEEE80211BE */
++
+ static inline int wpa_auth_mic_failure_report(
+ 	struct wpa_authenticator *wpa_auth, const u8 *addr)
+ {
+@@ -1079,6 +1125,7 @@ static void wpa_free_sta_sm(struct wpa_state_machine *sm)
+ 		wpa_group_put(sm->mld_links[link_id].wpa_auth,
+ 			      sm->mld_links[link_id].wpa_auth->group);
+ 		sm->mld_links[link_id].wpa_auth = NULL;
++		sm->mld_links[link_id].valid = false;
+ 	}
+ #endif /* CONFIG_IEEE80211BE */
+ 	wpa_group_put(sm->wpa_auth, sm->group);
+diff --git a/source/hostap-2.11/src/ap/wpa_auth.h b/source/hostap-2.11/src/ap/wpa_auth.h
+index c1c7814d0..bf86038d0 100644
+--- a/source/hostap-2.11/src/ap/wpa_auth.h
++++ b/source/hostap-2.11/src/ap/wpa_auth.h
+@@ -659,6 +659,7 @@ void wpa_auth_ml_get_key_info(struct wpa_authenticator *a,
+ 
+ void wpa_release_link_auth_ref(struct wpa_state_machine *sm,
+ 			       int release_link_id);
++void wpa_auth_ml_clear_sm_refs(struct wpa_authenticator *wpa_auth);
+ 
+ #if defined(CONFIG_IEEE80211BE) && defined(CONFIG_DRIVER_BRCM)
+ #define MAX_NUM_LINKS 			4
+diff --git a/source/hostap-2.11/src/ap/wpa_auth_glue.c b/source/hostap-2.11/src/ap/wpa_auth_glue.c
+index 7c7da8b1e..2dd6f08b1 100644
+--- a/source/hostap-2.11/src/ap/wpa_auth_glue.c
++++ b/source/hostap-2.11/src/ap/wpa_auth_glue.c
+@@ -1940,6 +1940,9 @@ void hostapd_deinit_wpa(struct hostapd_data *hapd)
+ 
+ 	rsn_preauth_iface_deinit(hapd);
+ 	if (hapd->wpa_auth) {
++#ifdef CONFIG_IEEE80211BE
++		wpa_auth_ml_clear_sm_refs(hapd->wpa_auth);
++#endif /* CONFIG_IEEE80211BE */
+ 		wpa_deinit(hapd->wpa_auth);
+ 		hapd->wpa_auth = NULL;
+ 
