@@ -45,6 +45,7 @@ CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC
 DEPENDS:remove:class-native = " safec-native"
 CFLAGS += " -Wall -Werror -Wextra -Wno-pointer-sign -Wno-sign-compare -Wno-deprecated-declarations -Wno-type-limits -Wno-unused-parameter -Wno-return-local-addr "
 CFLAGS:append = " -Wno-format-overflow -Wno-misleading-indentation -Wno-enum-conversion "
+CPPFLAGS:append = " -I${RECIPE_SYSROOT}/usr/include/safeclib"
 
 CFLAGS:append = " \
     -I${STAGING_INCDIR}/ccsp \
@@ -72,7 +73,7 @@ LDFLAGS:remove_morty = " -ltirpc -lrt"
 
 do_install:prepend  () {
     if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'true', 'false', d)}; then
-       sed -i '/mta/Id' ${WORKDIR}/git/source/scripts/init/defaults/system_defaults_arm
+       sed -i '/mta/Id' ${UNPACKDIR}/git/source/scripts/init/defaults/system_defaults_arm
     fi
 }
 
@@ -99,9 +100,9 @@ do_install:append () {
     install -d ${D}${sysconfdir}/cron/cron.daily
     install -d ${D}${sysconfdir}/cron/cron.weekly
     install -d ${D}${sysconfdir}/cron/cron.monthly
-    install -m 444 ${WORKDIR}/udhcpc.vendor_specific  ${D}${sysconfdir}/udhcpc.vendor_specific
-    install -m 755 ${WORKDIR}/udhcpc.script ${D}${sysconfdir}/
-    install -m 755 ${WORKDIR}/dhcpswitch.sh ${D}${sysconfdir}/
+    install -m 444 ${UNPACKDIR}/udhcpc.vendor_specific  ${D}${sysconfdir}/udhcpc.vendor_specific
+    install -m 755 ${UNPACKDIR}/udhcpc.script ${D}${sysconfdir}/
+    install -m 755 ${UNPACKDIR}/dhcpswitch.sh ${D}${sysconfdir}/
 
     install -m 0644 ${S}/source/scripts/init/service.d/cron.allow ${D}${sysconfdir}/cron/
     install -m 755 ${S}/source/scripts/init/service.d/ddns_daily.sh ${D}${sysconfdir}/cron/cron.daily/
@@ -123,7 +124,7 @@ do_install:append () {
 
     DISTRO_PARTNER_DEFAULT_EXT="${@bb.utils.contains('DISTRO_FEATURES','partner_default_ext','true','false',d)}"
     if [ $DISTRO_PARTNER_DEFAULT_EXT = 'true' ]; then
-        install -D -m 755 ${WORKDIR}/ApplySystemDefaults.service ${D}${systemd_unitdir}/system/ApplySystemDefaults.service
+        install -D -m 755 ${UNPACKDIR}/ApplySystemDefaults.service ${D}${systemd_unitdir}/system/ApplySystemDefaults.service
     fi
 
     # Creating symbolic links to install files in specific directory as in legacy builds

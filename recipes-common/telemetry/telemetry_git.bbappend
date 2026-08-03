@@ -57,4 +57,8 @@ EXTRA_OECMAKE += " \
     -DMSGPACK_LIBRARIES=${RECIPE_SYSROOT}${libdir}/libmsgpack-c.so \
     -DMSGPACK_INCLUDE_DIRS=${RECIPE_SYSROOT}${includedir} \
 "
-
+do_configure:prepend() {
+    find ${S} -type f \( -name Makefile.am \) -exec sed -i 's/-lmsgpackc/-lmsgpack-c/g' {} \;
+}
+CPPFLAGS:append = " -I${RECIPE_SYSROOT}/usr/include/safeclib"
+LDFLAGS:append:wrynose = " -lsafec"

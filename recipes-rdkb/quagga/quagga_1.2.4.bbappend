@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-SRC_URI += "file://rtadv.patch"
+#SRC_URI += "file://rtadv.patch"
 SRC_URI += "file://0001-RDKB-20441-zebra-service-fails-to-start.patch"
 SRC_URI += "file://quagga-Avoid-duplicate-connected-address.patch"
 
@@ -18,5 +18,13 @@ RDEPENDS:${PN}:remove = "${PN}-bgpd ${PN}-isisd ${PN}-ospf6d ${PN}-ospfd ${PN}-r
 do_install:append() {
     rm -rf ${D}${base_libdir}
     rm -r ${D}${sysconfdir}/quagga/*.conf.sample
-}
 
+    install -d ${D}${libdir}
+
+#    cp -a ${B}/lib/.libs/libzebra.so* ${D}${libdir}/
+    install -m 0755 ${B}/lib/.libs/libzebra.so.1.0.0 ${D}${libdir}/
+    ln -sf libzebra.so.1.0.0 ${D}${libdir}/libzebra.so.1
+    ln -sf libzebra.so.1 ${D}${libdir}/libzebra.so
+}
+FILES:libzebra = "${libdir}/libzebra.so.*"
+FILES:${PN}-dev += "${libdir}/libzebra.so"

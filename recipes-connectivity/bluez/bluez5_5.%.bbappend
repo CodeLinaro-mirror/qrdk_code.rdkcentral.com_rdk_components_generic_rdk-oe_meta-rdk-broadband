@@ -3,3 +3,12 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 # for bluez support
 SRC_URI:append_broadband += "file://Bluetooth_service_dependency_broadband.patch"
 SRC_URI:append_broadband += " ${@bb.utils.contains('DISTRO_FEATURES', 'btr_hciadv', 'file://Bluetooth_service_beacon_dependency_broadband.patch', '', d)}"
+
+CFLAGS:append:wrynose = " \
+    -Wno-error=implicit-function-declaration  \
+    -Wno-error=discarded-qualifiers \
+"
+do_configure:append:wrynose() {
+    sed -i 's/extern int rl_message ()/extern int rl_message (const char *, ...)/' \
+        ${RECIPE_SYSROOT}/usr/include/readline/readline.h
+}
