@@ -19,7 +19,7 @@ VOICE_NOT_SUPPORTED = "${@bb.utils.contains('DISTRO_FEATURES', 'voice_not_suppor
 REMOVE_DUMMY_WAN0 = "${@bb.utils.contains('DISTRO_FEATURES', 'remove_dummy_wan0', 'true', 'false', d)}"
 
 SRC_URI = "${CMF_GITHUB_ROOT}/sysint-broadband;protocol=https;${BRANCH_sysint-broadband};name=sysintbroadband"
-SRC_URI += "${CMF_GIT_ROOT}/rdkb/devices/intel-x86-pc/emulator/sysint;module=.;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=git/device;name=sysintdevice"
+SRC_URI += "${CMF_GIT_ROOT}/rdkb/devices/intel-x86-pc/emulator/sysint;module=.;protocol=${CMF_GIT_PROTOCOL};branch=${CMF_GIT_BRANCH};destsuffix=${BP}/device;name=sysintdevice"
 
 SRCREV_sysintdevice = "${AUTOREV}"
 SRCREV_FORMAT = "sysintbroadband_sysintdevice"
@@ -31,7 +31,7 @@ S = "${UNPACKDIR}/${PN}-${PV}"
 inherit systemd breakpad-logmapper
 
 do_install() {
-        install -d ${D}/bin
+        install -d ${D}/${bindir}
 	install -d ${D}${sysconfdir}
         install -d ${D}/rdklogger
         install -d ${D}${systemd_unitdir}/system
@@ -136,7 +136,7 @@ do_install() {
 	fi
         install -m 0644 ${S}/etc/telemetry2_0.properties ${D}${sysconfdir}
 	install -m 755 ${S}/log_timestamp.sh ${D}${sysconfdir}
-	install -m 755 ${S}/timestamp ${D}/bin
+	install -m 755 ${S}/timestamp ${D}${bindir}
    	install -m 755 ${S}/postwanstatusevent.sh ${D}${base_libdir}/rdk
         if ${@bb.utils.contains('DISTRO_FEATURES', 'snmppa', 'true', 'false', d)}; then
              install -m 755 ${S}/handlesnmpv3.sh ${D}${base_libdir}/rdk
@@ -217,7 +217,7 @@ SYSTEMD_SERVICE:${PN} += "system-time-set.path"
 SYSTEMD_SERVICE:${PN} += "system-time-event.service"
 SYSTEMD_SERVICE:${PN} += "ntp-time-sync-event.service"
 
-FILES:${PN} += "/bin/*"
+FILES:${PN} += "${bindir}/*"
 FILES:${PN} += "${sysconfdir}/*"
 FILES:${PN} += "rdklogger/*"
 FILES:${PN} += "${base_libdir}/rdk/*"

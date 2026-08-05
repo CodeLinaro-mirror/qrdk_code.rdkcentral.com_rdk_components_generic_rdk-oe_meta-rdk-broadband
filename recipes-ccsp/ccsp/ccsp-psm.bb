@@ -30,7 +30,7 @@ LDFLAGS:append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' 
 LDFLAGS:append_wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
-LDFLAGS +=" -lprivilege -lsyscfg -lsecure_wrapper"
+LDFLAGS +=" -lprivilege -lsyscfg -lsecure_wrapper -lsafec"
 EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 
 CFLAGS:append = " \
@@ -39,8 +39,9 @@ CFLAGS:append = " \
     -I=${includedir}/ccsp \
     -I=${includedir}/rbus \
     -I${STAGING_INCDIR}/syscfg \
+    -I${STAGING_INCDIR}/safeclib \
     "
-
+CFLAGS:append:wrynose = " -Wno-error=address"
 LDFLAGS:append = " \
     -ldbus-1 \
     "

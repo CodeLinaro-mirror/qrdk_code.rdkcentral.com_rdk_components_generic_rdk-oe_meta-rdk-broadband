@@ -1,4 +1,5 @@
 DEPENDS:append = " libunpriv "
+FILESEXTRAPATHS:append := ":${THISDIR}/${PN}"
 LDFLAGS:append = " \
                  -lprivilege \
                  "
@@ -17,6 +18,7 @@ CFLAGS:prepend += "-I${PKG_CONFIG_SYSROOT_DIR}/usr/include/libnl3 "
 CFLAGS:prepend += "-I${PKG_CONFIG_SYSROOT_DIR}/usr/include/ "
 CFLAGS:append = " \
     -I${STAGING_INCDIR}/trower-base64 \
+    -I${STAGING_INCDIR}/safeclib \
     "
 
 DEPENDS:append += " libunpriv"
@@ -37,7 +39,7 @@ SRCREV_FORMAT = "OneWifi"
 
 SRC_URI:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'sta_manager', '${RDKB_CCSP_ROOT_GIT}/WiFiStaManager/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiStaManager;name=WiFiStaManager', " ", d)}"
 SRCREV_WiFiStaManager = "${AUTOREV}"
-
+SRC_URI:append:wrynose = " file://onewifi_wrynose_issues.patch"
 S = "${UNPACKDIR}/${PN}-${PV}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
@@ -67,7 +69,7 @@ CFLAGS:append = " \
     -I${STAGING_INCDIR}/ccsp \
     -I=${includedir}/rbus \
 "
-
+CFLAGS:append:wrynose = " -Wno-incompatible-pointer-types -Wno-int-conversion -Wno-return-mismatch"
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
 CFLAGS:append = " -DWIFI_CAPTIVE_PORTAL"
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'halVersion3', ' -DWIFI_HAL_VERSION_3', '', d)}"
@@ -90,6 +92,7 @@ CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'hal-ipc', ' -DHAL
 #target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
 #target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
 CFLAGS:append = " `pkg-config --exists libhostap && pkg-config --cflags libhostap`"
+CFLAGS:remove:wrynose = " `pkg-config --exists libhostap && pkg-config --cflags libhostap`"
 
 LDFLAGS:append = " \
     -ltelemetry_msgsender \
@@ -178,7 +181,6 @@ do_install:append_puma7 () {
 do_install:append_bcm3390() {
     rm ${D}/usr/ccsp/wifi/br0_ip.sh
 }
-
 FILES:${PN} = "\
     ${bindir}/OneWifi \
     ${bindir}/wifi_ctrl \

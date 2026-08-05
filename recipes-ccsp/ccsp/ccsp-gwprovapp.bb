@@ -36,7 +36,7 @@ CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC
 CFLAGS:append =  "${@bb.utils.contains('DISTRO_FEATURES', 'lld_support', ' -DENABLE_LLD_SUPPORT ', '', d)}"
 
 EXTRA_OECONF:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '--enable-wanmgr', '', d)}"
-LDFLAGS += "-pthread -ltelemetry_msgsender"
+LDFLAGS += "-pthread -ltelemetry_msgsender -lsafec"
 
 do_install:append () {
     # Config files and scripts

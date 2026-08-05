@@ -42,7 +42,7 @@ CFLAGS:remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_supp
 LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'dbus_support', '-ldbus-1', '', d)}"
 LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_json_dml_support', '', '-llibparodus', d)}"
 LDFLAGS:append = " -ltrower-base64"
-LDFLAGS:append = " -lutctx"
+LDFLAGS:append = " -lutctx -lsafec"
 
 
 do_compile:prepend () {

@@ -1,0 +1,176 @@
+Upstream-Status: Pending
+diff --git a/source/apps/levl/wifi_levl.c b/source/apps/levl/wifi_levl.c
+index d4ce2a04..bf0a1f74 100644
+--- a/source/apps/levl/wifi_levl.c
++++ b/source/apps/levl/wifi_levl.c
+@@ -1648,7 +1648,7 @@ bus_error_t levl_vap_addrowhandler(char const* tableName, char const* aliasName,
+     wifi_mgr_t *mgr = get_wifimgr_obj();
+     unsigned int vap_index;
+ 
+-    if (instanceCounter > getTotalNumberVAPs(NULL)) {
++    if (instanceCounter > getTotalNumberVAPs()) {
+         instanceCounter = 1;
+     }
+     vap_index  = VAP_INDEX(mgr->hal_cap, (instanceCounter-1)) + 1;
+@@ -1697,7 +1697,7 @@ bus_error_t levl_radio_addrowhandler(char const* tableName, char const* aliasNam
+ 
+     static int unsigned instanceCounter = 1;
+ 
+-    if (instanceCounter > getNumberRadios(NULL)) {
++    if (instanceCounter > getNumberRadios()) {
+         instanceCounter = 1;
+     }
+ 
+@@ -1724,7 +1724,7 @@ int levl_init(wifi_app_t *app, unsigned int create_flag)
+     char *component_name = "WifiAppsLevl";
+ 
+     int num_of_radio = getNumberRadios();
+-    int num_of_vaps = getTotalNumberVAPs(NULL);
++    int num_of_vaps = getTotalNumberVAPs();
+     int num_elements;
+ 
+     bus_data_element_t dataElements[] = {
+diff --git a/source/core/Makefile.am b/source/core/Makefile.am
+index c6b77175..5285ef7d 100644
+--- a/source/core/Makefile.am
++++ b/source/core/Makefile.am
+@@ -198,7 +198,7 @@ endif
+ 
+ OneWifi_SOURCES += $(top_srcdir)/lib/common/os_time.c $(top_srcdir)/lib/common/util.c $(top_srcdir)/lib/common/monitor.c $(top_srcdir)/lib/common/os.c $(top_srcdir)/lib/common/os_util.c $(top_srcdir)/lib/common/os_exec.c $(top_srcdir)/lib/const/const.c $(top_srcdir)/lib/ds/ds_tree.c $(top_srcdir)/lib/json_util/string.c $(top_srcdir)/lib/json_util/memdbg.c $(top_srcdir)/lib/json_util/future.c $(top_srcdir)/lib/log/log.c $(top_srcdir)/lib/log/log_syslog.c $(top_srcdir)/lib/log/log_stdout.c $(top_srcdir)/lib/log/log_traceback.c $(top_srcdir)/lib/osa/os_backtrace.c $(top_srcdir)/lib/osa/os_socket.c $(top_srcdir)/lib/osa/os_nif_linux.c $(top_srcdir)/lib/osa/os_regex.c $(top_srcdir)/lib/osa/os_proc.c $(top_srcdir)/lib/osa/os_file_ops.c $(top_srcdir)/lib/osa/os_file.c $(top_srcdir)/lib/osa/os_random.c $(top_srcdir)/lib/ovsdb/ovsdb.c $(top_srcdir)/lib/ovsdb/ovsdb_method.c $(top_srcdir)/lib/ovsdb/ovsdb_update.c $(top_srcdir)/lib/ovsdb/ovsdb_sync.c $(top_srcdir)/lib/ovsdb/ovsdb_sync_api.c $(top_srcdir)/lib/ovsdb/ovsdb_table.c $(top_srcdir)/lib/ovsdb/ovsdb_cache.c $(top_srcdir)/lib/ovsdb/ovsdb_utils.c $(top_srcdir)/lib/pjs/pjs_array.c $(top_srcdir)/lib/pjs/pjs_ovs_basic.c $(top_srcdir)/lib/pjs/pjs_basic.c $(top_srcdir)/lib/pjs/pjs_types.c $(top_srcdir)/lib/pjs/pjs_ovs_set.c $(top_srcdir)/lib/pjs/pjs_ovs_map.c $(top_srcdir)/lib/qm/qm_conn.c $(top_srcdir)/lib/schema/schema.c $(top_srcdir)/lib/pktgen/pktgen.c $(top_srcdir)/lib/datapipeline/dppline.c $(top_srcdir)/lib/datapipeline/opensync_stats.pb-c.c $(top_srcdir)/lib/datapipeline/osp_unit_rdk.c $(top_srcdir)/lib/datapipeline/devinfo.c
+ 
+-OneWifi_LDFLAGS = -rdynamic -lwebconfig_framework -lsecure_wrapper $(SYSTEMD_LDFLAGS) -luuid -lsecure_wrapper -lmsgpackc -lcjson  -lm -ljansson -lev -lprotobuf-c -ltrower-base64 
++OneWifi_LDFLAGS = -rdynamic -lwebconfig_framework -lsecure_wrapper $(SYSTEMD_LDFLAGS) -luuid -lsecure_wrapper -lmsgpack-c -lcjson  -lm -ljansson -lev -lprotobuf-c -ltrower-base64 
+ 
+ if ONEWIFI_DML_SUPPORT
+ OneWifi_LDFLAGS += -lccsp_common
+diff --git a/source/core/wifi_ctrl_rbus_handlers.c b/source/core/wifi_ctrl_rbus_handlers.c
+index f13bf0fa..f316a9da 100644
+--- a/source/core/wifi_ctrl_rbus_handlers.c
++++ b/source/core/wifi_ctrl_rbus_handlers.c
+@@ -3983,7 +3983,7 @@ void bus_register_handlers(wifi_ctrl_t *ctrl)
+     int rc = bus_error_success;
+     char *component_name = "WifiCtrl";
+     int num_of_radio = getNumberRadios();
+-    int num_of_vaps = getTotalNumberVAPs(NULL);
++    int num_of_vaps = getTotalNumberVAPs();
+     int num_elements;
+     bus_data_element_t dataElements[] = {
+                                 { WIFI_WEBCONFIG_DOC_DATA_SOUTH, bus_element_type_method,
+diff --git a/source/dml/tr_181/sbapi/Makefile.am b/source/dml/tr_181/sbapi/Makefile.am
+index 6d327d38..a0ef898e 100644
+--- a/source/dml/tr_181/sbapi/Makefile.am
++++ b/source/dml/tr_181/sbapi/Makefile.am
+@@ -54,4 +54,4 @@ else
+ libCcspWifiAgent_sbapi_la_CPPFLAGS += -I$(top_srcdir)/source/platform/rdkb
+ endif
+ libCcspWifiAgent_sbapi_la_SOURCES = cosa_dbus_api.c cosa_wifi_apis.c pack_file.c cosa_logging_apis.c
+-libCcspWifiAgent_sbapi_la_LDFLAGS = -lccsp_common -lhal_wifi -lavro -lmsgpackc -ltrower-base64 -luuid -llibparodus -lutapi -lutctx -lsecure_wrapper -lwebconfig_framework -lprint_uptime -lev -lwifi_bus
++libCcspWifiAgent_sbapi_la_LDFLAGS = -lccsp_common -lhal_wifi -lavro -lmsgpack-c -ltrower-base64 -luuid -llibparodus -lutapi -lutctx -lsecure_wrapper -lwebconfig_framework -lprint_uptime -lev -lwifi_bus
+diff --git a/source/dml/tr_181/sbapi/cosa_dbus_api.h b/source/dml/tr_181/sbapi/cosa_dbus_api.h
+index 14e29c0e..01f83b1c 100644
+--- a/source/dml/tr_181/sbapi/cosa_dbus_api.h
++++ b/source/dml/tr_181/sbapi/cosa_dbus_api.h
+@@ -73,7 +73,7 @@
+ #include "ccsp_base_api.h"
+ 
+ /* Init and Exit functions for SnmpAgent PA */
+-BOOL Cosa_Init ();
++BOOL Cosa_Init (void * pbus_handle);
+ BOOL Cosa_Shutdown();
+ 
+ /* retrieve the CCSP Component name and path who supports specified name space */
+diff --git a/source/dml/tr_181/sbapi/webpa_interface.c b/source/dml/tr_181/sbapi/webpa_interface.c
+index 2e557b12..f12be9ab 100644
+--- a/source/dml/tr_181/sbapi/webpa_interface.c
++++ b/source/dml/tr_181/sbapi/webpa_interface.c
+@@ -44,7 +44,7 @@ static void checkComponentHealthStatus(char *compName, char *dbusPath, char *sta
+     int *retStatus);
+ static void waitForEthAgentComponentReady();
+ static int check_ethernet_wan_status();
+-static void *handle_parodus();
++static void *handle_parodus(void *arg);
+ 
+ #define CCSP_AGENT_WEBPA_SUBSYSTEM "eRT."
+ 
+diff --git a/source/platform/rdkb/misc.c b/source/platform/rdkb/misc.c
+index a9f25f2a..2e9b1dab 100644
+--- a/source/platform/rdkb/misc.c
++++ b/source/platform/rdkb/misc.c
+@@ -25,7 +25,7 @@
+ #include <errno.h>
+ #include <unistd.h>
+ 
+-void wifi_misc_init();
++//void wifi_misc_init();
+ sem_t *sem;
+ 
+ int rdkb_sysevent_open(char *ip, unsigned short port, int version, char *id, unsigned int *token)
+diff --git a/source/platform/rdkb/misc.h b/source/platform/rdkb/misc.h
+index a8322e6a..0fe08acf 100644
+--- a/source/platform/rdkb/misc.h
++++ b/source/platform/rdkb/misc.h
+@@ -27,7 +27,6 @@ extern "C"
+ {
+ #endif
+ 
+-void wifi_misc_init();
+ 
+ typedef struct {
+     wifi_misc_desc_t                desc;
+@@ -36,6 +35,7 @@ typedef struct {
+ wifi_misc_desc_t *get_misc_descriptor();
+ wifi_misc_t *get_misc_obj();
+ 
++void wifi_misc_init(wifi_misc_t *misc);
+ #ifdef __cplusplus
+ }
+ #endif
+diff --git a/source/utils/Makefile.am b/source/utils/Makefile.am
+index 7f228da4..794e282b 100644
+--- a/source/utils/Makefile.am
++++ b/source/utils/Makefile.am
+@@ -70,7 +70,7 @@ libwifi_utils_la_SOURCES = wifi_validator.c
+ libwifi_utils_la_SOURCES += ext_blaster.pb-c.c
+ 
+ 
+-libwifi_utils_la_LDFLAGS = -rdynamic -lwebconfig_framework -lsecure_wrapper $(SYSTEMD_LDFLAGS) -lsecure_wrapper -lmsgpackc -lcjson -lm -ljansson -static
++libwifi_utils_la_LDFLAGS = -rdynamic -lwebconfig_framework -lsecure_wrapper $(SYSTEMD_LDFLAGS) -lsecure_wrapper -lmsgpack-c -lcjson -lm -ljansson -static
+ 
+ if ONEWIFI_DML_SUPPORT
+ libwifi_utils_la_LDFLAGS += -lccsp_common
+diff --git a/source/utils/jsonconv.c b/source/utils/jsonconv.c
+index 2fa6a741..0cf54dd1 100755
+--- a/source/utils/jsonconv.c
++++ b/source/utils/jsonconv.c
+@@ -128,12 +128,12 @@ static char *format_string(const char *input)
+     return output;
+ }
+ 
+-int msgpack_pack_str_with_body(msgpack_packer* pk, const void* b, size_t l)
+- {
+-     int ret = msgpack_pack_str(pk, l);
+-     if (ret != 0) { return ret; }
+-     return msgpack_pack_str_body(pk, b, l);
+- }
++/* int msgpack_pack_str_with_body(msgpack_packer* pk, const void* b, size_t l)
++{
++    int ret = msgpack_pack_str(pk, l);
++    if (ret != 0) { return ret; }
++    return msgpack_pack_str_body(pk, b, l);
++}*/
+ 
+ /*
+  * Pack cJSON object.
+diff --git a/source/webconfig/Makefile.am b/source/webconfig/Makefile.am
+index 174806bf..85c0778c 100644
+--- a/source/webconfig/Makefile.am
++++ b/source/webconfig/Makefile.am
+@@ -80,7 +80,7 @@ endif
+ 
+ libwifi_webconfig_la_SOURCES +=  $(top_srcdir)/lib/common/util.c $(top_srcdir)/source/utils/wifi_util.c $(top_srcdir)/source/utils/collection.c
+ 
+-libwifi_webconfig_la_LDFLAGS = -rdynamic -lwebconfig_framework -lsecure_wrapper $(SYSTEMD_LDFLAGS) -lsecure_wrapper -lmsgpackc -lcjson -lm -ljansson -lssl -lcrypto -shared
++libwifi_webconfig_la_LDFLAGS = -rdynamic -lwebconfig_framework -lsecure_wrapper $(SYSTEMD_LDFLAGS) -lsecure_wrapper -lmsgpack-c -lcjson -lm -ljansson -lssl -lcrypto -shared
+ 
+ libwifi_webconfig_la_CPPFLAGS += -I${PKG_CONFIG_SYSROOT_DIR}${includedir}/rdk-wifi-libhostap/ -I${PKG_CONFIG_SYSROOT_DIR}${includedir}/rdk-wifi-libhostap/src/ -I${PKG_CONFIG_SYSROOT_DIR}${includedir}/rdk-wifi-libhostap/src/ap -I${PKG_CONFIG_SYSROOT_DIR}${includedir}/rdk-wifi-libhostap/src/utils -I${PKG_CONFIG_SYSROOT_DIR}${includedir}/rdk-wifi-libhostap/src/drivers/ -I$(PKG_CONFIG_SYSROOT_DIR)$(includedir)/qca/qca-wifi/os/linux/include/ -I${PKG_CONFIG_SYSROOT_DIR}${libdir}/ -DEXTERNAL_USE_ONLY
+ 

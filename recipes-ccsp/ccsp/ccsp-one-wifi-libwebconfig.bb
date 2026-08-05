@@ -45,7 +45,7 @@ CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'cac', '-DONEWIFI_
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'wps_support', '-DFEATURE_SUPPORT_WPS', '', d)}"
 EXTRA_OECONF:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'sta_manager', 'ONEWIFI_STA_MGR_APP_SUPPORT=true', 'ONEWIFI_STA_MGR_APP_SUPPORT=false', d)}"
 CFLAGS:append_kirkstone = " -Wno-deprecated-declarations"
-CFLAGS:append_wrynose = " -Wno-deprecated-declarations"
+CFLAGS:append:wrynose = " -Wno-deprecated-declarations -Wno-int-conversion"
 
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'dbus_support', '-ldbus-1', '-lrbus', d)} "
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
@@ -58,6 +58,10 @@ LDFLAGS:append_wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', 
 EXTRA_OECONF:append = " --enable-libwebconfig"
 EXTRA_OECONF:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'systemd', '--enable-notify', '', d)}"
 ISSYSTEMD = "${@bb.utils.contains_any('DISTRO_FEATURES', 'systemd', 'true', 'false', d)}"
+
+do_configure:append:wrynose() {
+      sed -i 's/msgpackc/msgpack-c/g' ${S}/source/webconfig/Makefile.am
+}
 
 do_compile:prepend () {
     # Copy files specific to the cac cac distribution
