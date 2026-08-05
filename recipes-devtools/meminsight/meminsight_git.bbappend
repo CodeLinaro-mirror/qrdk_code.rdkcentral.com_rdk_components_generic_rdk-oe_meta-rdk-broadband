@@ -1,6 +1,7 @@
 # Generate RDM package only when 'meminsight' is passed to GENERATE_RDM_CERTS
 # GENERATE_RDM_CERTS can be passed through jenkins or can be set locally in auto.conf
 inherit ${@bb.utils.contains('GENERATE_RDM_CERTS', '${BPN}', 'comcast-package-deploy', '', d)}
+inherit pkgconfig autotools
 
 DOWNLOAD_APPS= "${@bb.utils.contains('DISTRO_FEATURES', 'rdm', bb.utils.contains('DISTRO_FEATURES', 'enable_xmeminsight', '', '${BPN}', d), '', d)}"
 CUSTOM_PKG_EXTNS = "dl"
@@ -11,7 +12,7 @@ ENABLE_RDM_VERSIONING="${@bb.utils.contains('DISTRO_FEATURES', 'rdm rdm-versioni
 PKG_FIRMWARE_DECOUPLED="true"
 
 PKG_BUNDLE_NAME="${MACHINE_IMAGE_NAME}-meminsight"
-PKG_BUNDLE_MAJOR_VERSION="4"
+PKG_BUNDLE_MAJOR_VERSION="5"
 PKG_BUNDLE_MINOR_VERSION="0"
 
 DOWNLOADABLE_FILES = "${@bb.utils.contains('DOWNLOAD_APPS', '${PKG_BUNDLE_NAME}', '\
@@ -23,6 +24,9 @@ DOWNLOADABLE_FILES += "${@bb.utils.contains('ENABLE_RDM_VERSIONING', 'true', '\
                              ', '', d)}"
 
 PACKAGE_BEFORE_PN += "${PN}-dl "
+
+DEPENDS += "curl"
+
 RDEPENDS_${PN} += " ${PN}-dl"
 
 do_install_append() {
@@ -44,3 +48,4 @@ pkg_postinst_${PN}-dl () {
             rm -f $D/etc/rdm/post-services/start_meminsight.sh
         fi
 }
+
