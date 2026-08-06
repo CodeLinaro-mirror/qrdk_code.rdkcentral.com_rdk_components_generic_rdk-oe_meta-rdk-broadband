@@ -98,6 +98,7 @@
     <rollingpolicy name="FSC_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="PWRMGR_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="MESH_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
+    <rollingpolicy name="CRASHUPLOAD_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="T2_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="CERTSELECTOR_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
     <rollingpolicy name="DACTOOL_rollingpolicy" type="sizewin" maxsize="2097152" maxnum="2"/>
@@ -209,6 +210,7 @@
     <appender name="FSCrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="FSCLog.txt" layout="comcast_dated" rollingpolicy="FSC_rollingpolicy"/>
     <appender name="PWRMGRrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="POWERMGRLog.txt" layout="comcast_dated" rollingpolicy="PWRMGR_rollingpolicy"/>
     <appender name="MESHrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="MeshAgentLog.txt" layout="comcast_dated" rollingpolicy="MESH_rollingpolicy"/>
+    <appender name="CRASHUPLOADrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="core_log.txt" layout="comcast_dated" rollingpolicy="CRASHUPLOAD_rollingpolicy"/>
     <appender name="T2rollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="telemetry2_0.txt" layout="comcast_dated" rollingpolicy="T2_rollingpolicy"/>
     <appender name="CERTSELECTORrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="rdkcertconfig.txt" layout="comcast_dated" rollingpolicy="CERTSELECTOR_rollingpolicy"/>
     <appender name="DACTOOLrollingfileappender" type="rollingfile" logdir="/rdklogs/logs/" prefix="se05xDACTool.txt" layout="comcast_dated" rollingpolicy="DACTOOL_rollingpolicy"/>
@@ -339,6 +341,7 @@
     <category name="LOG.RDK.PWRMGR" priority="info" appender="PWRMGRrollingfileappender"/>
     <category name="LOG.RDK.MESH" priority="info" appender="MESHrollingfileappender"/>
     <category name="LOG.RDK.T2" priority="info" appender="T2rollingfileappender"/>
+    <category name="LOG.RDK.CRASHUPLOAD" priority="info" appender="CRASHUPLOADrollingfileappender"/>
     <category name="LOG.RDK.CERTSELECTOR" priority="info" appender="CERTSELECTORrollingfileappender"/>
     <category name="LOG.RDK.DACTOOL" priority="info" appender="DACTOOLrollingfileappender"/>
     <category name="LOG.RDK.MeshService" priority="info" appender="MeshServicerollingfileappender"/>
@@ -415,4 +418,3 @@
     <category name="LOG.RDK.IGNITE" priority="info" appender="IGNITErollingfileappender"/>
     <category name="LOG.RDK.STAGE" priority="info" appender="STAGErollingfileappender"/>
 </log4c>
-
