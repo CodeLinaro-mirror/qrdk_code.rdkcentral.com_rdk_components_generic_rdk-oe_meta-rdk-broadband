@@ -58,6 +58,8 @@ CFLAGS_append_kirkstone = " -Wno-deprecated-declarations "
 CFLAGS_append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
 CFLAGS_append_vbvxb9 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', '-DNEWPLATFORM_PORT', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostap_mgmt_frame_control', '-DFEATURE_HOSTAP_MGMT_FRAME_CTRL', '', d)}"
+#Beacon protection is disabled by default
+#CFLAGS_append = " -DBEACON_PROT "
 ###########################LEGACY#####################
 #This should be removed after you implement the propagation of additional definitions via pkg-config
 #for the ALL transitive targets for the ALL platform
