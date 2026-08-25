@@ -31,7 +31,7 @@ EXTRA_OECONF:append_tchxb8 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi'
 EXTRA_OECONF:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'XB10_PORT=true', '', d)}"
 
 PV = "${RDK_RELEASE}+git${SRCPV}"
-S = "${WORKDIR}/git/src/"
+S = "${UNPACKDIR}/git/src/"
 PSEUDO_IGNORE_PATHS .= ",${WORKDIR}/git/util_crypto,${WORKDIR}/git/platform"
 
 

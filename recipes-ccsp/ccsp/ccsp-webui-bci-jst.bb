@@ -21,7 +21,7 @@ SRC_URI:append = " \
 SRCREV_xb3 = "${AUTOREV}"
 SRCREV_FORMAT = "default_xb3"
 
-S = "${WORKDIR}/git/source/Styles/xb3"
+S = "${UNPACKDIR}/git/source/Styles/xb3"
 
 inherit autotools systemd
 

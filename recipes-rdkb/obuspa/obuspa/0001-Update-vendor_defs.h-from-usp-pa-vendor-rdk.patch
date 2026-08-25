@@ -2,6 +2,7 @@ From 81c879b1096f0f8491d84af1d26095163eda7ef3 Mon Sep 17 00:00:00 2001
 From: Ryan Shea <ryan.shea3@t-mobile.com>
 Date: Fri, 24 Oct 2025 08:56:35 -0600
 Subject: [PATCH] Update vendor_defs.h from usp-pa-vendor-rdk
+Upstream-Status: Pending
 
 https://github.com/rdkcentral/usp-pa-vendor-rdk/blob/5746131c51a62372ab9a7211d08eda06a1befdba/src/vendor/vendor_defs.h
 ---

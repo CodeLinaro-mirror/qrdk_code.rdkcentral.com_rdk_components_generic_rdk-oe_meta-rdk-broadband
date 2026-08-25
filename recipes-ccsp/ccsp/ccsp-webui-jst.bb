@@ -16,7 +16,7 @@ SRC_URI = "\
 SRCREV_xb3 = "${AUTOREV}"
 SRCREV_FORMAT = "webui_xb3"
 
-S = "${WORKDIR}/git/source/Styles/xb3"
+S = "${UNPACKDIR}/${BPN}-${PV}/source/Styles/xb3"
 
 
 inherit lxc

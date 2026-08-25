@@ -7,7 +7,7 @@ DESCRIPTION = "Agent for USP protocol"
 DEPENDS = "obuspa ccsp-common-library rbus"
 RDEPENDS:${PN} += "obuspa"
 LICENSE = "BSD-3-Clause"
-LIC_FILES_CHKSUM = "file://${WORKDIR}/usp-pa-vendor-rdk/LICENSE;md5=778849279f710b843cfcef75fe59376b"
+LIC_FILES_CHKSUM = "file://${UNPACKDIR}/usp-pa-vendor-rdk/LICENSE;md5=778849279f710b843cfcef75fe59376b"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
@@ -17,7 +17,7 @@ SRC_URI += "git://github.com/rdkcentral/usp-pa-vendor-rdk;protocol=http;branch=m
 SRCREV = "6a7dec999577695543c8a81c762d44db56dbdce3"
 PV = "1.0+git${SRCPV}"
 
-S = "${WORKDIR}/usp-pa-vendor-rdk/src/vendor"
+S = "${UNPACKDIR}/usp-pa-vendor-rdk/src/vendor"
 
 # Configuration files for target
 SRC_URI += "file://conf/usp_factory_reset.conf"

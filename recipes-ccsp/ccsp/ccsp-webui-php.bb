@@ -18,7 +18,7 @@ SRC_URI = "\
 SRCREV_xb3 = "${AUTOREV}"
 SRCREV_FORMAT = "webui_xb3"
 
-S = "${WORKDIR}/git/source/CcspPhpExtension"
+S = "${UNPACKDIR}/git/source/CcspPhpExtension"
 
 inherit autotools systemd
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"

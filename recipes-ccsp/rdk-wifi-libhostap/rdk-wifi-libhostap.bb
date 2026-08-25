@@ -162,7 +162,7 @@ SRC_URI += "${@bb.utils.contains('DISTRO_FEATURES', 'HOSTAPD_2_10', ' file://2.1
 
 ###########################PRIOR_BUILD#####################
 
-S = "${WORKDIR}/git/"
+S = "${UNPACKDIR}/git/"
 
 FILES:${PN} = " \
         ${libdir}/libhostap.so* \
