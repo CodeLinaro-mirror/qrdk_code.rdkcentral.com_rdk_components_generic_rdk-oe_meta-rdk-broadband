@@ -1,7 +1,7 @@
 SUMMARY = "Advanced Security Agent"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=3b83ef96387f14655fc854ddc3c6bd57"
-DEPENDS = "ccsp-common-library webconfig-framework utopia dbus rdk-logger hal-platform hal-cm trower-base64 msgpack-c"
+DEPENDS = "ccsp-common-library webconfig-framework utopia dbus rdk-logger hal-platform hal-cm trower-base64 msgpack-c libev"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 require recipes-ccsp/ccsp/ccsp_common.inc
 
