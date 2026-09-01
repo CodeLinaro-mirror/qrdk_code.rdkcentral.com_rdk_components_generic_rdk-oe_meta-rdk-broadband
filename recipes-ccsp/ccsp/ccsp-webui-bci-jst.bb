@@ -79,7 +79,7 @@ do_install:append() {
     install -m 755 ${S}/code/cmn/js/lib/* ${D}/usr/www2/cmn/js/lib
     install -m 755 ${S}/jst/includes/*.jst ${D}/usr/www2/includes
     install -m 755 ${S}/config/*.sh ${D}${sysconfdir}
-    install -m 0755 ${WORKDIR}/ajax_maintenance_window_conf.jst ${D}/usr/www2/actionHandler/
+    install -m 0755 ${UNPACKDIR}/ajax_maintenance_window_conf.jst ${D}/usr/www2/actionHandler/
     sed -i 's/usr\/www/usr\/www2/g' ${D}${sysconfdir}/webgui.sh
 }
 
@@ -92,6 +92,5 @@ FILES:${PN} += "/usr/www2/cmn/*"
 FILES:${PN} += "/usr/www2/includes/*"
 FILES:${PN}-dbg += "${libdir}/extensions/*/.debug/* \
                     /fss/gw/usr/ccsp/.debug/*"
-
 
 

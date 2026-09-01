@@ -40,7 +40,7 @@ CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-confi
 CFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 LDFLAGS:append_dunfell = "${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS:append_kirkstone = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-LDFLAGS:append_wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)} "
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 CFLAGS:prepend += " ${@bb.utils.contains('DISTRO_FEATURES', 'IDM_DEBUG',' -DIDM_DEBUG','', d)}"
 
@@ -49,8 +49,8 @@ EXTRA_OECONF:append  = " --with-ccsp-platform=bcm --with-ccsp-arch=arm "
 SYSTEMD_SERVICE:${PN} = "RdkInterDeviceManager.service"
 
 do_configure:prepend() {
-    cp ${WORKDIR}/RdkInterDeviceManager.conf ${S}/systemd_units/
-    cp ${WORKDIR}/idm_recovery.sh ${S}/source/InterDeviceManager/
+    cp ${UNPACKDIR}/RdkInterDeviceManager.conf ${S}/systemd_units/
+    cp ${UNPACKDIR}/idm_recovery.sh ${S}/source/InterDeviceManager/
 }
 
 do_install:append () {

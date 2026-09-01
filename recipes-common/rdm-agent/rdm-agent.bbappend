@@ -12,7 +12,7 @@ LDFLAGS += "-lcjson"
 DEPENDS += "cjson"
 
 do_compile:append () {
-    ${CC} -Wall -Wextra ${CFLAGS} ${WORKDIR}/jsonquery.c -o ${WORKDIR}/jsonquery ${LDFLAGS}
+    ${CC} -Wall -Wextra ${CFLAGS} ${UNPACKDIR}/jsonquery.c -o ${WORKDIR}/jsonquery ${LDFLAGS}
 }
 
 do_install:append () {

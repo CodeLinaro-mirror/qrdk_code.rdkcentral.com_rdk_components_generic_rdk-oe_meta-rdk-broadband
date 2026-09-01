@@ -33,6 +33,7 @@ LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', 
 LDFLAGS:remove = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', ' -lcm_mgnt', '', d)}"
 LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 LDFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:append:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 
 do_install:append () {
     install -d ${D}${sysconfdir}
