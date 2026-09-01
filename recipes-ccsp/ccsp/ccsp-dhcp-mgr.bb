@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8f98bf3e9ebc1788ad35a2e5b0b9191f"
 
 DEPENDS = "ccsp-common-library dbus utopia ccsp-lm-lite"
 DEPENDS:append = " hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi curl ccsp-misc ccsp-hotspot cjson libsyswrapper halinterface libunpriv "
+DEPENDS:append:wrynose = " ${@bb.utils.contains("DISTRO_FEATURES", "safec", " safec", " ", d)}"
 
 require ccsp_common.inc
 
@@ -34,7 +35,7 @@ LDFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', 
 LDFLAGS:remove = "${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '-lsafec-3.5', '', d)}"
 LDFLAGS:append_dunfell = "${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec-3.5.1 ', '', d)}"
 LDFLAGS:append_kirkstone = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
-LDFLAGS:append_wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
+LDFLAGS:append:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)} "
 #CFLAGS:append  = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'ra_monitor_support', ' -DRA_MONITOR_SUPPORT', '', d)}"
 MAPT_FEATURE_ENABLED = "${@bb.utils.contains_any('DISTRO_FEATURES', 'feature_mapt','true', bb.utils.contains_any('DISTRO_FEATURES', 'unified_mapt', 'true', 'false', d), d)}"
 

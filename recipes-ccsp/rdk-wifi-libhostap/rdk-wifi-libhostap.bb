@@ -176,7 +176,7 @@ FILES:${PN} = " \
 EXTRA_OEMAKE += "${@bb.utils.contains('DISTRO_FEATURES', 'Wifi-test-suite', 'WIFI_EMULATOR=true', 'WIFI_EMULATOR=false', d)}"
 do_hostapd_patch () {
     if ! ${PRIOR_BUILD}; then
-        install -m 0644 ${WORKDIR}/.config ${WORKDIR}/libhostap.mk ${S}/source/hostap-${HOSTAPD_PV}/hostapd/
+        install -m 0644 ${UNPACKDIR}/.config ${UNPACKDIR}/libhostap.mk ${S}/source/hostap-${HOSTAPD_PV}/hostapd/
         echo "include libhostap.mk" >> ${S}/source/hostap-${HOSTAPD_PV}/hostapd/Makefile
     fi
 }

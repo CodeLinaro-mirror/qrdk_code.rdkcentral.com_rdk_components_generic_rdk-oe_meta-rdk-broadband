@@ -27,6 +27,7 @@ SRC_URI += "file://conf/usp_truststore.pem"
 SRC_URI += "file://usp-pa.service"
 SRC_URI += "file://UspPa.sh"
 
+
 # Specify the rules to use to build and install this package
 inherit autotools pkgconfig systemd
 
@@ -34,18 +35,22 @@ EXTRA_OECONF = " \
     --with-sysroot=${STAGING_DIR_TARGET} \
     "
 
+do_configure:prepend:wrynose() {
+    sed -i 's|^\([[:space:]]*\)-I\$(includedir)/rbus|\1-I\$(SYSROOT)\$(includedir)/rbus|' ${S}/Makefile.am
+}
+
 # Copy files to staging area
 do_install:append() {
     install -d ${D}${bindir}
     install -d ${D}${sysconfdir}/usp-pa
     install -d ${D}${systemd_system_unitdir}
 
-    install -m 0755 ${WORKDIR}/UspPa.sh ${D}${bindir}/UspPa
-    install -m 0644 ${WORKDIR}/conf/usp_factory_reset.conf ${D}${sysconfdir}/usp-pa
-    install -m 0644 ${WORKDIR}/conf/usp_dm_objs.conf ${D}${sysconfdir}/usp-pa
-    install -m 0644 ${WORKDIR}/conf/usp_dm_params.conf ${D}${sysconfdir}/usp-pa
-    install -m 0644 ${WORKDIR}/conf/usp_truststore.pem ${D}${sysconfdir}/usp-pa
-    install -m 0644 ${WORKDIR}/usp-pa.service ${D}${systemd_system_unitdir}
+    install -m 0755 ${UNPACKDIR}/UspPa.sh ${D}${bindir}/UspPa
+    install -m 0644 ${UNPACKDIR}/conf/usp_factory_reset.conf ${D}${sysconfdir}/usp-pa
+    install -m 0644 ${UNPACKDIR}/conf/usp_dm_objs.conf ${D}${sysconfdir}/usp-pa
+    install -m 0644 ${UNPACKDIR}/conf/usp_dm_params.conf ${D}${sysconfdir}/usp-pa
+    install -m 0644 ${UNPACKDIR}/conf/usp_truststore.pem ${D}${sysconfdir}/usp-pa
+    install -m 0644 ${UNPACKDIR}/usp-pa.service ${D}${systemd_system_unitdir}
 }
 
 # Files in staging area to copy to system image

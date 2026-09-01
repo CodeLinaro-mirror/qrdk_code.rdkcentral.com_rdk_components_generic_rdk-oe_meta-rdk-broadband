@@ -6,6 +6,26 @@ LDFLAGS += "-lrdkloggers"
 
 inherit coverity pkgconfig
 
+CFLAGS:append:wrynose = " \
+    -Wno-error=unused-parameter \
+    -Wno-error=address \
+    -Wno-error=implicit-function-declaration \
+    -Wno-error=incompatible-pointer-types \
+    -Wno-error=return-mismatch \
+    -Wno-error=discarded-qualifiers \
+    -Wno-error=unterminated-string-initialization \
+    -Wno-error=int-conversion \
+    -Wno-error=int-to-pointer-cast \
+    -Wno-error=pointer-to-int-cast \
+    -Wno-error=format \
+    -Wno-error=format-security \
+    -Wno-error=header-guard \
+    -Wno-error=implicit-int \
+    -Wno-error=stringop-overflow \
+"
+
+CFLAGS:append:wrynose = " -std=gnu17 "
+
 CFLAGS:append += " -D_COSA_HAL_ -U_COSA_SIM_ -fno-exceptions -ffunction-sections -fdata-sections -fomit-frame-pointer -fno-strict-aliasing \ 
            -DCONFIG_SYSTEM_MOCA -D_ANSC_LINUX -D_ANSC_USER -D_ANSC_LITTLE_ENDIAN_ -D_CCSP_CWMP_TCP_CONNREQ_HANDLER \ 
            -D_DSLH_STUN_ -D_NO_PKI_KB5_SUPPORT -D_BBHM_SSE_FILE_IO -D_ANSC_USE_OPENSSL_ -DENABLE_SA_KEY \ 

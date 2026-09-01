@@ -88,7 +88,7 @@ do_install:append() {
 		mv ${WORKDIR}/out.txt ${WORKDIR}/webconfig_metadata.json
 	fi
         touch ${D}/etc/WEBCONFIG_ENABLE
-        (${PYTHON} ${WORKDIR}/metadata_parser.py ${WORKDIR}/webconfig_metadata.json ${D}/etc/webconfig.properties ${MACHINE})
+        (${PYTHON} ${UNPACKDIR}/metadata_parser.py ${WORKDIR}/webconfig_metadata.json ${D}/etc/webconfig.properties ${MACHINE})
     fi
 }
 

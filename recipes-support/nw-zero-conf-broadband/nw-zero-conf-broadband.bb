@@ -15,12 +15,12 @@ SRC_URI += "file://iface-setup-broadband.service \
 do_install:append() {
     install -d ${D}${systemd_unitdir}/system
     install -d ${D}${base_libdir}/rdk
-    install -m 0644 ${WORKDIR}/iface-setup-broadband.service ${D}${systemd_unitdir}/system
-    install -m 0644 ${WORKDIR}/board-access-broadband.service ${D}${systemd_unitdir}/system
-    install -m 0755 ${WORKDIR}/board_access-broadband.sh ${D}${base_libdir}/rdk/
+    install -m 0644 ${UNPACKDIR}/iface-setup-broadband.service ${D}${systemd_unitdir}/system
+    install -m 0644 ${UNPACKDIR}/board-access-broadband.service ${D}${systemd_unitdir}/system
+    install -m 0755 ${UNPACKDIR}/board_access-broadband.sh ${D}${base_libdir}/rdk/
 
     # Override the default time setter script which is too dependent on configs and entries from sysint
-    install -m 0755 ${WORKDIR}/default-time-setter-broadband.sh ${D}${base_libdir}/rdk/
+    install -m 0755 ${UNPACKDIR}/default-time-setter-broadband.sh ${D}${base_libdir}/rdk/
 }
 
 SYSTEMD_SERVICE:${PN} = "board-access-broadband.service iface-setup-broadband.service" 

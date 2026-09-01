@@ -29,7 +29,7 @@ CFLAGS:append = " \
 
 CFLAGS += " -Wall -Werror -Wextra -Wno-enum-conversion -Wno-stringop-overflow -Wno-array-parameter"
 CFLAGS:append_kirkstone = " -Wno-format-truncation"
-CFLAGS:append_wrynose = " -Wno-format-truncation"
+CFLAGS:append:wrynose = " -Wno-format-truncation "
 
 
 LDFLAGS:append = " \
@@ -52,15 +52,21 @@ LDFLAGS:append = "${@bb.utils.contains_any("DISTRO_FEATURES", "mlt", " -lsysReso
 
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -I${STAGING_INCDIR}/safeclib ', '', d)}"
 
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 LDFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
+LDFLAGS:append:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
 
 CFLAGS:append  = " ${@bb.utils.contains('DISTRO_FEATURES', 'wan-traffic-count', ' -DWAN_TRAFFIC_COUNT_SUPPORT', '', d)}"
 
 CFLAGS:append = " ${@bb.utils.contains("DISTRO_FEATURES", "WanFailOverSupportEnable", " -DWAN_FAILOVER_SUPPORTED ", " ", d)} "
 
+LDFLAGS:append = "${@bb.utils.contains_any("DISTRO_FEATURES", "WanFailOverSupportEnable", " -lrbus -lrbuscore -lrtMessage ", " ", d)}"
+
+DEPENDS:append:wrynose = " rbus"
+LDFLAGS:append:wrynose = " -lrbus -lrbuscore -lrtMessage"
 
 do_compile:prepend () {
 	if ${@bb.utils.contains_any('DISTRO_FEATURES', 'vendor_class_id_feature', 'true', 'false', d)}; then

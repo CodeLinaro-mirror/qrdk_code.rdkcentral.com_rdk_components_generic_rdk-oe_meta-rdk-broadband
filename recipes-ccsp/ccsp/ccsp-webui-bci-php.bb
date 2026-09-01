@@ -57,8 +57,8 @@ do_configure () {
 do_install() {
 	install -d ${D}${base_libdir}/rdk
 	install -d ${D}${systemd_unitdir}/system
-	install -m 0644 ${WORKDIR}/cosalogs.service ${D}${systemd_unitdir}/system
-	install -m 0644 ${WORKDIR}/cosalogs.sh ${D}${base_libdir}/rdk
+	install -m 0644 ${UNPACKDIR}/cosalogs.service ${D}${systemd_unitdir}/system
+	install -m 0644 ${UNPACKDIR}/cosalogs.sh ${D}${base_libdir}/rdk
 }
 
 do_install:append() {
@@ -89,7 +89,7 @@ do_install:append() {
     install -m 755 ${S}/../Styles/xb3/code/includes/*.php ${D}/usr/www/includes
     install -m 755 ${S}/../Styles/xb3/config/*.sh ${D}${sysconfdir}
     install ${B}/modules/cosa.so ${D}/fss/gw//usr/ccsp
-    install -m 0755 ${WORKDIR}/ajax_maintenance_window_conf.php ${D}/usr/www/actionHandler/
+    install -m 0755 ${UNPACKDIR}/ajax_maintenance_window_conf.php ${D}/usr/www/actionHandler/
 }
 
 do_install:append:mips () {

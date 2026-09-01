@@ -1,14 +1,14 @@
-DEPENDS:append_broadband = " ccsp-common-library utopia"
-LDFLAGS_broadband = " -lccsp_common -lsyscfg"
+DEPENDS:append:broadband = " ccsp-common-library utopia"
+LDFLAGS:append:broadband = " -lccsp_common -lsyscfg"
 
 
-INCLUDE_DIRS_broadband = " \
+INCLUDE_DIRS:append:broadband = " \
      -I${STAGING_INCDIR}/ccsp \
      -I${STAGING_INCDIR}/syscfg \
      "
 
 
-do_install:append_broadband () {
+do_install:append:broadband () {
     install -m 0755 ${S}/scripts/uploadRDKBRRDLogs.sh ${D}${base_libdir}/rdk/uploadRRDLogs.sh
     install -m 0644 ${S}/scripts/remote-debugger.path ${D}${systemd_unitdir}/system
 
@@ -17,5 +17,5 @@ do_install:append_broadband () {
     sed -i -- '/ExecStop=/,$d' ${D}${systemd_unitdir}/system/remote-debugger.service
 }
 
-SYSTEMD_SERVICE:${PN}_broadband += "remote-debugger.path"
-FILES:${PN}:append_broadband += "${systemd_unitdir}/system/remote-debugger.path"
+SYSTEMD_SERVICE:${PN}:append:broadband = " remote-debugger.path"
+FILES:${PN}:append:broadband = " ${systemd_unitdir}/system/remote-debugger.path"
