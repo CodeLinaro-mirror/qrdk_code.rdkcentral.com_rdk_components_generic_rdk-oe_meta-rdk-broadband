@@ -5,6 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=8f98bf3e9ebc1788ad35a2e5b0b9191f"
 
 DEPENDS = "ccsp-common-library dbus utopia ccsp-lm-lite"
 DEPENDS:append = " hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi curl ccsp-misc ccsp-hotspot cjson libsyswrapper halinterface libunpriv "
+DEPENDS:append:wrynose = " ${@bb.utils.contains("DISTRO_FEATURES", "safec", " safec", " ", d)}"
 
 require ccsp_common.inc
 

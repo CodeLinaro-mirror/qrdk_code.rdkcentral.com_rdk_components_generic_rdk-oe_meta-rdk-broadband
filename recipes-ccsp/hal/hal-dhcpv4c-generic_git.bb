@@ -24,4 +24,4 @@ CFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `p
 LDFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 LDFLAGS:append:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' -lsafec ', '', d)}"
 
-inherit coverity pkgconfig
+inherit coverity pkgconfig ${@"autotools" if "wrynose" in (d.getVar("OVERRIDES") or "").split(":") else ""}

@@ -35,6 +35,10 @@ EXTRA_OECONF = " \
     --with-sysroot=${STAGING_DIR_TARGET} \
     "
 
+do_configure:prepend:wrynose() {
+    sed -i 's|^\([[:space:]]*\)-I\$(includedir)/rbus|\1-I\$(SYSROOT)\$(includedir)/rbus|' ${S}/Makefile.am
+}
+
 # Copy files to staging area
 do_install:append() {
     install -d ${D}${bindir}

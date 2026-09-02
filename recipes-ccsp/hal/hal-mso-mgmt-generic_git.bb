@@ -16,4 +16,4 @@ S = "${UNPACKDIR}/${PN}-${PV}/source/mso_mgmt"
 
 CFLAGS:append = " -I=${includedir}/ccsp "
 
-inherit coverity
+inherit coverity ${@"autotools" if "wrynose" in (d.getVar("OVERRIDES") or "").split(":") else ""}

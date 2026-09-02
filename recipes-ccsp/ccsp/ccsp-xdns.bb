@@ -9,6 +9,8 @@ DEPENDS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' safec'
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
+CFLAGS:append:wrynose = " -Wno-error=attribute-warning "
+
 RDEPENDS:${PN} = " trower-base64 "
 DEPENDS += " trower-base64"
 
