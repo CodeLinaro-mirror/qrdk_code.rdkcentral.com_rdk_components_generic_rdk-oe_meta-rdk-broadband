@@ -10,6 +10,12 @@ S = "${UNPACKDIR}/${PN}-${PV}"
 
 inherit cmake pkgconfig
 
+do_configure:prepend:wrynose() {
+    if ! grep -q '^cmake_minimum_required' ${S}/CMakeLists.txt; then
+        sed -i '1i cmake_minimum_required(VERSION 3.5)' ${S}/CMakeLists.txt
+    fi
+}
+
 FILES:${PN} += "${libdir}/* \
                 ${bindir}/* "
 
