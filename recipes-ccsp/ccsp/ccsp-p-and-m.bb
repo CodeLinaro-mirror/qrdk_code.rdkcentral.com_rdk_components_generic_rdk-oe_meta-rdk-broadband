@@ -85,7 +85,7 @@ ENABLE_HOTSPOT ?= "yes"
 EXTRA_OECONF:append += " --enable-hotspotsupport=${ENABLE_HOTSPOT}"
 
 ENABLE_ONESTACK = "--enable-onestacksupport=${@bb.utils.contains('DISTRO_FEATURES', 'OneStack', 'yes', 'no', d)}"
-EXTRA_OECONF_append = " ${ENABLE_ONESTACK}"
+EXTRA_OECONF:append = " ${ENABLE_ONESTACK}"
 
 CFLAGS:append = " -DCONFIG_VENDOR_CUSTOMER_COMCAST -DCONFIG_INTERNET2P0 -DUSE_REMOTE_DEBUGGER"
 ENABLE_MCAST_SERVICE = "${@bb.utils.contains('DISTRO_FEATURES', 'no_utopia_mcast', 'no', 'yes', d)}"
