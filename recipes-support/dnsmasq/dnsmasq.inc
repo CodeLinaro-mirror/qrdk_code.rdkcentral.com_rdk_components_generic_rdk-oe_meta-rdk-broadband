@@ -74,7 +74,7 @@ do_install () {
 
         install -d ${D}${sysconfdir}/default/volatiles
         install -m 0644 ${UNPACKDIR}/99_dnsmasq ${D}${sysconfdir}/default/volatiles
-        install -m 0755 ${WORKDIR}/dnsmasq-resolvconf-helper ${D}${bindir}
+        install -m 0755 ${UNPACKDIR}/dnsmasq-resolvconf-helper ${D}${bindir}
     fi
 }
 
