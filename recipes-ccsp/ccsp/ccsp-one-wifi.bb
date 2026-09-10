@@ -51,6 +51,7 @@ inherit autotools pkgconfig systemd ${@bb.utils.contains_any("DISTRO_FEATURES", 
 
 CFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 CFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+CFLAGS:append:wrynose = " ${@bb.utils.getstatusoutput('pkg-config --cflags libhostap')[1]}"
 
 LDFLAGS:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 LDFLAGS:remove:wrynose = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"

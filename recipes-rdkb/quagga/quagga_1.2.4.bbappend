@@ -1,6 +1,6 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-#SRC_URI += "file://rtadv.patch"
+SRC_URI += "file://rtadv.patch"
 SRC_URI += "file://0001-RDKB-20441-zebra-service-fails-to-start.patch"
 SRC_URI += "file://quagga-Avoid-duplicate-connected-address.patch"
 

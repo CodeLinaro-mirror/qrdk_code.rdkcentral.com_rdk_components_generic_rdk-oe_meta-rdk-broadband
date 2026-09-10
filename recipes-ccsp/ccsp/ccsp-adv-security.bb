@@ -55,8 +55,8 @@ do_install:append () {
     install -m 755 ${S}/scripts/advsec.sh -t ${D}/usr/ccsp/advsec
     # Install logrotate configuration
     install -d ${D}${sysconfdir}/logrotate.d
-    install -m 644 ${WORKDIR}/advsec-agent ${D}${sysconfdir}/logrotate.d/advsec-agent
-    install -m 644 ${WORKDIR}/advsec-ni ${D}${sysconfdir}/logrotate.d/advsec-ni
+    install -m 644 ${UNPACKDIR}/advsec-agent ${D}${sysconfdir}/logrotate.d/advsec-agent
+    install -m 644 ${UNPACKDIR}/advsec-ni ${D}${sysconfdir}/logrotate.d/advsec-ni
 }
 
 PACKAGES += "${PN}-ccsp"

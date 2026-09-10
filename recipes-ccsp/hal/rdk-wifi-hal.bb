@@ -58,7 +58,11 @@ CFLAGS:append:wrynose = " -Wno-deprecated-declarations \
     -Wno-error=unused-but-set-variable \
     -Wno-error=address \
     -DCONFIG_WEP -DCONFIG_IEEE80211BE \
-    -Wno-error=unused-function "
+    -Wno-error=unused-function \
+    -Wno-error=incompatible-pointer-types \
+    -Wno-error=unused-variable \
+"
+
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', ' -DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
 CFLAGS:append_kirkstone = " -Wno-deprecated-declarations "
@@ -149,6 +153,9 @@ ONEWIFI_CONFIG_FLAGS = " \
 #target_name_CFLAGS += ${LIBHOSTAP_CFLAGS}
 #target_name_LDFLAGS += ${LIBHOSTAP_LIBS}
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' `pkg-config --exists libhostap && pkg-config --cflags libhostap`', '', d)}"
+CFLAGS:remove:wrynose = " ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', ' `pkg-config --exists libhostap && pkg-config --cflags libhostap`', '', d)}"
+CFLAGS:append:wrynose = " ${@bb.utils.getstatusoutput('pkg-config --cflags libhostap')[1]}"
+
 ONEWIFI_CONFIG_FLAGS:append_tchxb7 = "-DTCXB7_PORT -DCONFIG_DRIVER_BRCM -DCONFIG_DRIVER_BRCM_MAP"
 ONEWIFI_CONFIG_FLAGS:remove_tchxb8 = "-DTCXB7_PORT -DCONFIG_WMM"
 ONEWIFI_CONFIG_FLAGS:remove_tchxb7 = "-DCONFIG_WMM"
