@@ -32,7 +32,7 @@ SRC_URI_append = " ${@bb.utils.contains('MACHINE', 'xe2-plume-rdk-extender-qsdk1
 
 SRC_URI_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_OneWifi = "78398ba98261adeca7ffc557e5282846a4c4d68b"
+SRCREV_OneWifi = "a61ef9363b82aa31b42a095ef5b154270a68f1b3"
 SRCREV_lan_web = "${AUTOREV}"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"
