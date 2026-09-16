@@ -156,7 +156,10 @@ do_install() {
     	fi
 
 	install -m 0644 ${S}/ntp-data-collector.service ${D}${systemd_unitdir}/system
-        install -m 755 ${S}/ntp-data-collector.sh ${D}${base_libdir}/rdk
+        install -m 0644 ${S}/chrony-ntp-metrics.timer  ${D}${systemd_unitdir}/system
+        install -m 0644 ${S}/chrony-ntp-metrics.service  ${D}${systemd_unitdir}/system
+        install -m 0755 ${S}/chrony-ntp-metrics.sh ${D}${base_libdir}/rdk
+        install -m 0755 ${S}/ntp-data-collector.sh ${D}${base_libdir}/rdk
 	install -d ${D}${datadir}/dbus-1/system-services
 	install -m 0755 ${S}/org.freedesktop.nm_connectivity.service ${D}${datadir}/dbus-1/system-services/
 	install -m 0644 ${S}/notify-network-ready.service ${D}${systemd_unitdir}/system
@@ -209,13 +212,17 @@ SYSTEMD_SERVICE_${PN}_append_qemux86broadband = "  dropbear.service"
 SYSTEMD_SERVICE_${PN}_append_rdkzram = " rdkzram.service"
 SYSTEMD_SERVICE_${PN} += " ${@bb.utils.contains('DISTRO_FEATURES', 'systemd', 'ocsp-support.service', '', d)}"
 SYSTEMD_SERVICE_${PN} += "ntp-data-collector.service"
-
+SYSTEMD_SERVICE_${PN} += "chrony-ntp-metrics.timer"
 
 SYSTEMD_SERVICE_${PN} += "network-up.path"
 SYSTEMD_SERVICE_${PN} += "network-up.timer"
 SYSTEMD_SERVICE_${PN} += "system-time-set.path"
 SYSTEMD_SERVICE_${PN} += "system-time-event.service"
 SYSTEMD_SERVICE_${PN} += "ntp-time-sync-event.service"
+SYSTEMD_SERVICE_${PN} += "chrony-ntp-metrics.timer"
+
+
+
 
 FILES_${PN} += "/bin/*"
 FILES_${PN} += "${sysconfdir}/*"
@@ -223,6 +230,8 @@ FILES_${PN} += "rdklogger/*"
 FILES_${PN} += "${base_libdir}/rdk/*"
 FILES_${PN}_append_qemux86broadband += "${systemd_unitdir}/system/*"
 FILES_${PN} += "${systemd_unitdir}/system/ntp-data-collector.service"
+FILES_${PN} += "${systemd_unitdir}/system/chrony-ntp-metrics.timer"
+FILES_${PN} += "${systemd_unitdir}/system/chrony-ntp-metrics.service"
 
 
 
