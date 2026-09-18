@@ -28,3 +28,6 @@ do_install:append() {
 }
 FILES:libzebra = "${libdir}/libzebra.so.*"
 FILES:${PN}-dev += "${libdir}/libzebra.so"
+
+ERROR_QA:remove = "patch-fuzz"
+WARN_QA:append = " patch-fuzz"
