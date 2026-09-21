@@ -107,7 +107,7 @@ do_install:class-native () {
     install -d ${D}${bindir}
     install -m 644 ${S}/source/dm_pack/dm_pack_code_gen.py ${D}${bindir}
 }
-do_install:append_broadband() {
+do_install:append:broadband() {
         if ${@bb.utils.contains('DISTRO_FEATURES', 'no_mta_support', 'false', 'true', d)}; then
         install -d ${D}${systemd_unitdir}/system/CcspMtaAgentSsp.service.d
         install -D -m 644 ${S}/systemd_units/CcspMtaAgentSsp.conf ${D}${systemd_unitdir}/system/CcspMtaAgentSsp.service.d/CcspMtaAgentSsp.conf

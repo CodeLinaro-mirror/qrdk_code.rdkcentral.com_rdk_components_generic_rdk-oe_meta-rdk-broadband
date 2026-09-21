@@ -1,8 +1,8 @@
 FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 # for bluez support
-SRC_URI:append_broadband += "file://Bluetooth_service_dependency_broadband.patch"
-SRC_URI:append_broadband += " ${@bb.utils.contains('DISTRO_FEATURES', 'btr_hciadv', 'file://Bluetooth_service_beacon_dependency_broadband.patch', '', d)}"
+SRC_URI:append:broadband += "file://Bluetooth_service_dependency_broadband.patch"
+SRC_URI:append:broadband += " ${@bb.utils.contains('DISTRO_FEATURES', 'btr_hciadv', 'file://Bluetooth_service_beacon_dependency_broadband.patch', '', d)}"
 
 CFLAGS:append:wrynose = " \
     -Wno-error=implicit-function-declaration  \
