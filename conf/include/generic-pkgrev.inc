@@ -157,7 +157,7 @@ PR_pn-rdk-cellularmanager = "r0"
 PV_pn-start-parodus = "${@pv_for_branch(d, '2.0.0_stable2_20260709')}"
 PR_pn-start-parodus = "r0"
 
-PV_pn-test-and-diagnostic = "${@pv_for_branch(d, '2.3.0_stable2_20260904')}"
+PV_pn-test-and-diagnostic = "${@pv_for_branch(d, '2.3.0_stable2_20260904_hotfix_v1')}"
 PR_pn-test-and-diagnostic = "r0"
 
 PV_pn-utopia = "${@pv_for_branch(d, '2.3.0_stable2_20260916')}"
