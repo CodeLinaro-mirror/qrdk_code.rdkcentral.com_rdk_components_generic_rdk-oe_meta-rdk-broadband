@@ -14,7 +14,7 @@ SRCREV_cpp-httplib =  "9bbb4741b4f7c8fc5083c8a56d8d301a8abc25a3"
 SRCREV_FORMAT = "WifiEmulator_cpp-httplib"
 
 SRC_URI = "git://github.com/rdkcentral/OneWifiTestSuite.git;protocol=https;branch=main;name=WifiEmulator"
-SRCREV_WifiEmulator = "94ee75ef214d602d20430ff12e2a40be60b9498e"
+SRCREV_WifiEmulator = "ae47051c13d9be14672016b16cd387458b2e0db4"
 SRCREV_FORMAT = "WifiEmulator"
 
 SRC_URI += "git://github.com/yhirose/cpp-httplib;protocol=https;branch=master;destsuffix=${S}/src/external_agent_cci/temp_http_server;name=cpp-httplib;subdir=cpp-httplib"
