@@ -48,7 +48,7 @@ SRCREV_rdk_fwupgrade_manager = "6f6f2770842651c0fa86108d160b4f11eafd5d42"
 SRCREV_rdk_cellularmanager = "b22775eb119e26f0997eda2ed4189f3a0f2ba814"
 SRCREV_start_parodus = "9581bdf7c291f51f993dbee46ba0bb266b493b0e"
 SRCREV_test_and_diagnostic = "aab247f0e160fe62d271335f17e34f1aa3d754f0"
-SRCREV_utopia = "6bf2188010793f898d08f9cca2a8cc6ab4c2f281"
+SRCREV_utopia = "66fa2984cc4f990b0cc5e6e8738ef8644cc14a51"
 SRCREV_sysint-broadband = "d70fce187598e48bae835219f11a954fb9be7de1"
 SRCREV_ccsp-dhcp-mgr = "ad1c9c6dc1afb131f9b9bbdeaf9ae66edb18fcc7"
 
