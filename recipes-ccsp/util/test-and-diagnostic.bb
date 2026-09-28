@@ -4,7 +4,7 @@ HOMEPAGE = "http://github.com/belvedere-yocto/TestAndDiagnostic"
 LICENSE = "Apache-2.0"
 LIC_FILES_CHKSUM = "file://LICENSE;md5=06093b681f6d882a55e3bc222a02a988"
 
-DEPENDS = "ccsp-common-library utopia hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi rbus libev libpcap telemetry"
+DEPENDS = "ccsp-common-library utopia hal-cm hal-dhcpv4c hal-ethsw hal-moca hal-mso_mgmt hal-mta hal-platform hal-vlan hal-wifi rbus libev libpcap telemetry cjson msgpack-c"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'core-net-lib', ' core-net-lib', " ", d)}"
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler', ' trower-base64 msgpack-c rdk-scheduler cimplog', " ", d)}"
@@ -36,6 +36,8 @@ CFLAGS_append = " \
     -I${STAGING_INCDIR}/utctx \
     -I${STAGING_INCDIR}/ulog \
     -I${STAGING_INCDIR}/syscfg \
+    -I${STAGING_INCDIR}/cjson \
+    -I${STAGING_INCDIR}/msgpackc \
     "
 
 CFLAGS_append += "${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler',' -I${STAGING_INCDIR}/trower-base64 -I${STAGING_INCDIR}/msgpackc -I${STAGING_INCDIR}/cimplog','',d)}"
@@ -44,6 +46,7 @@ EXTRA_OECONF_append = "--enable-mta"
 
 LDFLAGS_append = " \
     -ldbus-1 \
+    -lcjson \
     "
 
 # Fan & Thermal Control Feature
