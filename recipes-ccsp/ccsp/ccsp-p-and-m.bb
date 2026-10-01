@@ -238,7 +238,7 @@ FILES:${PN}-ccsp = " \
     /fss/gw/usr/ccsp/pam/mapping.txt \
 "
 
-FILES:${PN}-ccsp:remove_no_moca_support = " \
+FILES:${PN}-ccsp:remove:no_moca_support = " \
     ${prefix}/ccsp/pam/moca_status.sh \
 "
 
