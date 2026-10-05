@@ -1,6 +1,6 @@
-FILESEXTRAPATHS_prepend := "${THISDIR}/files:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/files:"
 
-RDEPENDS_${PN} += "bash"
+RDEPENDS:${PN} += "bash"
 
 DEPENDS += "telemetry"
 
@@ -9,10 +9,10 @@ SRC_URI += "file://chrony.conf \
             file://rdk_chrony.conf \
             file://build_chrony_config.sh \
            "
-PACKAGECONFIG_remove = "editline"
+PACKAGECONFIG:remove = "editline"
 
 
-do_install_append() {
+do_install:append() {
     # Binaries
     install -m 0755 ${S}/chronyc ${D}${sbindir}
     install -d ${D}${base_libdir}/rdk
@@ -31,12 +31,12 @@ do_install_append() {
 }
 
 
-FILES_${PN} += "${sbindir}/chronyc"
-CONFFILES_${PN} += "${sysconfdir}/chrony.conf"
-CONFFILES_${PN} += "${sysconfdir}/rdk_chrony.conf"
-FILES_${PN} += "${systemd_unitdir}/system/chronyd.service"
-FILES_${PN} += "${base_libdir}/rdk/build_chrony_config.sh"
+FILES:${PN} += "${sbindir}/chronyc"
+CONFFILES:${PN} += "${sysconfdir}/chrony.conf"
+CONFFILES:${PN} += "${sysconfdir}/rdk_chrony.conf"
+FILES:${PN} += "${systemd_unitdir}/system/chronyd.service"
+FILES:${PN} += "${base_libdir}/rdk/build_chrony_config.sh"
 
 
 
-RCONFLICTS_${PN} = "ntimed"
+RCONFLICTS:${PN} = "ntimed"

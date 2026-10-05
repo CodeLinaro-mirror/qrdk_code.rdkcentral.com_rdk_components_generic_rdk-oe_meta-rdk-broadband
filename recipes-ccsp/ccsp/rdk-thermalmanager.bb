@@ -5,7 +5,7 @@ LIC_FILES_CHKSUM = "file://LICENSE;md5=175792518e4ac015ab6696d16c4f607e"
 
 
 DEPENDS = "ccsp-common-library rdk-logger utopia libunpriv"
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"
 
 SRC_URI = "git://github.com/rdkcentral/thermal-manager.git;protocol=https;branch=main;name=ThermalManager"
 
@@ -21,7 +21,7 @@ require recipes-ccsp/ccsp/ccsp_common.inc
 
 inherit autotools pkgconfig systemd
 
-CFLAGS_append = " \
+CFLAGS:append = " \
     -I${STAGING_INCDIR} \
     -I${STAGING_INCDIR}/dbus-1.0 \
     -I${STAGING_LIBDIR}/dbus-1.0/include \
@@ -29,19 +29,19 @@ CFLAGS_append = " \
     "
 
 LDFLAGS += " -lprivilege"
-LDFLAGS_append = " -ldbus-1 -lsyscfg"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
-LDFLAGS_append = "${@bb.utils.contains('DISTRO_FEATURES', 'safec dunfell kirkstone', ' -lsafec-3.5.1 ', '', d)}"
+LDFLAGS:append = " -ldbus-1 -lsyscfg"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
+LDFLAGS:append = "${@bb.utils.contains('DISTRO_FEATURES', 'safec dunfell kirkstone', ' -lsafec-3.5.1 ', '', d)}"
 
-DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'telemetry2_0', 'telemetry', '', d)}"
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'telemetry2_0', '-DENABLE_FEATURE_TELEMETRY2_0', '', d)} "
-LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'telemetry2_0', ' -ltelemetry_msgsender ', '', d)} "
+DEPENDS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'telemetry2_0', 'telemetry', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'telemetry2_0', '-DENABLE_FEATURE_TELEMETRY2_0', '', d)} "
+LDFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'telemetry2_0', ' -ltelemetry_msgsender ', '', d)} "
 
 PACKAGES += "${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${PN}-gtest', '', d)}"
 
-SYSTEMD_SERVICE_${PN} = "RdkThermalManager.service"
+SYSTEMD_SERVICE:${PN} = "RdkThermalManager.service"
 
-do_install_append () {
+do_install:append () {
     # Config files and scripts
     install -d ${D}${exec_prefix}/rdk/thermalmanager
     ln -sf ${bindir}/thermalmanager ${D}${exec_prefix}/rdk/thermalmanager/thermalmanager
@@ -53,20 +53,20 @@ do_install_append () {
 }
 
 
-FILES_${PN} = " \
+FILES:${PN} = " \
    ${bindir}/* \
    ${exec_prefix}/rdk/thermalmanager/* \
    ${systemd_unitdir}/system/RdkThermalManager.service \
 "
 
-FILES_${PN}-dbg = " \
+FILES:${PN}-dbg = " \
     ${exec_prefix}/rdk/rdkthermalmanager/.debug \
     /usr/src/debug \
     ${bindir}/.debug \
     ${libdir}/.debug \
 "
 
-FILES_${PN}-gtest = "\
+FILES:${PN}-gtest = "\
     ${@bb.utils.contains('DISTRO_FEATURES', 'gtestapp', '${bindir}/RdkThermalManager_gtest.bin', '', d)} \
 "
 

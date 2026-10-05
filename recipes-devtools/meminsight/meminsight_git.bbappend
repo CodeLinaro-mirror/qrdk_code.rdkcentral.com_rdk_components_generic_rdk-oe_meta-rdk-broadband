@@ -27,7 +27,7 @@ PACKAGE_BEFORE_PN += "${PN}-dl "
 
 DEPENDS += "curl"
 
-RDEPENDS_${PN} += " ${PN}-dl"
+RDEPENDS:${PN} += " ${PN}-dl"
 
 do_install:append() {
     if [ "${ENABLE_RDM_VERSIONING}" = "true" ]; then

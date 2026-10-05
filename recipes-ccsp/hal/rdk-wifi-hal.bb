@@ -62,7 +62,7 @@ CFLAGS:append:wrynose = " -Wno-deprecated-declarations \
     -Wno-error=incompatible-pointer-types \
     -Wno-error=unused-variable \
 "
-CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'ignite', '-DPROJECT_IGNITE', '', d)}"
+CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'ignite', '-DPROJECT_IGNITE', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostapauthenticator', ' -DFEATURE_HOSTAP_AUTHENTICATOR', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hal-ipc', ' -DHAL_IPC -DHAL_IPC_SERVER', '', d)}"
 CFLAGS:append_kirkstone = " -Wno-deprecated-declarations "
@@ -70,7 +70,7 @@ CFLAGS:append_xb10 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integrat
 CFLAGS:append_vbvxb9 = " ${@bb.utils.contains('DISTRO_FEATURES', 'onewifi_integration', ' -DNEWPLATFORM_PORT', '', d)}"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'hostap_mgmt_frame_control', ' -DFEATURE_HOSTAP_MGMT_FRAME_CTRL', '', d)}"
 #Beacon protection is disabled by default
-#CFLAGS_append = " -DBEACON_PROT "
+#CFLAGS:append = " -DBEACON_PROT "
 ###########################LEGACY#####################
 #This should be removed after you implement the propagation of additional definitions via pkg-config
 #for the ALL transitive targets for the ALL platform

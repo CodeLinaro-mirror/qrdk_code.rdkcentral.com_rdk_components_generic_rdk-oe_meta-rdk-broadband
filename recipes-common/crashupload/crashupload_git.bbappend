@@ -13,7 +13,7 @@ do_install:append() {
 
 }
 
-do_configure_prepend() {
+do_configure:prepend() {
     if [ "${IS_EXTENDER}" = "false" ]; then
         sed -i -e 's/ -lrfcapi//g' ${WORKDIR}/git/c_sourcecode/src/Makefile.am
     fi
@@ -26,7 +26,7 @@ SYSTEMD_SERVICE:${PN}:append = " coredump-upload.service \
                                            minidump-on-bootup-upload.timer \
 "
 
-DEPENDS_append = "${@bb.utils.contains('IS_EXTENDER', 'true', '', ' utopia', d)}"
-LDFLAGS_append = "${@bb.utils.contains('IS_EXTENDER', 'true', '', ' -lsyscfg -lsysevent', d)}"
-EXTRA_OEMAKE_append = "${@bb.utils.contains('IS_EXTENDER', 'true', '', ' LIBS=\'-lsysevent -lsyscfg\'', d)}"
-CFLAGS_append = "${@bb.utils.contains('IS_EXTENDER', 'true', '', ' -DBROADBAND', d)}"
+DEPENDS:append = "${@bb.utils.contains('IS_EXTENDER', 'true', '', ' utopia', d)}"
+LDFLAGS:append = "${@bb.utils.contains('IS_EXTENDER', 'true', '', ' -lsyscfg -lsysevent', d)}"
+EXTRA_OEMAKE:append = "${@bb.utils.contains('IS_EXTENDER', 'true', '', ' LIBS=\'-lsysevent -lsyscfg\'', d)}"
+CFLAGS:append = "${@bb.utils.contains('IS_EXTENDER', 'true', '', ' -DBROADBAND', d)}"
