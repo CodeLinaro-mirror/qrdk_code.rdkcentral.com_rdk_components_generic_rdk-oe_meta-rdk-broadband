@@ -1,0 +1,149 @@
+diff --git a/source/hostap-2.11/src/ap/drv_callbacks.c b/source/hostap-2.11/src/ap/drv_callbacks.c
+index 64b9a27..3d7656b 100644
+--- a/source/hostap-2.11/src/ap/drv_callbacks.c
++++ b/source/hostap-2.11/src/ap/drv_callbacks.c
+@@ -936,7 +936,7 @@ static void hostapd_notif_disassoc_mld(struct hostapd_data *assoc_hapd,
+ 				       struct sta_info *sta,
+ 				       const u8 *addr)
+ {
+-	unsigned int link_id, i;
++	unsigned int link_id, i, j;
+ 	struct hostapd_data *tmp_hapd;
+ 	struct hapd_interfaces *interfaces = assoc_hapd->iface->interfaces;
+ 
+@@ -948,7 +948,10 @@ static void hostapd_notif_disassoc_mld(struct hostapd_data *assoc_hapd,
+ 		for (i = 0; i < interfaces->count; i++) {
+ 			struct sta_info *tmp_sta;
+ 
+-			tmp_hapd = interfaces->iface[i]->bss[0];
++			for (j = 0; j < interfaces->iface[i]->num_bss; j++) {
++				tmp_hapd = interfaces->iface[i]->bss[j];
++				if (tmp_hapd == NULL)
++					continue;
+ 
+ 			if (!tmp_hapd->conf->mld_ap ||
+ 			    assoc_hapd == tmp_hapd ||
+@@ -958,6 +961,7 @@ static void hostapd_notif_disassoc_mld(struct hostapd_data *assoc_hapd,
+ 			tmp_sta = ap_get_sta(tmp_hapd, addr);
+ 			if (tmp_sta)
+ 				ap_free_sta(tmp_hapd, tmp_sta);
++			}
+ 		}
+ 	}
+ 
+diff --git a/source/hostap-2.11/src/ap/ieee802_11.c b/source/hostap-2.11/src/ap/ieee802_11.c
+index fc2468a..d1241c5 100644
+--- a/source/hostap-2.11/src/ap/ieee802_11.c
++++ b/source/hostap-2.11/src/ap/ieee802_11.c
+@@ -4623,10 +4623,16 @@ static int ieee80211_ml_process_link(struct hostapd_data *hapd,
+ 	}
+ 
+ 	sta = ap_get_sta(hapd, origin_sta->addr);
++#if defined(CONFIG_DRIVER_BRCM)
++	if (origin_sta == sta)
++		goto out;	/* This sta already exists in the hapd of MAP */
++#endif
+ 	if (sta) {
+ 		wpa_printf(MSG_INFO, "MLD: link: Station already exists");
++#if !defined(CONFIG_DRIVER_BRCM)
+ 		status = WLAN_STATUS_UNSPECIFIED_FAILURE;
+ 		sta = NULL;
++#endif /* CONFIG_DRIVER_BRCM */
+ 		goto out;
+ 	}
+ 
+@@ -4656,6 +4662,9 @@ static int ieee80211_ml_process_link(struct hostapd_data *hapd,
+ 
+ 	sta->flags |= origin_sta->flags | WLAN_STA_ASSOC_REQ_OK;
+ 	sta->mld_assoc_link_id = origin_sta->mld_assoc_link_id;
++#if defined(CONFIG_DRIVER_BRCM)
++	sta->rx_link_id = origin_sta->rx_link_id;
++#endif /* !CONFIG_DRIVER_BRCM*/
+ 
+ 	status = __check_assoc_ies(hapd, sta, NULL, 0, &elems, reassoc, true);
+ 	if (status != WLAN_STATUS_SUCCESS) {
+@@ -4715,8 +4724,13 @@ out:
+ 	wpabuf_free(mlbuf);
+ 	link->status = status;
+ 
+-	if (!offload)
++	if (!offload) {
++#if defined(CONFIG_DRIVER_BRCM)
++		/* Skip building Per-STA profile because info in the main body */
++		if (hapd->mld_link_id != origin_sta->rx_link_id)
++#endif
+ 		ieee80211_ml_build_assoc_resp(hapd, link);
++	}
+ 
+ 	wpa_printf(MSG_DEBUG, "MLD: link: status=%u", status);
+ 	if (status != WLAN_STATUS_SUCCESS) {
+@@ -4756,43 +4770,29 @@ int hostapd_process_assoc_ml_info(struct hostapd_data *hapd,
+ 	if (!hostapd_is_mld_ap(hapd))
+ 		return 0;
+ 
+-#ifdef CONFIG_DRIVER_BRCM
+-    /*
+-     * From hostapd perspective the RX link will always be main link (e.g. 0).
+-     * But BCM driver may have obtained the Assoc Req from the affiliated link (e.g. 1 or 2)
+-     * and will send the Assoc Resp also on the affiliated link
+-     * So, hapd->mld_link_id and sta->mld_assoc_link_id will always be 0, but the sta->rx_link_id may be 0, 1 or 2
+-     * In order to have proper Assoc Resp Multi-Link IE Per-Sta profile filled, we have to explicitly
+-     * build Per-Sta profile for the main link in case the Assoc Resp has actually been obtained on affiliated link
+-    */
+-    struct mld_link_info *rx_link_fake = NULL;
+-#endif
+-
+ 	for (i = 0; i < MAX_NUM_MLD_LINKS; i++) {
+ 		struct hostapd_data *bss = NULL;
+ 		struct mld_link_info *link = &sta->mld_info.links[i];
+ 		bool link_bss_found = false;
+ 
+-#ifdef CONFIG_DRIVER_BRCM
+-        /*
+-         * Check if the Assoc Resp has been obtained in affiliated link_addr
+-         * and store the fake mld_assoc_link_id to construct Per-Sta profile later
+-         */
+-        if (link->valid &&
+-                i == sta->mld_assoc_link_id &&
+-                sta->rx_link_id != (u8)-1 &&
+-                sta->rx_link_id != sta->mld_assoc_link_id &&
+-                tx_link_status == WLAN_STATUS_SUCCESS) {
+-            wpa_printf(MSG_ERROR, "### %s: rx_link_id is not the mld_assoc_link_id", __func__);
+-            rx_link_fake = link;
+-        }
+-#endif
++#if defined(CONFIG_DRIVER_BRCM)
++		if (!link->valid)
++			continue;
++#else
+ 		if (!link->valid || i == sta->mld_assoc_link_id)
+ 			continue;
++#endif /* CONFIG_DRIVER_BRCM */
+ 
+ 		for_each_mld_link(bss, hapd) {
++#if defined(CONFIG_DRIVER_BRCM)
++			/* The hapd is always MAP(link0). The condition
++			 * will result in !link_bss_found, causing failure
++			 * when rx_link_id != 0 and MAP is in link_map.
++			 */
++#else
+ 			if (bss == hapd)
+ 				continue;
++#endif /* CONFIG_DRIVER_BRCM */
+ 
+ 			if (bss->mld_link_id != i)
+ 				continue;
+@@ -4820,13 +4820,6 @@ int hostapd_process_assoc_ml_info(struct hostapd_data *hapd,
+ 				return -1;
+ 		}
+ 	}
+-#ifdef CONFIG_DRIVER_BRCM
+-    if (rx_link_fake && !offload) {
+-        rx_link_fake->status = WLAN_STATUS_SUCCESS;
+-        wpa_printf(MSG_ERROR, "### %s: build assoc resp for " MACSTR, __func__, MAC2STR(rx_link_fake->peer_addr));
+-        ieee80211_ml_build_assoc_resp(hapd, rx_link_fake);
+-    }
+-#endif
+ #endif /* CONFIG_IEEE80211BE */
+ 
+ 	return 0;

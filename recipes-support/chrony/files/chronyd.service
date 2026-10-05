@@ -1,0 +1,15 @@
+[Unit]
+Description=NTP client/server
+Documentation=man:chronyd(8) man:chrony.conf(5)
+After=ntpdate.service sntp.service
+Conflicts=ntpd.service
+ConditionCapability=CAP_SYS_TIME
+
+[Service]
+Type=forking
+Restart=always
+PIDFile=/run/chrony/chronyd.pid
+ExecStartPre=/bin/sh -c '/bin/mkdir -p /var/lib/chrony'
+ExecStartPre=/lib/rdk/build_chrony_config.sh
+ExecStart=/usr/sbin/chronyd -l /rdklogs/logs/chrony.log
+

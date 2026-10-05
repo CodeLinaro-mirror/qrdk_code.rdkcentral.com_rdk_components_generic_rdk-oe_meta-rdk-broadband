@@ -1,0 +1,8 @@
+{
+  "name": "tcpdump",
+  "description": "Network packet analyzer - tcpdump",
+  "version": "1.0",
+  "installScript": "etc/rdm/post-services/tcpdump-post-install.sh",
+  "contents": ["tcpdump.tar"],
+  "size": "1024K"
+}

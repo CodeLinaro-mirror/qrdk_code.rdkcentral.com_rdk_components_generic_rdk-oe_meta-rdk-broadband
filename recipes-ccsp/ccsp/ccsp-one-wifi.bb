@@ -34,7 +34,7 @@ SRC_URI:append = " ${@bb.utils.contains('MACHINE', 'xe2-plume-rdk-extender-qsdk1
 
 SRC_URI:append = " ${@bb.utils.contains_any('DISTRO_FEATURES', 'cac', '${RDKB_CCSP_ROOT_GIT}/WiFiCnxCtrl/generic;protocol=${RDK_GIT_PROTOCOL};branch=${CCSP_GIT_BRANCH};destsuffix=WiFiCnxCtrl;name=WiFiCnxCtrl', " ", d)}"
 
-SRCREV_OneWifi = "d17bd2d25fc0728d130cbe84e3c0e90b3734a6bc"
+SRCREV_OneWifi = "02cc1aaa2fc85597b8e671c885e13a2a16648cc2"
 SRCREV_lan_web = "${AUTOREV}"
 SRCREV_WiFiCnxCtrl = "${AUTOREV}"
 SRCREV_FORMAT = "OneWifi"
@@ -211,11 +211,6 @@ FILES:${PN} = "\
     ${prefix}/ccsp/wifi/aphealth_log.sh \
     ${prefix}/ccsp/wifi/apshealth.sh \
     ${prefix}/ccsp/wifi/wifivAPPercentage.sh \
-    ${prefix}/ccsp/wifi/mesh_aclmac.sh \
-    ${prefix}/ccsp/wifi/mesh_setip.sh \
-    ${prefix}/ccsp/wifi/meshapcfg.sh \
-    ${prefix}/ccsp/wifi/handle_mesh \
-    ${prefix}/ccsp/wifi/mesh_status.sh \
     ${prefix}/ccsp/wifi/CcspWifi.cfg \
     ${prefix}/ccsp/wifi/CcspDmLib.cfg \
     ${prefix}/ccsp/wifi/WifiSingleClient.avsc \
