@@ -22,6 +22,8 @@ CFLAGS:append:wrynose = " \
     -Wno-error=header-guard \
     -Wno-error=implicit-int \
     -Wno-error=stringop-overflow \
+    -Wno-error=calloc-transposed-args \
+    -Wno-error=unused-variable \
 "
 
 CFLAGS:append:wrynose = " -std=gnu17 "
