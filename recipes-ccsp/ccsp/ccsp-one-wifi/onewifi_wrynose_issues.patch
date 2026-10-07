@@ -1,33 +1,4 @@
 Upstream-Status: Pending
-diff --git a/lib/common/os.c b/lib/common/os.c
-index ff5348fd..b8a7335e 100644
---- a/lib/common/os.c
-+++ b/lib/common/os.c
-@@ -145,7 +145,7 @@ bool task_once(task_once_t *once)
-     return retval;
- }
- 
--static int32_t hex2num(char c)
-+int32_t hex2num(char c)
- {
-     if (c >= '0' && c <= '9')
-         return c - '0';
-diff --git a/lib/osa/os_random.h b/lib/osa/os_random.h
-index 07120df6..b11c5ca7 100644
---- a/lib/osa/os_random.h
-+++ b/lib/osa/os_random.h
-@@ -29,11 +29,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- 
- extern void     os_random_seed(const char *ifname);
- 
--static inline long int
--os_random(void)
--{
--    return random();
--}
- 
- static inline int os_rand(void)
- {
 diff --git a/source/apps/levl/wifi_levl.c b/source/apps/levl/wifi_levl.c
 index 8b31681d..f87cd517 100644
 --- a/source/apps/levl/wifi_levl.c
@@ -73,10 +44,10 @@ index 5e614bce..982c3b09 100644
  if ONEWIFI_DML_SUPPORT
  OneWifi_LDFLAGS += -lccsp_common
 diff --git a/source/core/wifi_ctrl_rbus_handlers.c b/source/core/wifi_ctrl_rbus_handlers.c
-index bd5f5cea..a44f98b5 100644
+index bd5f5cea..60d6be4f 100644
 --- a/source/core/wifi_ctrl_rbus_handlers.c
 +++ b/source/core/wifi_ctrl_rbus_handlers.c
-@@ -4787,7 +4788,7 @@ void bus_register_handlers(wifi_ctrl_t *ctrl)
+@@ -4787,7 +4787,7 @@ void bus_register_handlers(wifi_ctrl_t *ctrl)
      int rc = bus_error_success;
      char *component_name = "WifiCtrl";
      int num_of_radio = getNumberRadios();
@@ -85,7 +56,6 @@ index bd5f5cea..a44f98b5 100644
      int num_elements;
      bus_data_element_t dataElements[] = {
                                  { WIFI_WEBCONFIG_DOC_DATA_SOUTH, bus_element_type_method,
- 
 diff --git a/source/dml/tr_181/sbapi/Makefile.am b/source/dml/tr_181/sbapi/Makefile.am
 index b649d4ca..e6bf6291 100644
 --- a/source/dml/tr_181/sbapi/Makefile.am
