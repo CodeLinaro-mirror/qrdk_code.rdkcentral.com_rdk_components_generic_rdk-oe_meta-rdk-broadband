@@ -76,7 +76,7 @@ CFLAGS:append = " \
 "
 
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', '-DENABLE_FEATURE_MESHWIFI', '', d)}"
-CFLAGS:append:wrynose = " -Wno-incompatible-pointer-types -Wno-int-conversion -Wno-return-mismatch"
+CFLAGS:append:wrynose = " -Wno-incompatible-pointer-types -Wno-int-conversion -Wno-return-mismatch -Wno-error=unused-variable -Wno-error=attribute-warning -Wno-error=calloc-transposed-args -Wno-error=sign-compare -Wno-error=unused-but-set-variable -Wno-error=return-type -Wno-error=enum-int-mismatch -Wno-error=pointer-sign -Wno-error=use-after-free"
 CFLAGS:append = " -DWIFI_CAPTIVE_PORTAL"
 CFLAGS:append = " -DONEWIFI_MULTIAP_APP_SUPPORT"
 CFLAGS:append = " ${@bb.utils.contains('DISTRO_FEATURES', 'halVersion3', ' -DWIFI_HAL_VERSION_3', '', d)}"
@@ -230,7 +230,14 @@ FILES:${PN}-dbg = " \
     ${bindir}/.debug \
     ${libdir}/.debug \
 "
-
+FILES:${PN}:append = " \
+    ${@bb.utils.contains('DISTRO_FEATURES', 'meshwifi', ' \
+        /usr/ccsp/wifi/handle_mesh \
+        /usr/ccsp/wifi/meshapcfg.sh \
+        /usr/ccsp/wifi/mesh_status.sh \
+        /usr/ccsp/wifi/mesh_aclmac.sh \
+        /usr/ccsp/wifi/mesh_setip.sh \
+    ', '', d)}"
 SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains_any('DISTRO_FEATURES', 'systemd', 'wifi-telemetry.target', '', d)}"
 SYSTEMD_SERVICE:${PN} += " ${@bb.utils.contains_any('DISTRO_FEATURES', 'systemd', 'wifi-telemetry-cron.service', '', d)}"
 
