@@ -106,6 +106,7 @@ SRC_URI += " \
         file://${HOSTAPD_PV}/wpa3_pcm_sta_2_11.patch \
         file://${HOSTAPD_PV}/mlo_rx_link_id_fix.patch \
         file://${HOSTAPD_PV}/fix-crash-on-client-connection-attempts-during-mlo-reconf.patch \
+        file://${HOSTAPD_PV}/driver_aid_first_211.patch \
     ','', d)} \
 "
 

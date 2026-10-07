@@ -1,0 +1,68 @@
+##########################################
+A STA that re-associates while hostapd still holds its previous
+sta_info (e.g. pruned after moving to another BSS, within
+AP_MAX_INACTIVITY_AFTER_DISASSOC) used to get the stale cached AID in
+the (Re)Association Response, while the driver had allocated a new
+one. EHT clients then drop downlink MU PPDUs addressed by the driver
+AID ("connected, no IP"). If the driver lookup fails for such a STA,
+the cached AID is kept (previous behaviour).
+##########################################
+--- a/source/hostap-2.11/src/ap/ieee802_11.c
++++ b/source/hostap-2.11/src/ap/ieee802_11.c
+@@ -3463,18 +3463,50 @@
+ 	 * available value. */
+ 	hapd = hostapd_mbssid_get_tx_bss(hapd);
+ 
++#ifdef CONFIG_DRIVER_AID
++	/*
++	 * The driver owns the AID, so ask it on every (re)association. This
++	 * includes a STA that comes back while its previous sta_info (and the
++	 * AID cached in it) has not been freed yet: the driver may have given
++	 * the new association a different AID, and the (Re)Association
++	 * Response has to carry the AID the driver uses for this STA (HE/EHT
++	 * MU PPDUs address the STA by AID).
++	 */
++	if (hapd->driver->get_aid) {
++		u16 drv_aid = 0;
++		int ret;
++
++		ret = (*hapd->driver->get_aid)(hapd->drv_priv, &drv_aid,
++					       sta->addr);
++		if (ret == 0 && drv_aid > 0) {
++			if (sta->aid > 0 && sta->aid != drv_aid)
++				wpa_printf(MSG_INFO,
++					   "AID: " MACSTR
++					   " old AID %d replaced by driver AID %d",
++					   MAC2STR(sta->addr), sta->aid,
++					   drv_aid);
++			sta->aid = drv_aid;
++			return 0;
++		}
++		if (sta->aid > 0) {
++			/* No AID from the driver: keep the cached one */
++			wpa_printf(MSG_INFO,
++				   "AID: " MACSTR
++				   " no driver AID (ret=%d), keeping old AID %d",
++				   MAC2STR(sta->addr), ret, sta->aid);
++			return 0;
++		}
++		sta->aid = drv_aid;
++		return ret;
++	}
++#endif /* CONFIG_DRIVER_AID */
++
+ 	/* get a unique AID */
+ 	if (sta->aid > 0) {
+ 		wpa_printf(MSG_DEBUG, "  old AID %d", sta->aid);
+ 		return 0;
+ 	}
+ 
+-#ifdef CONFIG_DRIVER_AID
+-	if (hapd->driver->get_aid) {
+-		return (*hapd->driver->get_aid)(hapd->drv_priv, &sta->aid, sta->addr);
+-	}
+-#endif
+-
+ 	if (TEST_FAIL())
+ 		return -1;
+ 
