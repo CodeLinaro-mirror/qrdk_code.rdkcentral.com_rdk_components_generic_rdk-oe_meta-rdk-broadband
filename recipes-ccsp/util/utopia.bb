@@ -35,6 +35,8 @@ EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'no_moca_support
 #This configuration is commented in utopia configure.ac file. As long as this is not enabled in configure file, passing the OE configuration is giving error in kirkstone.
 #EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'WanFailOverSupportEnable', '--enable-wanfailover', '', d)}"
 
+EXTRA_OECONF_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'NFT_Enable', '--enable-firewall-nft=yes', '', d)}"
+
 inherit autotools useradd update-alternatives pkgconfig
 
 DEPENDS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' safec', " ", d)}"

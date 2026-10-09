@@ -1,3 +1,5 @@
 RDEPENDS_packagegroup-rdk-oss-broadband_remove = " libmtp"
 RDEPENDS_packagegroup-rdk-oss-broadband += "${@bb.utils.contains('DISTRO_FEATURES','benchmark_enable','ntp','',d)}"
-
+RDEPENDS_packagegroup-rdk-oss-broadband += "${@bb.utils.contains('DISTRO_FEATURES', 'NFT_Enable', 'libmnl', '', d)}"
+RDEPENDS_packagegroup-rdk-oss-broadband += "${@bb.utils.contains('DISTRO_FEATURES', 'NFT_Enable', 'libnftnl', '', d)}"
+RDEPENDS_packagegroup-rdk-oss-broadband += "${@bb.utils.contains('DISTRO_FEATURES', 'NFT_Enable', 'nftables', '', d)}"

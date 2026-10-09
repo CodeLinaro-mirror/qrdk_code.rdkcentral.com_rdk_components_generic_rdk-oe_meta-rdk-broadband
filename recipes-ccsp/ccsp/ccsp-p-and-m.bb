@@ -44,6 +44,7 @@ CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'wifimotion', '-DFEATU
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'rdkb_wan_manager', '-lnanomsg', '', d)}"
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'fwupgrade_manager', '-lfw_upgrade', '', d)}"
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'enable_rdkscheduler', '-lrdk_scheduler', " ", d)}"
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'NFT_Enable', '-DNFT_ENABLE', '', d)}"
 
 CFLAGS_append = " \
     -I${STAGING_INCDIR} \
@@ -181,6 +182,9 @@ do_compile_prepend () {
         fi
         if ${@bb.utils.contains('DISTRO_FEATURES', 'ManagedWiFiSupportEnable', 'true', 'false', d)}; then
             sed -i '2i <?define WIFI_MANAGE_SUPPORTED=True?>' ${S}/config-arm/TR181-USGv2.XML
+        fi
+        if ${@bb.utils.contains('DISTRO_FEATURES', 'NFT_Enable', 'true', 'false', d)}; then
+            sed -i '2i <?define NFT_ENABLE=True?>' ${S}/config-arm/TR181-USGv2.XML
         fi
     (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config-arm/TR181-USGv2.XML ${S}/source/PandMSsp/dm_pack_datamodel.c)
 }
