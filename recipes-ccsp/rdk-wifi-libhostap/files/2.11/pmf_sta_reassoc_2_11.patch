@@ -1,0 +1,83 @@
+diff --git a/source/hostap-2.11/src/ap/ieee802_11.c b/source/hostap-2.11/src/ap/ieee802_11.c
+index 9f1ffb2..5a57142 100644
+--- a/source/hostap-2.11/src/ap/ieee802_11.c
++++ b/source/hostap-2.11/src/ap/ieee802_11.c
+@@ -3287,7 +3287,8 @@ static void handle_auth(struct hostapd_data *hapd,
+ 		}
+ 	}
+ #ifdef CONFIG_DRIVER_BRCM
+-	else {
++	/* As above: failure paths would delete the PMF association */
++	else if (!(sta->flags & WLAN_STA_MFP) || !ap_sta_is_authorized(sta)) {
+ 		sta->added_unassoc = 1;
+ 	}
+ #endif /* CONFIG_DRIVER_BRCM */
+@@ -4695,7 +4696,13 @@ static int ieee80211_ml_process_link(struct hostapd_data *hapd,
+ 		goto out;
+ 	}
+ 
++#ifdef CONFIG_DRIVER_BRCM
++	/* origin_sta may still be authorized from its previous association */
++	sta->flags |= (origin_sta->flags & ~WLAN_STA_AUTHORIZED) |
++		WLAN_STA_ASSOC_REQ_OK;
++#else /* CONFIG_DRIVER_BRCM */
+ 	sta->flags |= origin_sta->flags | WLAN_STA_ASSOC_REQ_OK;
++#endif /* CONFIG_DRIVER_BRCM */
+ 	sta->mld_assoc_link_id = origin_sta->mld_assoc_link_id;
+ #if defined(CONFIG_DRIVER_BRCM)
+ 	sta->rx_link_id = origin_sta->rx_link_id;
+@@ -4945,9 +4952,22 @@ static int add_associated_sta(struct hostapd_data *hapd,
+ 	     (reassoc && sta->ft_over_ds && sta->auth_alg == WLAN_AUTH_FT) ||
+ 	     (!wpa_auth_sta_ft_tk_already_set(sta->wpa_sm) &&
+ 	      !wpa_auth_sta_fils_tk_already_set(sta->wpa_sm)))) {
+-		hostapd_drv_sta_remove(hapd, sta->addr);
++#ifdef CONFIG_DRIVER_BRCM
++		/* DEL_STATION deauthenticates on BRCM: keep the entry, only
++		 * clear the previous association's authorization */
++		if (sta->flags & WLAN_STA_AUTHORIZED) {
++			wpa_printf(MSG_DEBUG, "Add associated STA " MACSTR
++				   ": clear authorization of the previous association",
++				   MAC2STR(sta->addr));
++			ap_sta_set_authorized(hapd, sta, 0);
++			hostapd_set_sta_flags(hapd, sta);
++		} else
++#endif /* CONFIG_DRIVER_BRCM */
++		{
++			hostapd_drv_sta_remove(hapd, sta->addr);
++			set = 0;
++		}
+ 		wpa_auth_sm_event(sta->wpa_sm, WPA_DRV_STA_REMOVED);
+-		set = 0;
+ 
+ 		 /* Do not allow the FT-over-DS exception to be used more than
+ 		  * once per authentication exchange to guarantee a new TK is
+@@ -6028,6 +6048,11 @@ static void handle_assoc(struct hostapd_data *hapd,
+ 	}
+ #endif /* CONFIG_FILS */
+ 
++#ifdef CONFIG_DRIVER_BRCM
++	if (sta && resp != WLAN_STATUS_SUCCESS)
++		sta->flags &= ~WLAN_STA_ASSOC_REQ_OK;
++#endif /* CONFIG_DRIVER_BRCM */
++
+ 	if (resp >= 0)
+ 		hostapd_drv_get_sta_auth_type(hapd, mgmt->sa, pos, left, reassoc ? STA_FRAME_REASSOC:STA_FRAME_ASSOC);
+ 		reply_res = send_assoc_resp(hapd,
+@@ -6866,6 +6891,17 @@ static void handle_assoc_cb(struct hostapd_data *hapd,
+ 	else
+ 		status = le_to_host16(mgmt->u.assoc_resp.status_code);
+ 
++#ifdef CONFIG_DRIVER_BRCM
++	/* For WPA3 the driver may report success also for a rejected request */
++	if (status == WLAN_STATUS_SUCCESS &&
++	    !(sta->flags & WLAN_STA_ASSOC_REQ_OK)) {
++		wpa_printf(MSG_INFO, "handle_assoc_cb: STA " MACSTR
++			   " - ignore %sAssociation Response TX status, the request was not accepted",
++			   MAC2STR(sta->addr), reassoc ? "Re" : "");
++		return;
++	}
++#endif /* CONFIG_DRIVER_BRCM */
++
+ 	if (!ok) {
+ 		hostapd_logger(hapd, mgmt->da, HOSTAPD_MODULE_IEEE80211,
+ 			       HOSTAPD_LEVEL_DEBUG,

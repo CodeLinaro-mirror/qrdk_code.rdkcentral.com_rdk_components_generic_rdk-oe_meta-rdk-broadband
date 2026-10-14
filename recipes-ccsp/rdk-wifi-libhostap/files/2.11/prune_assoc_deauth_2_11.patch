@@ -1,0 +1,40 @@
+diff --git a/source/hostap-2.11/src/ap/utils.c b/source/hostap-2.11/src/ap/utils.c
+index e93e531..f651883 100644
+--- a/source/hostap-2.11/src/ap/utils.c
++++ b/source/hostap-2.11/src/ap/utils.c
+@@ -74,14 +74,35 @@ static int prune_associations(struct hostapd_iface *iface, void *ctx)
+ 			continue;
+ 
+ #ifdef CONFIG_IEEE80211BE
++#ifdef RDK_ONEWIFI
++		/* mld_assoc_link_id is 0 also for non-MLO entries */
+ 		if (data->mld_assoc_link_id >= 0 &&
++		    ap_sta_is_mld(ohapd, osta) &&
++		    hostapd_is_ml_partner(data->hapd, ohapd) &&
+ 		    osta->mld_assoc_link_id == data->mld_assoc_link_id)
+ 			continue;
++#else /* RDK_ONEWIFI */
++		if (data->mld_assoc_link_id >= 0 &&
++		    osta->mld_assoc_link_id == data->mld_assoc_link_id)
++			continue;
++#endif /* RDK_ONEWIFI */
+ #endif /* CONFIG_IEEE80211BE */
+ 
++#ifdef RDK_ONEWIFI
++		/* Already pruned through another link of this MLD STA */
++		if (osta->timeout_next == STA_REMOVE &&
++		    !(osta->flags & (WLAN_STA_AUTH | WLAN_STA_ASSOC)))
++			continue;
++#endif /* RDK_ONEWIFI */
++
+ 		wpa_printf(MSG_INFO, "%s: Prune association for " MACSTR,
+ 			   ohapd->conf->iface, MAC2STR(osta->addr));
++#ifdef RDK_ONEWIFI
++		/* A disassociated entry is deauthenticated 30 s later (reason 2) */
++		ap_sta_deauthenticate(ohapd, osta, WLAN_REASON_UNSPECIFIED);
++#else /* RDK_ONEWIFI */
+ 		ap_sta_disassociate(ohapd, osta, WLAN_REASON_UNSPECIFIED);
++#endif /* RDK_ONEWIFI */
+ 	}
+ 
+ 	return 0;

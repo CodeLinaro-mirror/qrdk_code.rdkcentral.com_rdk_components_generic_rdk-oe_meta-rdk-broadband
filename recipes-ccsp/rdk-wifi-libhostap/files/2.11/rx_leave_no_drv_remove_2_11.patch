@@ -1,0 +1,35 @@
+--- a/source/hostap-2.11/src/ap/ieee802_11.c
++++ b/source/hostap-2.11/src/ap/ieee802_11.c
+@@ -6156,6 +6156,9 @@
+ 		hapd, sta, le_to_host16(mgmt->u.deauth.reason_code));
+ 	sta->acct_terminate_cause = RADIUS_ACCT_TERMINATE_CAUSE_USER_REQUEST;
+ 	ieee802_1x_notify_port_enabled(sta->eapol_sm, 0);
++#ifdef CONFIG_DRIVER_BRCM
++	sta->flags |= WLAN_STA_DRIVER_IND;
++#endif /* CONFIG_DRIVER_BRCM */
+ 	ap_free_sta(hapd, sta);
+ }
+ 
+@@ -6184,6 +6187,14 @@
+ 	if (sta->ipaddr)
+ 		hostapd_drv_br_delete_ip_neigh(hapd, 4, (u8 *) &sta->ipaddr);
+ 	ap_sta_ip6addr_del(hapd, sta);
++#ifdef CONFIG_DRIVER_BRCM
++	mlme_disassociate_indication(
++		hapd, sta, le_to_host16(mgmt->u.disassoc.reason_code));
++	sta->flags &= ~WLAN_STA_AUTH;
++	wpa_auth_sm_event(sta->wpa_sm, WPA_DEAUTH);
++	sta->flags |= WLAN_STA_DRIVER_IND;
++	ap_free_sta(hapd, sta);
++#else /* CONFIG_DRIVER_BRCM */
+ 	hostapd_drv_sta_remove(hapd, sta->addr);
+ 	sta->added_unassoc = 0;
+ 
+@@ -6208,6 +6219,7 @@
+ 			       HOSTAPD_LEVEL_DEBUG, "deauthenticated");
+ 		ap_free_sta(hapd, sta);
+ 	}
++#endif /* CONFIG_DRIVER_BRCM */
+ }
+ 
+ 
