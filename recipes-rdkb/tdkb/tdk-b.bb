@@ -22,7 +22,7 @@ RDEPENDS:${PN} = "jsoncpp jsonrpc ccsp-cm-agent bash trower-base64"
 
 require recipes-ccsp/ccsp/ccsp_common.inc
 
-tdkdir = "/usr/ccsp/tdk/"
+tdkdir = "/usr/ccsp/tdk"
 
 inherit autotools systemd coverity
 
