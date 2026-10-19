@@ -19,7 +19,7 @@ DEPENDS_remove_tchxb8 += "hal-platform"
 # To trigger builds, change the SRC_URI to point to forked version in github with correct BRANCH where
 # the changes are merged before creating a pull request to github.com/rdkcentral/rdk-wifi-hal
 SRC_URI = "git://github.com/rdkcentral/rdk-wifi-hal.git;protocol=https;branch=main;name=rdk-wifi-hal"
-SRCREV = "129f3199518e9a732d1718d395c039c130a0e3a6"
+SRCREV = "cd79f7f49006dfd053f90f0d406dfb6b2619162a"
 
 ONEWIFI_CFLAGS = " -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/rdk-wifi-libhostap/src \
                   -I${PKG_CONFIG_SYSROOT_DIR}/usr/include/libnl3 \
