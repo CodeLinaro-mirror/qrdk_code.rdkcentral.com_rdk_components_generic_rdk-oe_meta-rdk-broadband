@@ -9,6 +9,7 @@ SRC_URI = "${CMF_GITHUB_ROOT}/advanced-security;protocol=https;${BRANCH_ccsp_adv
 SRC_URI += "file://advsec-agent"
 SRC_URI += "file://advsec-ni"
 
+CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'CONFIG_IEEE80211BE', ' -DMLO_SUPPORTED', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec',  ' `pkg-config --cflags libsafec`', '-fPIC', d)}"
 LDFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', ' `pkg-config --libs libsafec`', '', d)}"
 CFLAGS_append = " ${@bb.utils.contains('DISTRO_FEATURES', 'safec', '', ' -DSAFEC_DUMMY_API', d)}"
@@ -34,7 +35,13 @@ S = "${WORKDIR}/git"
 CFLAGS += " -Wall -Werror -Wextra "
 
 do_compile_prepend () {
-       (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-AdvSecurity.xml ${S}/source/AdvSecuritySsp/dm_pack_datamodel.c)
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'OneWifi', 'true', 'false', d)}; then
+        sed -i '2i <?define WIFI_DATA_COLLECTION=True?>' ${S}/config/TR181-AdvSecurity.xml
+    fi
+    if ${@bb.utils.contains('DISTRO_FEATURES', 'CONFIG_IEEE80211BE', 'true', 'false', d)}; then
+        sed -i '2i <?define MLO_SUPPORTED=True?>' ${S}/config/TR181-AdvSecurity.xml
+    fi
+    (${PYTHON} ${STAGING_BINDIR_NATIVE}/dm_pack_code_gen.py ${S}/config/TR181-AdvSecurity.xml ${S}/source/AdvSecuritySsp/dm_pack_datamodel.c)
 }
 
 inherit autotools coverity ${@bb.utils.contains("DISTRO_FEATURES", "kirkstone", "python3native", "pythonnative", d)} breakpad-logmapper
