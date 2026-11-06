@@ -13,7 +13,7 @@ PKG_FIRMWARE_DECOUPLED="true"
 
 PKG_BUNDLE_NAME="${MACHINE_IMAGE_NAME}-meminsight"
 PKG_BUNDLE_MAJOR_VERSION="5"
-PKG_BUNDLE_MINOR_VERSION="0"
+PKG_BUNDLE_MINOR_VERSION="2"
 
 DOWNLOADABLE_FILES = "${@bb.utils.contains('DOWNLOAD_APPS', '${PKG_BUNDLE_NAME}', '\
                              ${bindir}/meminsight \
