@@ -1,0 +1,61 @@
+--- a/source/hostap-2.11/src/utils/wpa_debug.c
++++ b/source/hostap-2.11/src/utils/wpa_debug.c
+@@ -9,6 +9,11 @@
+ #include "includes.h"
+ 
+ #include "common.h"
++#include <sys/time.h>
++#include <time.h>
++#if defined(__ENABLE_PID__) && (__ENABLE_PID__)
++#include <sys/syscall.h>
++#endif
+ 
+ #ifdef CONFIG_DEBUG_SYSLOG
+ #include <syslog.h>
+@@ -66,6 +71,30 @@
+ #endif /* CONFIG_DEBUG_FILE */
+ 
+ 
++static void wpa_debug_rdk_prefix(FILE *f)
++{
++	struct timeval tv;
++	struct tm tm;
++	char buf[32];
++
++	if (access("/nvram/wifiLibhostapDbgTimestamp", R_OK) != 0)
++		return;
++
++	gettimeofday(&tv, NULL);
++	localtime_r(&tv.tv_sec, &tm);
++	strftime(buf, sizeof(buf), "%y%m%d-%T", &tm);
++#if defined(__ENABLE_PID__) && (__ENABLE_PID__)
++	fprintf(f, "%ld - %s.%06lu ", (long) syscall(__NR_gettid), buf,
++		(unsigned long) tv.tv_usec);
++#else
++	extern char *__progname;
++
++	fprintf(f, "[%s] %s.%06lu ", __progname ? __progname : "", buf,
++		(unsigned long) tv.tv_usec);
++#endif
++}
++
++
+ void wpa_debug_print_timestamp(void)
+ {
+ #ifndef CONFIG_ANDROID_LOG
+@@ -219,6 +248,7 @@
+             return;
+         }
+ 
++        wpa_debug_rdk_prefix(fpg);
+         vfprintf(fpg, fmt, ap);
+         va_end(ap);
+         fprintf(fpg, "\n");
+@@ -291,6 +321,7 @@
+ 			}
+ 	    }
+  
++	    wpa_debug_rdk_prefix(fpg);
+ 	    fprintf(fpg, "%s - hexdump(len=%lu):", title, (unsigned long) len);
+ 
+ 	    if (buf == NULL) {
